@@ -1,6 +1,6 @@
-# CSRF-Edge
+# Edge-CSRF
 
-CSRF-Edge is CSRF protection middleware for [Next.js](https://nextjs.org/) that runs in the edge runtime.
+Edge-CSRF is CSRF protection middleware for [Next.js](https://nextjs.org/) that runs in the edge runtime.
 
 This library uses the cookie strategy from [`expressjs/csurf`](https://github.com/expressjs/csurf) and the crypto logic from ['pillarjs/csrf'](https://github.com/pillarjs/csrf) except it only uses Next.js edge runtime dependencies so it can be used in [Next.js middleware](https://nextjs.org/docs/advanced-features/middleware).
 
@@ -13,18 +13,18 @@ This library uses the cookie strategy from [`expressjs/csurf`](https://github.co
 
 # Quickstart
 
-To use CSRF-Edge, first add it as a dependency to your app:
+To use Edge-CSRF, first add it as a dependency to your app:
 
 ```bash
-npm install csrf-edge
+npm install edge-csrf
 ```
 
-Next, create a middleware file (`middleware.js`) for your project and add the CSRF-Edge middleware:
+Next, create a middleware file (`middleware.js`) for your project and add the Edge-CSRF middleware:
 
 ```javascript
 // middleware.js
 
-import csrf from 'csrf-edge';
+import csrf from 'edge-csrf';
 import { NextResponse } from 'next/server';
 
 // initalize protection function
