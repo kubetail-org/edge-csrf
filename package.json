@@ -1,15 +1,16 @@
 {
   "name": "csrf-edge",
   "description": "Primary logic behind CSRF tokens for Next.js Edge runtime",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "author": "Andres Morey",
   "license": "MIT",
   "repository": "amorey/csrf-edge",
-  "module": "./index.js",
+  "type": "module",
+  "main": "index.js",
   "files": [
-    "./index.js",
-    "./config.js",
-    "./util.js"
+    "config.js",
+    "index.js",
+    "util.js"
   ],
   "scripts": {
     "lint": "eslint",
@@ -35,8 +36,5 @@
     "edge",
     "nextjs",
     "next"
-  ],
-  "dependencies": {
-    "yup": "^0.32.11"
-  }
+  ]
 }
