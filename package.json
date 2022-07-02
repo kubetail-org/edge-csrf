@@ -1,0 +1,42 @@
+{
+  "name": "csrf-edge",
+  "description": "Primary logic behind CSRF tokens for Next.js Edge runtime",
+  "version": "0.1.0",
+  "author": "Andres Morey",
+  "license": "MIT",
+  "repository": "amorey/csrf-edge",
+  "module": "./index.js",
+  "files": [
+    "./index.js",
+    "./config.js",
+    "./util.js"
+  ],
+  "scripts": {
+    "lint": "eslint",
+    "test": "jest --env @edge-runtime/jest-environment"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "@edge-runtime/jest-environment": "^1.1.0-beta.7",
+    "babel-jest": "^28.1.1",
+    "eslint": "^8.18.0",
+    "jest": "^28.1.1",
+    "next": "^12.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "next": "^12.2.0"
+  },
+  "keywords": [
+    "csrf",
+    "tokens",
+    "edge",
+    "nextjs",
+    "next"
+  ],
+  "dependencies": {
+    "yup": "^0.32.11"
+  }
+}
