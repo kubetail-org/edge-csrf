@@ -12,10 +12,11 @@ export function createSecret(length) {
  * Encode Uint8Array as base64 string
  */
 export function utoa(input) {
-  let i = input.byteLength;
-  let output = new Array(i);
-  while (i--) output[i] = String.fromCharCode(input[i]);
-  return btoa(output.join(''));
+  let output = '';
+  for (let i = 0; i < input.byteLength; i++) {
+    output += String.fromCharCode(input[i]);
+  }
+  return btoa(output);
 }
 
 /**
@@ -23,9 +24,8 @@ export function utoa(input) {
  */
 export function atou(input) {
   input = atob(input);
-  let i = input.length;
-  let output = new Uint8Array(i);
-  while (i--) output[i] = input.charCodeAt(i);
+  let output = new Uint8Array(input.length);
+  for (let i = 0; i < input.length; i++) output[i] = input.charCodeAt(i);
   return output;
 }
 
@@ -99,13 +99,11 @@ export async function verifyToken(token, secret) {
   // generate new hash to verify old hash
   const hashCheck = await _hash(secret, salt);
   
-  let i = hash.byteLength;
-  
   // check hash length
-  if (i !== hashCheck.byteLength) return false;
+  if (hash.byteLength !== hashCheck.byteLength) return false;
   
   // check hash values
-  while (i--) {
+  for (let i = 0; i < hash.byteLength; i++) {
     if (hash[i] !== hashCheck[i]) return false;
   }
   
@@ -118,8 +116,9 @@ export async function verifyToken(token, secret) {
  */
 export function _createSalt(byteLength) {
   const salt = new Uint8Array(byteLength);
-  let i = byteLength;
-  while (i--) salt[i] = Math.floor(Math.random() * 255);
+  for (let i = 0; i < byteLength; i++) {
+    salt[i] = Math.floor(Math.random() * 255);
+  }
   return salt;
 }
 
