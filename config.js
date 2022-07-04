@@ -4,9 +4,9 @@ const defaultConfig = {
     path: '/',
     maxAge: 60 * 60 * 12,
     domain: '',
-    secure: true,
     httpOnly: true,
-    sameSite: 'String'
+    sameSite: 'strict',
+    secure: true
   },
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
   saltByteLength: 8,
