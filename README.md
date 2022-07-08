@@ -1,12 +1,13 @@
 # Edge-CSRF
 
-Edge-CSRF is CSRF protection middleware for [Next.js](https://nextjs.org/) that runs in the edge runtime.
+Edge-CSRF is CSRF protection for [Next.js](https://nextjs.org/) middleware that runs in the edge runtime.
 
 This library uses the cookie strategy from [expressjs/csurf](https://github.com/expressjs/csurf) and the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf) except it only uses Next.js edge runtime dependencies so it can be used in [Next.js middleware](https://nextjs.org/docs/advanced-features/middleware).
 
 # Features
 
 - Runs in edge runtime
+- Implements cookie strategy from [expressjs/csurf](https://github.com/expressjs/csurf) and the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf)
 - Gets token from HTTP request header (`x-csrf-token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded or json-encoded HTTP request bodies
 - Customizable cookie options
@@ -35,6 +36,8 @@ export async function middleware(request) {
 
   // csrf protection
   const csrfError = await csrfProtect(request, response);
+
+  // check result
   if (csrfError) {
     const url = request.nextUrl.clone();
     url.pathname = '/api/csrf-invalid';
@@ -84,15 +87,15 @@ export default function MyFormPage({ csrfToken }) {
   cookie: {
     name: '_csrfSecret',
     path: '/',
-    maxAge: 60 * 60 * 12,
+    maxAge: null,
     domain: '',
     secure: true,
     httpOnly: true,
-    sameSite: 'String'
+    sameSite: 'strict'
   },
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
   saltByteLength: 8,
-  secretByteLength: 8,
+  secretByteLength: 18,
   token: {
     responseHeader: 'x-csrf-token',
     value: null
@@ -102,6 +105,4 @@ export default function MyFormPage({ csrfToken }) {
 
 TODO:
 - Add details to error response
-- Handle malformed inputs
 - Typescript support
-- Use session cookie
