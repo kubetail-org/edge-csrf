@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-import { Readable } from 'stream';
 
 import * as util from '../util';
 
@@ -48,6 +47,19 @@ describe('atou', () => {
     const input = 'AQID';
     const output = util.atou(input);
     expect(output).toEqual(new Uint8Array([1, 2, 3]));
+  });
+
+  it('handles non-ascii characters gracefully', () => {
+    const charCode = 257;
+    const input = btoa(String.fromCharCode(charCode));
+    const output = util.atou(input);
+    expect(output[0]).toEqual(257 % 256);
+  });
+
+  it('handles invalid base-64 strings gracefully', () => {
+    const input = 'aü';
+    const output = util.atou(input);
+    expect(output.byteLength).toEqual(0);
   });
 });
 

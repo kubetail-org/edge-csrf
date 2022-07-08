@@ -1,17 +1,13 @@
-import primitives from '@edge-runtime/primitives';
-
-// polyfill
-global.crypto = primitives.default.crypto;
-global.Request = primitives.default.Request;
-global.Response = primitives.default.Response;
+import './setupGlobals';
 
 import Benchmark from 'benchmark';
 import beautify from 'beautify-benchmark';
 
-const { NextRequest, NextResponse } = await import('next/server.js');
+import nextserver from 'next/server';
+const { NextRequest, NextResponse } = nextserver;
 
-import csrf from '../index.js';
-import { createSecret, createToken, utoa } from '../util.js';
+import csrf from '../index';
+import { createSecret, createToken, utoa } from '../util';
 
 const suite = new Benchmark.Suite;
 

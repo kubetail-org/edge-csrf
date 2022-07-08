@@ -1,16 +1,16 @@
 const defaultConfig = {
   cookie: {
-    name: '_csrfSecret',
-    path: '/',
-    maxAge: 60 * 60 * 12,
     domain: '',
     httpOnly: true,
+    maxAge: null,
+    name: '_csrfSecret',
+    path: '/',
     sameSite: 'strict',
     secure: true
   },
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
   saltByteLength: 8,
-  secretByteLength: 8,
+  secretByteLength: 18,
   token: {
     responseHeader: 'x-csrf-token',
     value: null

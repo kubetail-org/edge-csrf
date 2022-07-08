@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "lint": "eslint",
-    "test": "jest --env @edge-runtime/jest-environment"
+    "test": "jest --env @edge-runtime/jest-environment",
+    "bench": "node --experimental-specifier-resolution=node"
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",
