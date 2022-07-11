@@ -64,7 +64,7 @@ Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be reject
 // pages/my-form.js
 
 export function getServerSideProps({ res }) {
-  const csrfToken = res.getHeader('x-csrf-token') || '';
+  const csrfToken = res.getHeader('x-csrf-token');
   return {props: { csrfToken }};
 }
 
