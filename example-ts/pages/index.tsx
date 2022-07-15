@@ -1,12 +1,19 @@
-export async function getServerSideProps({ req, res }) {
-  const csrfToken = res.getHeader('x-csrf-token') || 'missing';
+import type { GetServerSideProps } from 'next'
+import React from 'react'
+
+type Props = {
+  csrfToken: string
+}
+
+const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const csrfToken = res.getHeader('x-csrf-token') || '';
   return {props: { csrfToken }};
 }
 
-export default function Home({ csrfToken }) {
+const Home: React.FunctionComponent<Props> = ({ csrfToken }) => {
   return (
     <>
-      <p>CSRF token value: {csrfToken}</p>
+      <p>CSRF token value: {csrfToken || 'missing'}</p>
       <form action="/api/form-handler" method="post">
         <legend>Form without CSRF (should fail):</legend>
         <input type="text" name="input1" />
@@ -27,5 +34,8 @@ export default function Home({ csrfToken }) {
         <button type="submit">Submit</button>
       </form>
     </>
-  );
+  )
 }
+
+export { getServerSideProps }
+export default Home
