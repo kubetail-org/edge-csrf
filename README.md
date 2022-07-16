@@ -11,6 +11,7 @@ This library uses the cookie strategy from [expressjs/csurf](https://github.com/
 - Gets token from HTTP request header (`x-csrf-token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded or json-encoded HTTP request bodies
 - Customizable cookie options
+- TypeScript definitions included
 
 # Quickstart
 
