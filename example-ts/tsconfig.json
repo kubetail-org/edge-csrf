@@ -14,12 +14,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true
-
-    // for development only
-    //"baseUrl": "../",
-    //"paths": {
-    //"edge-csrf": "src/index"
-    //}
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
