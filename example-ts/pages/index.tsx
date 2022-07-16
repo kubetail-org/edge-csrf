@@ -1,13 +1,13 @@
-import type { GetServerSideProps } from 'next'
-import React from 'react'
+import type { GetServerSideProps } from 'next';
+import React from 'react';
 
 type Props = {
   csrfToken: string
-}
+};
 
-const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const csrfToken = res.getHeader('x-csrf-token') || '';
-  return {props: { csrfToken }};
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+  const csrfToken = res.getHeader('x-csrf-token');
+  return { props: { csrfToken } };
 }
 
 const Home: React.FunctionComponent<Props> = ({ csrfToken }) => {
@@ -34,8 +34,7 @@ const Home: React.FunctionComponent<Props> = ({ csrfToken }) => {
         <button type="submit">Submit</button>
       </form>
     </>
-  )
+  );
 }
 
-export { getServerSideProps }
-export default Home
+export default Home;

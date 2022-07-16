@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "edge-csrf" :"0.1.3-ts",
+    "edge-csrf": "0.2.1",
     "next": "12.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
