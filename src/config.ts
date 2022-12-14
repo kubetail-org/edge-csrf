@@ -17,7 +17,7 @@ export class CookieOptions {
 }
 
 export class TokenOptions {
-  responseHeader: string = 'x-csrf-token'
+  responseHeader: string = 'X-CSRF-Token'
   value: TokenValueFunction | undefined = undefined
   
   constructor(opts?: Partial<TokenOptions>) {
@@ -32,7 +32,7 @@ export class Config {
   secretByteLength: number = 18
   token: TokenOptions = new TokenOptions()
   
-  constructor(opts?: Partial<Config>) {
+  constructor(opts?: Partial<ConfigOptions>) {
     opts = opts || {}
     if (opts.cookie) opts.cookie = new CookieOptions(opts.cookie);
     if (opts.token) opts.token = new TokenOptions(opts.token);
@@ -48,3 +48,8 @@ export class Config {
     }
   }
 }
+
+export interface ConfigOptions extends Omit<Config, 'cookie' | 'token'> {
+  cookie: Partial<CookieOptions>;
+  token: Partial<TokenOptions>;
+};

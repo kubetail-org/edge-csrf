@@ -1,19 +1,19 @@
-import type { GetServerSideProps } from 'next';
+import type { NextPage, GetServerSideProps } from 'next';
 import React from 'react';
 
 type Props = {
-  csrfToken: string
+  csrfToken: string;
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const csrfToken = res.getHeader('x-csrf-token');
+  const csrfToken = res.getHeader('X-CSRF-Token') || 'missing';
   return { props: { csrfToken } };
 }
 
-const Home: React.FunctionComponent<Props> = ({ csrfToken }) => {
+const Home: NextPage<Props> = ({ csrfToken }) => {
   return (
     <>
-      <p>CSRF token value: {csrfToken || 'missing'}</p>
+      <p>CSRF token value: {csrfToken}</p>
       <form action="/api/form-handler" method="post">
         <legend>Form without CSRF (should fail):</legend>
         <input type="text" name="input1" />

@@ -6,9 +6,10 @@ This library uses the cookie strategy from [expressjs/csurf](https://github.com/
 
 # Features
 
+- Supports Next.js 13
 - Runs in edge runtime
 - Implements cookie strategy from [expressjs/csurf](https://github.com/expressjs/csurf) and the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf)
-- Gets token from HTTP request header (`x-csrf-token`) or from request body field (`csrf_token`)
+- Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded or json-encoded HTTP request bodies
 - Customizable cookie options
 - TypeScript definitions included
@@ -19,6 +20,7 @@ To use Edge-CSRF, first add it as a dependency to your app:
 
 ```bash
 npm install edge-csrf
+yarn add edge-csrf
 ```
 
 Next, create a middleware file (`middleware.ts`) for your project and add the Edge-CSRF middleware:
@@ -31,7 +33,11 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // initalize protection function
-const csrfProtect = csrf();
+const csrfProtect = csrf({
+  cookie: {
+    secure: false  // WARNING: set this to `true` in production!
+  }
+});
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -41,52 +47,31 @@ export async function middleware(request: NextRequest) {
 
   // check result
   if (csrfError) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/api/csrf-invalid';
-    return NextResponse.rewrite(url);
+    return new NextResponse('invalid csrf token', { status: 403 });
   }
     
   return response;
 }
 ```
 
-Next, create a handler to return CSRF error messages to the user:
-
-```typescript
-// pages/api/csrf-invalid.ts
-
-import type { NextApiRequest, NextApiResponse } from 'next';
-
-type Data = {
-  status: string
-};
-
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  res.status(403).send({ status: 'invalid csrf token' });
-}
-```
-
-Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `x-csrf-token` HTTP response header server-side or client-side. For example:
+Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
 
 ```typescript
 // pages/form.ts
 
-import type { GetServerSideProps } from 'next';
+import type { NextPage, GetServerSideProps } from 'next';
 import React from 'react';
 
 type Props = {
-  csrfToken: string
+  csrfToken: string;
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const csrfToken = res.getHeader('x-csrf-token');
+  const csrfToken = res.getHeader('x-csrf-token') || 'missing';
   return { props: { csrfToken } };
 }
 
-const FormPage: React.FunctionComponent<Props> = ({ csrfToken }) => {
+const FormPage: NextPage<Props> = ({ csrfToken }) => {
   return (
     <form action="/api/form-handler" method="post">
       <input type="hidden" value={csrfToken}>
@@ -108,11 +93,8 @@ type Data = {
   status: string
 };
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  // this code won't execute unless CSRF token passes validation
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+  // this code won't execute unless CSRF token passes validation 
   res.status(200).json({ status: 'success' });
 }
 ```
@@ -149,7 +131,7 @@ Here are the default configuration values:
   saltByteLength: 8,
   secretByteLength: 18,
   token: {
-    responseHeader: 'x-csrf-token',
+    responseHeader: 'X-CSRF-Token',
     value: undefined
   }
 }
