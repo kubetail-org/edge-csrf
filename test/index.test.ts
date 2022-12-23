@@ -243,10 +243,10 @@ describe('config option tests', () => {
       const request = new NextRequest('http://example.com', {method: 'GET'})
       const response = NextResponse.next()
       await csrfProtect(request, response)
-      const { options } = response.cookies.getWithOptions('_csrfSecret')
+      const cookie = response.cookies.get('_csrfSecret')!
 
       // assertions
-      expect(options.Domain).toEqual('x.example.com')
+      expect(cookie.domain).toEqual('x.example.com')
     })
 
     it.each([true, false])('should respect `httpOnly:%s`', async (httpOnly) => {
@@ -255,10 +255,10 @@ describe('config option tests', () => {
       const request = new NextRequest('http://example.com', {method: 'GET'})
       const response = NextResponse.next()
       await csrfProtect(request, response)
-      const setCookie  = response.headers.get('set-cookie')
+      const setCookie = response.headers.get('set-cookie')
 
       // assertions
-      expect(setCookie.includes('HttpOnly')).toEqual(httpOnly)
+      expect(setCookie?.includes('HttpOnly')).toEqual(httpOnly)
     })
 
     it('should use session cookies by default', async () => {
@@ -267,12 +267,12 @@ describe('config option tests', () => {
       const request = new NextRequest('http://example.com', {method: 'GET'})
       const response = NextResponse.next()
       await csrfProtect(request, response)
-      const { options } = response.cookies.getWithOptions('_csrfSecret')
-      const setCookie = response.headers.get('set-cookie')
+      const cookie = response.cookies.get('_csrfSecret')!
+      const setCookie = response.headers.get('set-cookie') || ''
 
       // assertions
-      expect(options['Max-Age']).toEqual(undefined)
-      expect(options.Expires).toEqual(undefined)
+      expect(cookie.maxAge).toEqual(undefined)
+      expect(cookie.expires).toEqual(undefined)
       expect(setCookie.includes('Max-Age')).toEqual(false)
       expect(setCookie.includes('Expires')).toEqual(false)
     })
@@ -283,11 +283,11 @@ describe('config option tests', () => {
       const request = new NextRequest('http://example.com', {method: 'GET'})
       const response = NextResponse.next()
       await csrfProtect(request, response)
-      const { options } = response.cookies.getWithOptions('_csrfSecret')
+      const cookie = response.cookies.get('_csrfSecret')!
 
       // assertions
-      expect(options['Max-Age']).toEqual('86400')
-      expect(options.Expires).not.toEqual(undefined)
+      expect(cookie.maxAge).toEqual(86400)
+      expect(cookie.expires).not.toEqual(undefined)
     })
 
     it('should respect configured `name`', async () => {
@@ -307,10 +307,10 @@ describe('config option tests', () => {
       const request = new NextRequest('http://example.com', {method: 'GET'})
       const response = NextResponse.next()
       await csrfProtect(request, response)
-      const { options } = response.cookies.getWithOptions('_csrfSecret')
+      const cookie = response.cookies.get('_csrfSecret')!
 
       // assertions
-      expect(options.Path).toEqual('/sub-directory/')
+      expect(cookie.path).toEqual('/sub-directory/')
     })
 
     it('should respect configured `sameSite`', async () => {
@@ -319,10 +319,10 @@ describe('config option tests', () => {
       const request = new NextRequest('http://example.com', {method: 'GET'})
       const response = NextResponse.next()
       await csrfProtect(request, response)
-      const { options } = response.cookies.getWithOptions('_csrfSecret')
+      const cookie = response.cookies.get('_csrfSecret')!
 
       // assertions
-      expect(options.SameSite).toEqual('Lax')
+      expect(cookie.sameSite).toEqual('lax')
     })
 
     it.each([true, false])('should respect `secure:%s`', async (secure) => {
@@ -331,7 +331,7 @@ describe('config option tests', () => {
       const request = new NextRequest('http://example.com', {method: 'GET'})
       const response = NextResponse.next()
       await csrfProtect(request, response)
-      const setCookie  = response.headers.get('set-cookie')
+      const setCookie = response.headers.get('set-cookie')!
 
       // assertions
       expect(setCookie.includes('Secure')).toEqual(secure)
@@ -359,7 +359,7 @@ describe('config option tests', () => {
         const request = new NextRequest('http://example.com', {method: 'GET'})
         const response = NextResponse.next()
         const csrfError = await csrfProtect(request, response)
-        const token = atou(response.headers.get('x-csrf-token'))
+        const token = atou(response.headers.get('x-csrf-token')!)
         
         // assertions
         expect(token.byteLength).toEqual(22 + byteLength)
@@ -375,7 +375,7 @@ describe('config option tests', () => {
         const request = new NextRequest('http://example.com', {method: 'GET'})
         const response = NextResponse.next()
         const csrfError = await csrfProtect(request, response)
-        const secret = atou(response.cookies.get('_csrfSecret'))
+        const secret = atou(response.cookies.get('_csrfSecret')!.value)
         
         // assertions
         expect(secret.byteLength).toEqual(byteLength)
@@ -400,7 +400,8 @@ describe('config option tests', () => {
         token: {
           value: async (request) => {
             const formData = await request.formData()
-            return formData.get('my_key')
+            const formDataVal = formData.get('my_key')
+            return (typeof formDataVal === 'string') ? formDataVal : ''
           }
         }
       })

@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 
 export type TokenValueFunction = {
-  (request: NextRequest): string
+  (request: NextRequest): Promise<string>
 }
 
 /**

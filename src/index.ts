@@ -1,6 +1,7 @@
-import type { NextRequest, NextResponse } from 'next/server'
+import type { NextRequest, NextResponse } from 'next/server';
 
-import { Config } from './config'
+import { Config } from './config';
+import type { ConfigOptions } from './config';
 import {
   createSecret,
   getTokenString,
@@ -8,26 +9,27 @@ import {
   verifyToken,
   utoa,
   atou
-} from './util'
+} from './util';
 
 type CSRFMiddlewareFunction = {
-  (request: NextRequest, response: NextResponse): Promise<Error | null>
-}
+  (request: NextRequest, response: NextResponse): Promise<Error | null>;
+};
 
-export default function CreateMiddleware(opts?: Partial<Config>): CSRFMiddlewareFunction {
+export default function CreateMiddleware(opts?: Partial<ConfigOptions>): CSRFMiddlewareFunction {
   const config = new Config(opts || {});
 
   return async (request, response) => {
-    let secret: Uint8Array
-    let secretStr: string | undefined
+    let secret: Uint8Array;
+    let secretStr: string | undefined;
     
     // get secret from cookies
-    secretStr = request.cookies.get(config.cookie.name)
+    secretStr = request.cookies.get(config.cookie.name)?.value
 
     // if secret is missing, create new secret and set cookie
     if (secretStr === undefined) {
       secret = createSecret(config.secretByteLength)
-      response.cookies.set(config.cookie.name, utoa(secret), config.cookie)
+      const cookie = Object.assign({value: utoa(secret)}, config.cookie);
+      response.cookies.set(cookie);
     } else {
       secret = atou(secretStr)
     }

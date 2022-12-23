@@ -1,5 +1,5 @@
 export async function getServerSideProps({ req, res }) {
-  const csrfToken = res.getHeader('x-csrf-token') || 'missing';
+  const csrfToken = res.getHeader('X-CSRF-Token') || 'missing';
   return {props: { csrfToken }};
 }
 
@@ -21,7 +21,7 @@ export default function Home({ csrfToken }) {
       </form>
       <br />
       <form action="/api/form-handler" method="post">
-        <legend>Form with CSRF (should succeed):</legend>
+        <legend>Form with valid CSRF (should succeed):</legend>
         <input type="hidden" name="csrf_token" value={csrfToken} />
         <input type="text" name="input1" />
         <button type="submit">Submit</button>

@@ -19,7 +19,7 @@ describe('Config tests', () => {
     expect(config.ignoreMethods).toEqual(['GET', 'HEAD', 'OPTIONS'])
     expect(config.saltByteLength).toEqual(8)
     expect(config.secretByteLength).toEqual(18)
-    expect(config.token.responseHeader).toEqual('x-csrf-token')
+    expect(config.token.responseHeader).toEqual('X-CSRF-Token')
     expect(config.token.value).toEqual(undefined)
   })
 

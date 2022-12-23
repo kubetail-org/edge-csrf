@@ -1,7 +1,12 @@
 import csrf from 'edge-csrf';
 import { NextResponse } from 'next/server';
 
-const csrfProtect = csrf();
+// initalize protection function
+const csrfProtect = csrf({
+  cookie: {
+    secure: false  // WARNING: set this to `true` in production!
+  }
+});
 
 export async function middleware(request) {
   const response = NextResponse.next();
@@ -11,10 +16,8 @@ export async function middleware(request) {
 
   // check result
   if (csrfError) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/api/csrf-invalid';
-    return NextResponse.rewrite(url);
+    return new NextResponse('invalid csrf token', { status: 403 });
   }
-
+    
   return response;
 }
