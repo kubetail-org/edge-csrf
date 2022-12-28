@@ -47,12 +47,14 @@ export async function middleware(request: NextRequest) {
 
   // check result
   if (csrfError) {
-    return new NextResponse('invalid csrf token', { status: 403 });
+      return new NextResponse('invalid csrf token', { status: 403 });
   }
     
   return response;
 }
 ```
+
+:boom: Note: the example above sends a response directly from middleware. This feature is enabled by default in Next.js 13.1+. To enable this in Next.js 13.0.X you must set the `allowMiddlewareResponseBody` flag in the Next.js config file. Alternatively, you can use `NextResponse.rewrite()` to handle the response.
 
 Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
 
