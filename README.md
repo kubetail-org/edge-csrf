@@ -35,8 +35,8 @@ import type { NextRequest } from 'next/server';
 // initalize protection function
 const csrfProtect = csrf({
   cookie: {
-    secure: false  // WARNING: set this to `true` in production!
-  }
+    secure: process.env.NODE_ENV === 'production',
+  },
 });
 
 export async function middleware(request: NextRequest) {
