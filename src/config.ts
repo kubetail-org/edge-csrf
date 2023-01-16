@@ -28,6 +28,7 @@ export class TokenOptions {
 export class Config {
   cookie: CookieOptions = new CookieOptions()
   ignoreMethods: string[] = ['GET', 'HEAD', 'OPTIONS']
+  ignorePathPrefixes: string[] = ['/_next/']
   saltByteLength: number = 8
   secretByteLength: number = 18
   token: TokenOptions = new TokenOptions()

@@ -351,6 +351,21 @@ describe('config option tests', () => {
     })
   })
   
+  describe('ignorePathPrefixes', () => {
+    it('should respect configured ignorePathPrefixes', async () => {
+      const csrfProtect = csrf({ignorePathPrefixes: ['/ignore-me/sub-path/']})
+
+      const request = new NextRequest('http://example.com/ignore-me/sub-path/file.jpg')
+      const response = NextResponse.next()
+      const csrfError = await csrfProtect(request, response)
+      
+      // assertions
+      expect(response.headers.get('x-csrf-token')).toEqual(null)
+      expect(response.headers.get('set-cookie')).toEqual(null)
+      expect(csrfError).toEqual(null)
+    })
+  })
+
   describe('saltByteLength', () => {
     it('should respect saltByteLength option', async () => {
       for (let byteLength = 10; byteLength < 20; byteLength++) {

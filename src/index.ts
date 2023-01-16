@@ -22,6 +22,11 @@ export default function CreateMiddleware(opts?: Partial<ConfigOptions>): CSRFMid
     let secret: Uint8Array;
     let secretStr: string | undefined;
     
+    // check ignorePathPrefixes
+    for (const pathPrefix of config.ignorePathPrefixes) {
+      if (request.nextUrl.pathname.startsWith(pathPrefix)) return null;
+    }
+
     // get secret from cookies
     secretStr = request.cookies.get(config.cookie.name)?.value
 

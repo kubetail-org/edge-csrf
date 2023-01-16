@@ -130,6 +130,7 @@ Here are the default configuration values:
     sameSite: 'strict'
   },
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+  ignorePathPrefixes: ['/_next/'],
   saltByteLength: 8,
   secretByteLength: 18,
   token: {
