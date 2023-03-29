@@ -1,5 +1,4 @@
 import type { NextPage, GetServerSideProps } from 'next';
-import React from 'react';
 
 type Props = {
   csrfToken: string;
