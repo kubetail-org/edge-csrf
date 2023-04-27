@@ -129,8 +129,8 @@ Here are the default configuration values:
     httpOnly: true,
     sameSite: 'strict'
   },
+  excludePathPrefixes: ['/_next/'],
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-  ignorePathPrefixes: ['/_next/'],
   saltByteLength: 8,
   secretByteLength: 18,
   token: {

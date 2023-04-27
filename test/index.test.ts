@@ -351,9 +351,9 @@ describe('config option tests', () => {
     })
   })
   
-  describe('ignorePathPrefixes', () => {
-    it('should respect configured ignorePathPrefixes', async () => {
-      const csrfProtect = csrf({ignorePathPrefixes: ['/ignore-me/sub-path/']})
+  describe('excludePathPrefixes', () => {
+    it('should respect configured excludePathPrefixes', async () => {
+      const csrfProtect = csrf({excludePathPrefixes: ['/ignore-me/sub-path/']})
 
       const request = new NextRequest('http://example.com/ignore-me/sub-path/file.jpg')
       const response = NextResponse.next()
