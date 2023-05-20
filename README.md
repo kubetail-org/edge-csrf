@@ -20,6 +20,9 @@ To use Edge-CSRF, first add it as a dependency to your app:
 
 ```bash
 npm install edge-csrf
+# or
+pnpm add edge-csrf
+# or
 yarn add edge-csrf
 ```
 

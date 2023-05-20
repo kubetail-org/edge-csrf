@@ -1,3 +1,6 @@
+> **Warning**
+> This project uses the experimental NextJS /app directory. Please let us know if you notice any bugs or have any suggestions on how to improve this example project.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -23,3 +26,4 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
