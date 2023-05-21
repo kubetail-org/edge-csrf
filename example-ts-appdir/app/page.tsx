@@ -1,10 +1,10 @@
 import { headers } from 'next/headers';
 
 import '../styles/globals.css';
+import Form from './components/form';
 
 export default function Page() {
   const csrfToken = headers().get('X-CSRF-Token') || 'missing';
-
   return (
     <>
       <p>CSRF token value: {csrfToken}</p>
@@ -27,6 +27,8 @@ export default function Page() {
         <input type="text" name="input1" />
         <button type="submit">Submit</button>
       </form>
+      <br />
+      <Form csrfToken={csrfToken} />
     </>
   );
 }
