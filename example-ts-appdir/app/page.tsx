@@ -8,6 +8,7 @@ export default function Page() {
   return (
     <>
       <p>CSRF token value: {csrfToken}</p>
+      <h2>Example 1 (built-in form submission):</h2>
       <form action="/form-handler" method="post">
         <legend>Form without CSRF (should fail):</legend>
         <input type="text" name="input1" />
@@ -28,6 +29,7 @@ export default function Page() {
         <button type="submit">Submit</button>
       </form>
       <br />
+      <h2>Example 2 (javascript form submission):</h2>
       <Form csrfToken={csrfToken} />
     </>
   );
