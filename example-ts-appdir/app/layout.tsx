@@ -1,3 +1,9 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'edge-csrf examples'
+};
+
 export default function Layout({
   children,
 }: {
@@ -5,9 +11,6 @@ export default function Layout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <title>Next.js</title>
-      </head>
       <body>
         {children}
       </body>
