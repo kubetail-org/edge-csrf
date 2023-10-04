@@ -16,7 +16,7 @@ dependencies:
     version: 18.2.4
   edge-csrf:
     specifier: ^1.0.3
-    version: 1.0.3(next@13.4.3)
+    version: link:..
   eslint:
     specifier: 8.41.0
     version: 8.41.0
@@ -650,14 +650,6 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       esutils: 2.0.3
-    dev: false
-
-  /edge-csrf@1.0.3(next@13.4.3):
-    resolution: {integrity: sha512-miYuAv+tLaKw+niVD8Os5zQcMOB4Sdc748DKz3w6VIkou+WU2GHCUeL3fn9NyNeHAfNsUrOTB9Y/zlBVmnSTEQ==}
-    peerDependencies:
-      next: ^13.0.0
-    dependencies:
-      next: 13.4.3(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /emoji-regex@9.2.2:

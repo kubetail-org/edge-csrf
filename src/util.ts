@@ -52,21 +52,21 @@ export async function getTokenString(request: NextRequest, valueFn?: TokenValueF
   // check request body
   const contentType = request.headers.get('content-type') || 'text/plain';
 
-  // url-encoded
-  if (contentType === 'application/x-www-form-urlencoded') {
+  // url-encoded or multipart/form-data
+  if (contentType === 'application/x-www-form-urlencoded' || contentType.startsWith('multipart/form-data;')) {
     const formData = await request.formData();
-    const formDataVal = formData.get('csrf_token')
-    if (typeof formDataVal === 'string') return formDataVal
-    return ''
+    const formDataVal = formData.get('csrf_token');
+    if (typeof formDataVal === 'string') return formDataVal;
+    return '';
   }
 
   // json-encoded
   if (contentType === 'application/json' ||
       contentType === 'application/ld+json') {
     const json = await request.json();
-    const jsonVal = json['csrf_token']
-    if (typeof jsonVal === 'string') return jsonVal
-    return ''
+    const jsonVal = json['csrf_token'];
+    if (typeof jsonVal === 'string') return jsonVal;
+    return '';
   }
 
   return await request.text();
