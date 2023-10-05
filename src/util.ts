@@ -55,7 +55,7 @@ export async function getTokenString(request: NextRequest, valueFn?: TokenValueF
   // url-encoded or multipart/form-data
   if (contentType === 'application/x-www-form-urlencoded' || contentType.startsWith('multipart/form-data;')) {
     const formData = await request.formData();
-    const formDataVal = formData.get('csrf_token');
+    const formDataVal = formData.get('csrf_token') || formData.get('1_csrf_token');  // `1_`  is for server-actions
     if (typeof formDataVal === 'string') return formDataVal;
     return '';
   }

@@ -9,6 +9,7 @@ export default function Page() {
       <ul>
         <li><Link href="/html-example">HTML form submission</Link></li>
         <li><Link href="/js-example">JavaScript form submission</Link></li>
+        <li><Link href="/server-action-example">Server Action form submission</Link></li>
       </ul>
     </>
   );

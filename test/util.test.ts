@@ -84,6 +84,19 @@ describe('getTokenString', () => {
     expect(tokenStr).toEqual('my-token')
   })
   
+  it('gets token from multipart-form-data request', async () => {    
+    const formData = new FormData();
+    formData.set('file', new Blob(['xxx']), 'filename');
+    formData.set('csrf_token', 'my-token');
+
+    const request = new NextRequest('http://example.com/', {
+      method: 'POST',
+      body: formData
+    })
+    const tokenStr = await util.getTokenString(request)
+    expect(tokenStr).toEqual('my-token')
+  })
+
   it('gets token from json body', async () => {
     const request = new NextRequest('http://example.com/', {
       method: 'POST',

@@ -10,7 +10,7 @@ This library uses the cookie strategy from [expressjs/csurf](https://github.com/
 - Runs in edge runtime
 - Implements cookie strategy from [expressjs/csurf](https://github.com/expressjs/csurf) and the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf)
 - Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
-- Handles form-urlencoded or json-encoded HTTP request bodies
+- Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
 - Customizable cookie options
 - TypeScript definitions included
 
