@@ -32,6 +32,7 @@ export class Config {
   saltByteLength: number = 8
   secretByteLength: number = 18
   token: TokenOptions = new TokenOptions()
+  useStatic: boolean = false
   
   constructor(opts?: Partial<ConfigOptions>) {
     opts = opts || {}

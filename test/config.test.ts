@@ -21,6 +21,7 @@ describe('Config tests', () => {
     expect(config.secretByteLength).toEqual(18)
     expect(config.token.responseHeader).toEqual('X-CSRF-Token')
     expect(config.token.value).toEqual(undefined)
+    expect(config.useStatic).toEqual(false)
   })
 
   it('saltByteLength must be greater than 0', () => {

@@ -438,4 +438,19 @@ describe('config option tests', () => {
       expect(csrfError).toEqual(null)
     })
   })
+
+  describe('useStatic', () => {
+    it.each([true, false])('should respect configured `useStatic:%s`', async (useStatic) => {
+      const csrfProtect = csrf({ useStatic })
+      
+      const request = new NextRequest('http://example.com', {method: 'GET'})
+      const response = NextResponse.next()
+      await csrfProtect(request, response);
+      const setCookie = response.headers.get('set-cookie') || ''
+
+      // assertions
+      expect(setCookie.includes('X-CSRF-Token')).toEqual(useStatic);
+      expect(response.headers.has('x-csrf-token')).toEqual(!useStatic);
+    })
+  })
 })

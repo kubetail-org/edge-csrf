@@ -42,14 +42,26 @@ export default function CreateMiddleware(opts?: Partial<ConfigOptions>): CSRFMid
     // verify token
     if (!config.ignoreMethods.includes(request.method)) {
       const tokenStr = await getTokenString(request, config.token.value)
-      if (!await verifyToken(atou(tokenStr), secret)) {
+      // need to be decoded if the token was set in the cookie
+      const token = atou(config.useStatic ? decodeURIComponent(tokenStr) : tokenStr);
+      if (!await verifyToken(token, secret)) {
         return new Error('csrf validation error')
       }
     }
 
     // create new token for response
     const newToken = await createToken(secret, config.saltByteLength)
-    response.headers.set(config.token.responseHeader, utoa(newToken))
+    if (config.useStatic) {
+      const newCookie = {
+        ...config.cookie, 
+        name: config.token.responseHeader, 
+        value: utoa(newToken),
+        httpOnly: false,
+      }
+      response.cookies.set(newCookie)
+    } else {
+      response.headers.set(config.token.responseHeader, utoa(newToken))
+    }
 
     return null
   }
