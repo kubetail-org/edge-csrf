@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -16,7 +16,7 @@ dependencies:
     version: 18.2.4
   edge-csrf:
     specifier: ^1.0.3
-    version: link:..
+    version: 1.0.5(next@13.4.3)
   eslint:
     specifier: 8.41.0
     version: 8.41.0
@@ -650,6 +650,14 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       esutils: 2.0.3
+    dev: false
+
+  /edge-csrf@1.0.5(next@13.4.3):
+    resolution: {integrity: sha512-1RhkCG0lmph+5WoE9/AYc1H4y6wCCfkUFvXe0j1/rwg16jIU1m+frWlzNWTj8aLYb1/Qq/3usB+vqlEZiava4g==}
+    peerDependencies:
+      next: ^13.0.0
+    dependencies:
+      next: 13.4.3(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /emoji-regex@9.2.2:
