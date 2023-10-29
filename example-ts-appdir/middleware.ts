@@ -19,5 +19,10 @@ export async function middleware(request: NextRequest) {
     return new NextResponse('invalid csrf token', { status: 403 });
   }
 
+  // return token (for use in static-optimized-example)
+  if (request.nextUrl.pathname === '/csrf-token') {
+    return NextResponse.json({ csrfToken: response.headers.get('X-CSRF-Token') || 'missing' });
+  }
+
   return response;
 }

@@ -12,9 +12,9 @@ export default function Page() {
     // get form values
     const data = new FormData(ev.currentTarget);
 
-    // get token
-    const resp = await fetch('/static-optimized-example/csrf-token');
-    const { csrfToken } = await resp.json();
+    // get token (see middleware.ts)
+    const csrfResp = await fetch('/csrf-token');
+    const { csrfToken } = await csrfResp.json();
 
     // build fetch args
     const fetchArgs = { method: 'POST', headers: {}, body: JSON.stringify(data) };
