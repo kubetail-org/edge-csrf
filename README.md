@@ -6,13 +6,15 @@ This library uses the cookie strategy from [expressjs/csurf](https://github.com/
 
 # Features
 
-- Supports Next.js 13
+- Supports app-router and pages-router Next.js 13 and Next.js 14
 - Runs in edge runtime
 - Implements cookie strategy from [expressjs/csurf](https://github.com/expressjs/csurf) and the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf)
 - Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
 - Customizable cookie options
 - TypeScript definitions included
+
+**Note: There's an issue with Next.js middleware in v13.3.X and v13.4.X that prevents edge-csrf from working properly with the pages-router in a dev environment (https://github.com/vercel/next.js/issues/48083, https://github.com/vercel/next.js/issues/48546)**
 
 # Quickstart
 
@@ -56,8 +58,6 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 ```
-
-:boom: Note: the example above sends a response directly from middleware. This feature is enabled by default in Next.js 13.1+. To enable this in Next.js 13.0.X you must set the `allowMiddlewareResponseBody` flag in the Next.js config file. Alternatively, you can use `NextResponse.rewrite()` to handle the response.
 
 Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
 
@@ -103,6 +103,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
   res.status(200).json({ status: 'success' });
 }
 ```
+
+# Examples
+
+See more examples in the [/examples](examples) directory in this repository.
 
 # Configuration
 
