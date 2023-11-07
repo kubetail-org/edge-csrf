@@ -61,6 +61,38 @@ export async function middleware(request: NextRequest) {
 
 Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
 
+## App Router
+
+```typescript
+// app/page.tsx
+
+import { headers } from 'next/headers';
+
+export default function Page() {
+  const csrfToken = headers().get('X-CSRF-Token') || 'missing';
+
+  return (
+    <form action="/api/form-handler" method="post">
+      <input type="hidden" value={csrfToken}>
+      <input type="text" name="my-input">
+      <input type="submit">
+    </form>
+  );
+}
+```
+
+```typescript
+// app/form-handler/route.ts
+
+import { NextResponse } from 'next/server';
+
+export async function POST() {
+  return NextResponse.json({ status: 'success'});
+}
+```
+
+## Pages Router
+
 ```typescript
 // pages/form.ts
 
@@ -106,7 +138,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 # Examples
 
-See more examples in the [/examples](examples) directory in this repository.
+See more examples in the [examples](examples) directory in this repository.
 
 # Configuration
 
