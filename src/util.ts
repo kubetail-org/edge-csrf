@@ -1,5 +1,6 @@
+import { crypto, btoa, atob } from '@edge-runtime/ponyfill';
 import type { NextRequest } from 'next/server';
-
+ 
 export type TokenValueFunction = {
   (request: NextRequest): Promise<string>
 }

@@ -1,13 +1,10 @@
-import './setupGlobals';
-
 import Benchmark from 'benchmark';
 import beautify from 'beautify-benchmark';
+import { NextResponse } from 'next/server';
+import { Request } from '@edge-runtime/ponyfill';
 
-import nextserver from 'next/server';
-const { NextRequest, NextResponse } = nextserver;
-
-import csrf from '../index';
-import { createSecret, createToken, utoa } from '../util';
+import csrf from '../dist/cjs/index.js';
+import { createSecret, createToken, utoa } from '../dist/cjs/util.js';
 
 const suite = new Benchmark.Suite;
 

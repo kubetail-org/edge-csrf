@@ -1,3 +1,4 @@
+import { btoa } from '@edge-runtime/ponyfill'
 import { NextRequest, NextResponse } from 'next/server'
 
 import csrf from '../src/index'

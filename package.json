@@ -22,7 +22,7 @@
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-typescript": "^7.23.2",
     "@edge-runtime/jest-environment": "^2.3.6",
-    "@edge-runtime/primitives": "^4.0.4",
+    "@edge-runtime/primitives": "^4.0.5",
     "@jest/types": "^29.6.3",
     "@types/jest": "^29.5.6",
     "@types/node": "^20.8.9",
@@ -48,5 +48,8 @@
     "edge",
     "nextjs",
     "next"
-  ]
+  ],
+  "dependencies": {
+    "@edge-runtime/ponyfill": "^2.4.1"
+  }
 }

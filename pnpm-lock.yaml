@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+dependencies:
+  '@edge-runtime/ponyfill':
+    specifier: ^2.4.1
+    version: 2.4.1
+
 devDependencies:
   '@babel/core':
     specifier: ^7.23.2
@@ -18,8 +23,8 @@ devDependencies:
     specifier: ^2.3.6
     version: 2.3.6
   '@edge-runtime/primitives':
-    specifier: ^4.0.4
-    version: 4.0.4
+    specifier: ^4.0.5
+    version: 4.0.5
   '@jest/types':
     specifier: ^29.6.3
     version: 29.6.3
@@ -1313,8 +1318,18 @@ packages:
       jest-util: 29.5.0
     dev: true
 
+  /@edge-runtime/ponyfill@2.4.1:
+    resolution: {integrity: sha512-ZbR/EViY3gg2rmEAQTKPa6mXl4aR1/+cFcQe4r1segCjEbTAxT6PWu40odbu/KlZKSysEb2O/BWIC2lJgSJOMQ==}
+    engines: {node: '>=16'}
+    dev: false
+
   /@edge-runtime/primitives@4.0.4:
     resolution: {integrity: sha512-ktlFVHheT3mXz++atzAB13p/+VLMLiinWvn68/wfpLjsat/LuCccOGuNIe8gLPdVbucvw6N8TTn39iRVwz4gxA==}
+    engines: {node: '>=16'}
+    dev: true
+
+  /@edge-runtime/primitives@4.0.5:
+    resolution: {integrity: sha512-t7QiN5d/KpXgCvIfSt6Nm9Hj3WVdNgc5CpOD73jasY+9EvTI7Ngdj5cXvjcHrPcmYWJZMySPgeEeoL/1N/Llag==}
     engines: {node: '>=16'}
     dev: true
 

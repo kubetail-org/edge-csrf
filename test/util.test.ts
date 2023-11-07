@@ -1,3 +1,4 @@
+import { btoa } from '@edge-runtime/ponyfill'
 import { NextRequest } from 'next/server'
 
 import * as util from '../src/util'

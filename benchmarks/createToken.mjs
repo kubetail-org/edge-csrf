@@ -1,12 +1,7 @@
-import primitives from '@edge-runtime/primitives';
-
-// polyfill
-global.crypto = primitives.default.crypto;
-
 import Benchmark from 'benchmark';
 import beautify from 'beautify-benchmark';
 
-import { createSecret, createToken } from '../util.js';
+import { createSecret, createToken } from '../dist/cjs/util.js';
 
 const suite = new Benchmark.Suite;
 const secret = createSecret(8);
