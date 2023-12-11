@@ -127,6 +127,18 @@ describe('getTokenString', () => {
     expect(tokenStr).toEqual('my-token')
   })
 
+  it('gets token from server actions', async () => {
+    const formData = new FormData();
+    formData.set('2_csrf_token', 'my-token');
+
+    const request = new NextRequest('http://example.com/', {
+      method: 'POST',
+      body: formData
+    })
+    const tokenStr = await util.getTokenString(request)
+    expect(tokenStr).toEqual('my-token')
+  });
+
   it('gets token from raw body with missing content-type', async () => {
     const request = new NextRequest('http://example.com/', {
       method: 'POST',

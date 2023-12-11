@@ -38,6 +38,19 @@ export function atou(input: string): Uint8Array {
 }
 
 /**
+ * Get CSRF token from form
+ * @param {FormData} formData - The form data object
+ */
+const formDataKeyRegex = /^(\d+_)*csrf_token$/;
+
+function getTokenValueFromFormData(formData: FormData): FormDataEntryValue | undefined {
+  for (const [key, value] of formData.entries()) {
+    if (formDataKeyRegex.test(key)) return value;
+  }
+  return undefined;
+}
+
+/**
  * Get CSRF token from request
  * @param {NextRequest} request - The request object
  * @param {ValueFunc|null} valueFn - Function to retrieve token value from request
@@ -55,7 +68,7 @@ export async function getTokenString(request: NextRequest, valueFn?: TokenValueF
   // url-encoded or multipart/form-data
   if (contentType === 'application/x-www-form-urlencoded' || contentType.startsWith('multipart/form-data;')) {
     const formData = await request.formData();
-    const formDataVal = formData.get('csrf_token') || formData.get('1_csrf_token');  // `1_`  is for server-actions
+    const formDataVal = getTokenValueFromFormData(formData);
     if (typeof formDataVal === 'string') return formDataVal;
     return '';
   }
