@@ -138,7 +138,22 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 # Examples
 
-See more examples in the [examples](examples) directory in this repository.
+See more examples in the [examples](examples) directory in this repository:
+
+| Next.js Version | Router | Implementation                                                                          |
+| --------------- | ------ | --------------------------------------------------------------------------------------- |
+| 13              | app    | [HTML form](examples/next13-approuter-html-submission)                                  |
+| 13              | app    | [JavaScript (dynamic)](examples/next13-approuter-js-submission-dynamic)                 |
+| 13              | app    | [JavaScript (static)](examples/next13-approuter-js-submission-static)                   |
+| 13              | pages  | [HTML form](examples/next13-pagesrouter-html-submmission)                               |
+| 14              | app    | [HTML form](examples/next14-approuter-html-submission)                                  |
+| 14              | app    | [JavaScript (dynamic)](examples/next14-approuter-js-submission-dynamic)                 |
+| 14              | app    | [JavaScript (static)](examples/next14-approuter-js-submission-static)                   | 
+| 14              | app    | [Sentry](examples/next14-approuter-sentry)                                              |
+| 14              | app    | [Server action (form)](examples/next14-approuter-server-action-form-submission)         |
+| 14              | app    | [Server action (non-form)](examples/next14-approuter-server-action-non-form-submission) |
+| 14              | pages  | [HTML form](examples/next14-pagesrouter-html-submission)                                |
+
 
 # Configuration
 

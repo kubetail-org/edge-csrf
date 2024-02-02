@@ -66,7 +66,7 @@ export async function getTokenString(request: NextRequest, valueFn?: TokenValueF
   const contentType = request.headers.get('content-type') || 'text/plain';
 
   // url-encoded or multipart/form-data
-  if (contentType === 'application/x-www-form-urlencoded' || contentType.startsWith('multipart/form-data;')) {
+  if (contentType === 'application/x-www-form-urlencoded' || contentType.startsWith('multipart/form-data')) {
     const formData = await request.formData();
     const formDataVal = getTokenValueFromFormData(formData);
     if (typeof formDataVal === 'string') return formDataVal;
@@ -82,7 +82,20 @@ export async function getTokenString(request: NextRequest, valueFn?: TokenValueF
     return '';
   }
 
-  return await request.text();
+  const rawVal = await request.text();
+
+  // non-form server actions
+  if (contentType.startsWith('text/plain')) {
+    try {
+      const args = JSON.parse(rawVal);
+      if (!Array.isArray(args) || args.length == 0) return rawVal;
+      return args[0];
+    } catch (e) {
+      return rawVal
+    }
+  }
+
+  return rawVal;
 }
 
 /**

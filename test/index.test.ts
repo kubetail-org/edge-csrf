@@ -40,6 +40,45 @@ describe('csrf validation tests', () => {
     // assertions
     expect(csrfError).toEqual(null)
   })
+
+  it('should handle server action form submissions', async () => {
+    const secret = createSecret(8)
+    const token = await createToken(secret, 8)
+
+    const formData = new FormData();
+    formData.set('csrf_token', utoa(token));
+    formData.set('key1', 'val1');
+
+    const request = new NextRequest('http://example.com', {
+      method: 'POST',
+      body: formData
+    })
+    request.cookies.set('_csrfSecret', utoa(secret))
+
+    const response = NextResponse.next()
+    const csrfError = await csrfProtect(request, response)
+
+    // assertions
+    expect(csrfError).toEqual(null)
+  })
+
+  it('should handle server action non-form submissions', async () => {
+    const secret = createSecret(8)
+    const token = await createToken(secret, 8)
+
+    const request = new NextRequest('http://example.com', {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify([utoa(token), 'arg'])
+    })
+    request.cookies.set('_csrfSecret', utoa(secret))
+
+    const response = NextResponse.next()
+    const csrfError = await csrfProtect(request, response)
+
+    // assertions
+    expect(csrfError).toEqual(null)
+  })
   
   it('should fail with token from different secret', async () => {
     const evilSecret = createSecret(8)
