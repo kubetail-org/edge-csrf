@@ -154,6 +154,82 @@ See more examples in the [examples](examples) directory in this repository:
 | 14              | app    | [Server action (non-form)](examples/next14-approuter-server-action-non-form-submission) |
 | 14              | pages  | [HTML form](examples/next14-pagesrouter-html-submission)                                |
 
+# Server Actions
+
+Edge-CSRF supports server actions with both form and non-form submission in the latest version of Next.js (14).
+
+## Form Submission
+
+With server actions that get executed via form submission, you can add the CSRF token as a hidden field to the form ([see example](examples/next14-approuter-server-action-form-submission)):
+
+```tsx
+import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+export default function Page() {
+  const csrfToken = headers().get('X-CSRF-Token') || 'missing';
+
+  async function myAction(formData: FormData) {
+    'use server';
+    console.log('passed csrf validation');
+    revalidatePath('/');
+    redirect('/');
+  }
+
+  return (
+    <form action={myAction}>
+      <legend>Server Action with Form Submission Example:</legend>
+      <input type="hidden" name="csrf_token" value={csrfToken} />
+      <input type="text" name="myarg" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+## Non-Form Submission
+
+With server actions that get executed by JavaScript calls (non-form), you can pass the CSRF token as the first argument to the function ([see example](examples/next14-approuter-server-action-non-form-submission)):
+
+```tsx
+// lib/actions.ts
+'use server';
+
+export async function exampleFn(csrfToken: string, data: { key1: string; key2: string; }) {
+  console.log(data);
+}
+
+```
+
+```tsx
+// app/page.tsx
+'use client';
+
+import { exampleFn } from '../lib/actions';
+
+export default function Page() {
+  const handleClick = async () => {
+    const csrfResp = await fetch('/csrf-token');
+    const { csrfToken } = await csrfResp.json();
+
+    const data = { 
+      key1: 'val1',
+      key2: 'val2',
+    };
+
+    // use token as first argument to server action
+    await exampleFn(csrfToken, data);
+  };
+
+  return (
+    <>
+      <h2>Server Action with Non-Form Submission Example:</h2>
+      <button onClick={handleClick}>Click me</button>
+    </>
+  );
+}
+```
 
 # Configuration
 
