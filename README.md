@@ -4,7 +4,7 @@ Edge-CSRF is CSRF protection for [Next.js](https://nextjs.org/) that runs in mid
 
 This library uses the cookie strategy from [expressjs/csurf](https://github.com/expressjs/csurf) and the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf) except it only uses Next.js edge runtime dependencies so it can be used in [Next.js middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware).
 
-# Features
+## Features
 
 - Supports app-router and pages-router Next.js 13 and Next.js 14
 - Runs in edge runtime
@@ -16,11 +16,11 @@ This library uses the cookie strategy from [expressjs/csurf](https://github.com/
 
 **Note: There's an issue with Next.js middleware in v13.3.X and v13.4.X that prevents edge-csrf from working properly with the pages-router in a dev environment (https://github.com/vercel/next.js/issues/48083, https://github.com/vercel/next.js/issues/48546)**
 
-# Quickstart
+## Quickstart
 
 To use Edge-CSRF, first add it as a dependency to your app:
 
-```bash
+```console
 npm install edge-csrf
 # or
 pnpm add edge-csrf
@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
 
 Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
 
-## App Router
+### App Router
 
 ```typescript
 // app/page.tsx
@@ -91,7 +91,7 @@ export async function POST() {
 }
 ```
 
-## Pages Router
+### Pages Router
 
 ```typescript
 // pages/form.ts
@@ -136,7 +136,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 ```
 
-# Examples
+## Examples
 
 See more examples in the [examples](examples) directory in this repository:
 
@@ -154,11 +154,11 @@ See more examples in the [examples](examples) directory in this repository:
 | 14              | app    | [Server action (non-form)](examples/next14-approuter-server-action-non-form-submission) |
 | 14              | pages  | [HTML form](examples/next14-pagesrouter-html-submission)                                |
 
-# Server Actions
+## Server Actions
 
 Edge-CSRF supports server actions with both form and non-form submission in the latest version of Next.js (14).
 
-## Form Submission
+### Form Submission
 
 With server actions that get executed via form submission, you can add the CSRF token as a hidden field to the form ([see example](examples/next14-approuter-server-action-form-submission)):
 
@@ -188,7 +188,7 @@ export default function Page() {
 }
 ```
 
-## Non-Form Submission
+### Non-Form Submission
 
 With server actions that get executed by JavaScript calls (non-form), you can pass the CSRF token as the first argument to the function ([see example](examples/next14-approuter-server-action-non-form-submission)):
 
@@ -231,7 +231,7 @@ export default function Page() {
 }
 ```
 
-# Configuration
+## Configuration
 
 To configure the CSRF middleware function just pass an object containing your options to the initialization method:
 
@@ -269,3 +269,35 @@ Here are the default configuration values:
   }
 }
 ```
+
+## Development
+
+### Get the code
+
+To develop edge-csrf, first clone the repository then install the dependencies:
+
+```console
+git clone git@github.com:kubetail-org/edge-csrf.git
+cd edge-csrf
+pnpm install
+```
+
+### Run the unit tests
+
+Edge-CSRF uses jest for testing (via vitest). To run the tests, use the `test` command:
+
+```console
+pnpm test
+```
+
+The test files are colocated with the source code in the `src/` directory, with the filename format `{name}.test.ts`.
+
+### Build for production
+
+To build Edge-CSRF for production, run the `build` command:
+
+```console
+pnpm build
+```
+
+The production files will be located in the `dist/` directory.
