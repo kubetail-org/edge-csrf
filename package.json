@@ -4,7 +4,7 @@
   "version": "1.0.9",
   "author": "Andres Morey",
   "license": "MIT",
-  "repository": "amorey/edge-csrf",
+  "repository": "kubetail-org/edge-csrf",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.ts",
