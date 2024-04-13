@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import csrf from '../src/index'
-import { createSecret, createToken, utoa, atou } from '../src/util'
+import csrf from './index'
+import { createSecret, createToken, utoa, atou } from './util'
 
 const csrfProtect = csrf()
 

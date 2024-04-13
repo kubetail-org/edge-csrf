@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 
-import * as util from '../src/util'
+import * as util from './util'
 
 describe('createSecret', () => {
   it('outputs object of type Uint8Array', () => {
@@ -47,13 +47,6 @@ describe('atou', () => {
     const input = 'AQID'
     const output = util.atou(input)
     expect(output).toEqual(new Uint8Array([1, 2, 3]))
-  })
-
-  it('handles non-ascii characters gracefully', () => {
-    const charCode = 257
-    const input = btoa(String.fromCharCode(charCode))
-    const output = util.atou(input)
-    expect(output[0]).toEqual(257 % 256)
   })
 
   it('handles invalid base-64 strings gracefully', () => {

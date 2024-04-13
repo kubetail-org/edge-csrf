@@ -1,5 +1,3 @@
-import type { NextRequest } from 'next/server';
-
 import type { TokenValueFunction } from './util';
 
 export class CookieOptions {

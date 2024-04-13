@@ -21,7 +21,7 @@ export default function CreateMiddleware(opts?: Partial<ConfigOptions>): CSRFMid
   return async (request, response) => {
     let secret: Uint8Array;
     let secretStr: string | undefined;
-    
+
     // check excludePathPrefixes
     for (const pathPrefix of config.excludePathPrefixes) {
       if (request.nextUrl.pathname.startsWith(pathPrefix)) return null;
@@ -33,7 +33,7 @@ export default function CreateMiddleware(opts?: Partial<ConfigOptions>): CSRFMid
     // if secret is missing, create new secret and set cookie
     if (secretStr === undefined) {
       secret = createSecret(config.secretByteLength)
-      const cookie = Object.assign({value: utoa(secret)}, config.cookie);
+      const cookie = Object.assign({ value: utoa(secret) }, config.cookie);
       response.cookies.set(cookie);
     } else {
       secret = atou(secretStr)
@@ -42,6 +42,7 @@ export default function CreateMiddleware(opts?: Partial<ConfigOptions>): CSRFMid
     // verify token
     if (!config.ignoreMethods.includes(request.method)) {
       const tokenStr = await getTokenString(request, config.token.value)
+
       if (!await verifyToken(atou(tokenStr), secret)) {
         return new Error('csrf validation error')
       }

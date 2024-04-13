@@ -5,39 +5,31 @@
   "author": "Andres Morey",
   "license": "MIT",
   "repository": "kubetail-org/edge-csrf",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.ts",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "files": [
     "/dist"
   ],
   "scripts": {
-    "bench": "node --experimental-specifier-resolution=node",
-    "build": "rm -rf dist && tsc && tsc --build tsconfig.cjs.json",
-    "lint": "eslint",
-    "test": "jest --env @edge-runtime/jest-environment"
+    "build": "tsc && vite build",
+    "lint": "eslint \"./src/**/*.ts{,x}\"",
+    "test": "vitest"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/preset-env": "^7.23.2",
-    "@babel/preset-typescript": "^7.23.2",
-    "@edge-runtime/jest-environment": "^2.3.6",
-    "@edge-runtime/primitives": "^4.0.4",
-    "@jest/types": "^29.6.3",
-    "@types/jest": "^29.5.6",
-    "@types/node": "^20.8.9",
-    "@types/react": "^18.2.33",
-    "@types/react-dom": "^18.2.14",
-    "babel-jest": "^29.7.0",
-    "beautify-benchmark": "^0.2.4",
-    "benchmark": "^2.1.4",
-    "eslint": "^8.52.0",
-    "jest": "^29.7.0",
-    "next": "^14.0.1",
+    "@edge-runtime/vm": "^3.2.0",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.5",
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18.2.24",
+    "eslint": "^8.57.0",
+    "next": "^14.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.4",
+    "vite": "^5.2.8",
+    "vitest": "^1.4.0"
   },
   "peerDependencies": {
     "next": "^13.0.0 || ^14.0.0"

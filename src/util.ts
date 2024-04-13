@@ -31,7 +31,12 @@ export function utoa(input: Uint8Array): string {
  * @param {string} input - The data to be converted from base64 to Uint8Array
  */
 export function atou(input: string): Uint8Array {
-  input = atob(input);
+  try {
+    input = atob(input);
+  } catch {
+    return new Uint8Array();
+  }
+
   let output = new Uint8Array(input.length);
   for (let i = 0; i < input.length; i++) output[i] = input.charCodeAt(i);
   return output;
@@ -43,7 +48,7 @@ export function atou(input: string): Uint8Array {
  */
 const formDataKeyRegex = /^(\d+_)*csrf_token$/;
 
-function getTokenValueFromFormData(formData: FormData): FormDataEntryValue | undefined {
+function getTokenValueFromFormData(formData: FormData): File | string | undefined {
   for (const [key, value] of formData.entries()) {
     if (formDataKeyRegex.test(key)) return value;
   }
@@ -76,7 +81,7 @@ export async function getTokenString(request: NextRequest, valueFn?: TokenValueF
   // json-encoded
   if (contentType === 'application/json' ||
       contentType === 'application/ld+json') {
-    const json = await request.json();
+    const json = await request.json() as { csrf_token: unknown; };
     const jsonVal = json['csrf_token'];
     if (typeof jsonVal === 'string') return jsonVal;
     return '';
