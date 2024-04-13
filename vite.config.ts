@@ -8,6 +8,7 @@ export default defineConfig({
     lib: {
       entry: [
         resolve(__dirname, 'src/index.ts'),
+        resolve(__dirname, 'src/sveltekit.ts'),
       ],
       name: 'edge-csrf',
       formats: ["es", "cjs"],

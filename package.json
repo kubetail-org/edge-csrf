@@ -14,6 +14,10 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./sveltekit": {
+      "import": "./dist/sveltekit.js",
+      "require": "./dist/sveltekit.js"
     }
   },
   "files": [
@@ -44,7 +48,8 @@
     "vitest": "^1.4.0"
   },
   "peerDependencies": {
-    "next": "^13.0.0 || ^14.0.0"
+    "next": "^13.0.0 || ^14.0.0",
+    "@sveltejs/kit": "^2.5.5"
   },
   "keywords": [
     "csrf",
