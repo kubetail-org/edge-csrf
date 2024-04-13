@@ -8,7 +8,7 @@ import {
   createToken,
   verifyToken,
   utoa,
-  atou
+  atou,
 } from './util';
 
 type CSRFMiddlewareFunction = {
@@ -19,38 +19,38 @@ export default function CreateMiddleware(opts?: Partial<ConfigOptions>): CSRFMid
   const config = new Config(opts || {});
 
   return async (request, response) => {
-    let secret: Uint8Array;
-    let secretStr: string | undefined;
-    
     // check excludePathPrefixes
     for (const pathPrefix of config.excludePathPrefixes) {
       if (request.nextUrl.pathname.startsWith(pathPrefix)) return null;
     }
 
     // get secret from cookies
-    secretStr = request.cookies.get(config.cookie.name)?.value
+    const secretStr = request.cookies.get(config.cookie.name)?.value;
+
+    let secret: Uint8Array;
 
     // if secret is missing, create new secret and set cookie
     if (secretStr === undefined) {
-      secret = createSecret(config.secretByteLength)
-      const cookie = Object.assign({value: utoa(secret)}, config.cookie);
+      secret = createSecret(config.secretByteLength);
+      const cookie = { ...config.cookie, value: utoa(secret) };
       response.cookies.set(cookie);
     } else {
-      secret = atou(secretStr)
+      secret = atou(secretStr);
     }
 
     // verify token
     if (!config.ignoreMethods.includes(request.method)) {
-      const tokenStr = await getTokenString(request, config.token.value)
+      const tokenStr = await getTokenString(request, config.token.value);
+
       if (!await verifyToken(atou(tokenStr), secret)) {
-        return new Error('csrf validation error')
+        return new Error('csrf validation error');
       }
     }
 
     // create new token for response
-    const newToken = await createToken(secret, config.saltByteLength)
-    response.headers.set(config.token.responseHeader, utoa(newToken))
+    const newToken = await createToken(secret, config.saltByteLength);
+    response.headers.set(config.token.responseHeader, utoa(newToken));
 
-    return null
-  }
+    return null;
+  };
 }
