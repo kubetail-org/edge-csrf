@@ -12,8 +12,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": [
-  ],
+  "ignorePatterns": [],
   "rules": {
     "max-classes-per-file": "off",
     "max-len": "off",
