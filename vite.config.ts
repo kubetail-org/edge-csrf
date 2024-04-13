@@ -18,7 +18,8 @@ export default defineConfig({
           sourceMap: false,
           declaration: true,
           outDir: "dist",
-          include: ['src/**/*']
+          include: ['src/**/*'],
+          exclude: ['src/**/*.test.ts']
         }),
       ],
       external: [],
