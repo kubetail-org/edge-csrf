@@ -1,18 +1,40 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "module": "es6",
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "isolatedModules": true,
+    "module": "ESNext",
+    "target": "ES2020",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "declaration": true,
-    "allowSyntheticDefaultImports": true,
-    "outDir": "./dist/esm"
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    /* bundler mode */
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+
+    /* linting */
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    /* misc */
+    "types": [
+      "vitest/globals"
+    ]
   },
   "include": [
     "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }
