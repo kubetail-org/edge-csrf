@@ -11,6 +11,10 @@ import {
   atou,
 } from './util';
 
+export interface EdgeCsrfLocals {
+  csrfToken?: string;
+}
+
 export default function createHandle(opts?: Partial<ConfigOptions>): Handle {
   const config = new Config(opts || {});
 

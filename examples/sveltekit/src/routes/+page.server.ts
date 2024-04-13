@@ -3,3 +3,9 @@ export async function load({ locals }) {
 		csrfToken: locals.csrfToken,
 	};
 }
+
+export const actions = {
+	default: async () => {
+		return { success: true };
+	},
+};

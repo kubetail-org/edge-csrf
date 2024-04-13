@@ -1,7 +1,31 @@
 <script lang="ts">
 	export let data;
+
+	export let form;
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<div>{data.csrfToken}</div>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+{#if form?.success}
+<h1>success</h1>
+{:else}
+<p>CSRF token value: {data.csrfToken}</p>
+<h2>HTML Form Submission Example:</h2>
+<form action="/form-handler" method="post">
+	<legend>Form without CSRF (should fail):</legend>
+	<input type="text" name="input1" />
+	<button type="submit">Submit</button>
+</form>
+<br />
+<form action="/form-handler" method="post">
+	<legend>Form with incorrect CSRF (should fail):</legend>
+	<input type="hidden" name="csrf_token" value="notvalid" />
+	<input type="text" name="input1" />
+	<button type="submit">Submit</button>
+</form>
+<br />
+<form method="post">
+	<legend>Form with CSRF (should succeed):</legend>
+	<input type="hidden" name="csrf_token" value={data.csrfToken} />
+	<input type="text" name="input1" />
+	<button type="submit">Submit</button>
+</form>
+{/if}

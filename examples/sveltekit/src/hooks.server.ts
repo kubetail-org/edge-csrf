@@ -5,9 +5,9 @@ import csrf from 'edge-csrf/sveltekit';
 
 // initalize protection function
 const csrfProtectHandle = csrf({
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-    },
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+  },
 });
 
 export const handle: Handle = csrfProtectHandle;
