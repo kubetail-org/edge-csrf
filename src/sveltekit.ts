@@ -21,7 +21,7 @@ export default function createHandle(opts?: Partial<ConfigOptions>): Handle {
   return async ({ event, resolve }) => {
     // check excludePathPrefixes
     for (const pathPrefix of config.excludePathPrefixes) {
-      if (event.url.pathname.startsWith(pathPrefix)) return await resolve(event);
+      if (event.url.pathname.startsWith(pathPrefix)) return resolve(event);
     }
 
     // get secret from cookies
@@ -39,7 +39,7 @@ export default function createHandle(opts?: Partial<ConfigOptions>): Handle {
 
     // verify token
     if (!config.ignoreMethods.includes(event.request.method)) {
-      // @ts-ignore
+      // @ts-expect-error fixme
       const tokenStr = await getTokenString(event.request, config.token.value);
 
       if (!await verifyToken(atou(tokenStr), secret)) {
@@ -49,9 +49,9 @@ export default function createHandle(opts?: Partial<ConfigOptions>): Handle {
 
     // create new token for response
     const newToken = await createToken(secret, config.saltByteLength);
-    (event.locals as any).csrfToken = utoa(newToken);
+    Object.assign(event.locals, { csrfToken: utoa(newToken) });
 
     // resolve event
-    return await resolve(event);
+    return resolve(event);
   };
 }
