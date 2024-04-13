@@ -3,11 +3,9 @@ import csrf from 'edge-csrf/sveltekit';
 
 // https://kit.svelte.dev/docs/hooks
 
-// initalize protection function
-const csrfProtectHandle = csrf({
+// initalize csrf protection handle
+export const handle: Handle = csrf({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
   },
 });
-
-export const handle: Handle = csrfProtectHandle;
