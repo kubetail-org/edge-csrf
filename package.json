@@ -1,13 +1,21 @@
 {
   "name": "edge-csrf",
   "description": "CSRF protection for Next.js middleware",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "author": "Andres Morey",
   "license": "MIT",
   "repository": "kubetail-org/edge-csrf",
   "type": "module",
+  "sideEffects": false,
   "main": "dist/index.cjs",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "files": [
     "/dist"
   ],
