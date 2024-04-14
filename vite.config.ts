@@ -27,7 +27,7 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'miniflare',
+    environment: 'edge-runtime',
     globals: true,
   },
 });
