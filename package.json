@@ -50,11 +50,12 @@
     "react-dom": "^18.2.0",
     "typescript": "^5.4.4",
     "vite": "^5.2.8",
-    "vitest": "^1.4.0"
+    "vitest": "^1.4.0",
+    "vitest-environment-miniflare": "^2.14.2"
   },
   "peerDependencies": {
-    "next": "^13.0.0 || ^14.0.0",
-    "@sveltejs/kit": "^2.5.5"
+    "@sveltejs/kit": "^2.5.5",
+    "next": "^13.0.0 || ^14.0.0"
   },
   "keywords": [
     "csrf",

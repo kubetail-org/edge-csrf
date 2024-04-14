@@ -1,8 +1,8 @@
 import type { Handle } from '@sveltejs/kit';
-import csrf from 'edge-csrf/sveltekit';
+import { createHandle } from 'edge-csrf/sveltekit';
 
 // initalize csrf protection handle
-export const handle: Handle = csrf({
+export const handle: Handle = createHandle({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
   },
