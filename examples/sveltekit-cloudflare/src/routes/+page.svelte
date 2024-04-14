@@ -9,13 +9,13 @@
 {:else}
 <p>CSRF token value: {data.csrfToken}</p>
 <h2>HTML Form Submission Example:</h2>
-<form action="/form-handler" method="post">
+<form method="post">
 	<legend>Form without CSRF (should fail):</legend>
 	<input type="text" name="input1" />
 	<button type="submit">Submit</button>
 </form>
 <br />
-<form action="/form-handler" method="post">
+<form method="post">
 	<legend>Form with incorrect CSRF (should fail):</legend>
 	<input type="hidden" name="csrf_token" value="notvalid" />
 	<input type="text" name="input1" />

@@ -1,5 +1,5 @@
 {
-	"name": "sveltekit",
+	"name": "sveltekit-vercel",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -25,10 +25,11 @@
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^7.5.0",
+		"vercel": "^34.0.0",
 		"vite": "^5.0.3"
 	},
 	"type": "module",
 	"dependencies": {
-		"edge-csrf": "^1.0.11"
+		"edge-csrf": "1.0.12-sveltekit-1"
 	}
 }
