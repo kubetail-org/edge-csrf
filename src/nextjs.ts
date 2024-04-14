@@ -1,4 +1,5 @@
-import type { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import { Config } from './config';
 import type { ConfigOptions } from './config';
@@ -11,11 +12,16 @@ import {
   atou,
 } from './util';
 
-type CSRFMiddlewareFunction = {
+export type HandlerFunction = {
   (request: NextRequest, response: NextResponse): Promise<Error | null>;
 };
 
-export function createMiddleware(opts?: Partial<ConfigOptions>): CSRFMiddlewareFunction {
+/**
+ * Create handler function for use in Next.js middleware
+ * @param {Partial<ConfigOptions>} opts - Configuration options
+ * @returns Handler function
+ */
+export function createHandler(opts?: Partial<ConfigOptions>): HandlerFunction {
   const config = new Config(opts || {});
 
   return async (request, response) => {
@@ -52,5 +58,28 @@ export function createMiddleware(opts?: Partial<ConfigOptions>): CSRFMiddlewareF
     response.headers.set(config.token.responseHeader, utoa(newToken));
 
     return null;
+  };
+}
+
+/**
+ * Create Next.js middleware function
+ * @param {Partial<ConfigOptions>} opts - Configuration options
+ * @returns Next Middleware function
+ */
+export function createMiddleware(opts?: Partial<ConfigOptions>) {
+  const csrfHandler = createHandler(opts);
+
+  return async (request: NextRequest) => {
+    const response = NextResponse.next();
+
+    // csrf protection
+    const csrfError = await csrfHandler(request, response);
+
+    // check result
+    if (csrfError) {
+      return new NextResponse('invalid csrf token', { status: 403 });
+    }
+
+    return response;
   };
 }
