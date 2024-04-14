@@ -15,9 +15,13 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./nextjs": {
+      "import": "./dist/nextjs.js",
+      "require": "./dist/nextjs.cjs"
+    },
     "./sveltekit": {
       "import": "./dist/sveltekit.js",
-      "require": "./dist/sveltekit.js"
+      "require": "./dist/sveltekit.cjs"
     }
   },
   "files": [

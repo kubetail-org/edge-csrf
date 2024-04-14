@@ -15,7 +15,7 @@ export interface EdgeCsrfLocals {
   csrfToken?: string;
 }
 
-export default function createHandle(opts?: Partial<ConfigOptions>): Handle {
+export function createHandle(opts?: Partial<ConfigOptions>): Handle {
   const config = new Config(opts || {});
 
   return async ({ event, resolve }) => {
@@ -39,7 +39,6 @@ export default function createHandle(opts?: Partial<ConfigOptions>): Handle {
 
     // verify token
     if (!config.ignoreMethods.includes(event.request.method)) {
-      // @ts-expect-error fixme
       const tokenStr = await getTokenString(event.request, config.token.value);
 
       if (!await verifyToken(atou(tokenStr), secret)) {
