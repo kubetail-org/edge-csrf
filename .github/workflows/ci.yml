@@ -32,6 +32,7 @@ jobs:
       - run: pnpm install
       - run: pnpm test run -- --environment node
       - run: pnpm test run -- --environment edge-runtime
+      - run: pnpm build # only necessary for miniflare
       - run: pnpm test run -- --environment miniflare
 
   build:
