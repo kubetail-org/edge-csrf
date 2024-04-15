@@ -35,6 +35,7 @@ Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be reject
 
 ```typescript
 // src/routes/+page.server.ts
+
 export async function load({ locals }) {
   return {
     csrfToken: locals.csrfToken,
@@ -50,6 +51,7 @@ export const actions = {
 
 ```svelte
 <!-- src/routes/+page.svelte -->
+
 <script lang="ts">
   export let data;
 
