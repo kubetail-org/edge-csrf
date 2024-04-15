@@ -44,7 +44,7 @@ export async function load({ locals }) {
 export const actions = {
   default: async () => {
     return { success: true };
-  s},
+  },
 };
 ```
 
