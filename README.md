@@ -34,24 +34,6 @@ For details about each integration see:
 * [Next.js README](src/nextjs)
 * [SvelteKit README](src/sveltekit)
 
-Here are some [examples](examples) in this repository:
-
-| Framework  | Type         | Implementation                                                                          |
-| ---------- | ------------ | --------------------------------------------------------------------------------------- |
-| Next.js 13 | app router   | [HTML form](examples/next13-approuter-html-submission)                                  |
-| Next.js 13 | app router   | [JavaScript (dynamic)](examples/next13-approuter-js-submission-dynamic)                 |
-| Next.js 13 | app router   | [JavaScript (static)](examples/next13-approuter-js-submission-static)                   |
-| Next.js 13 | pages router | [HTML form](examples/next13-pagesrouter-html-submmission)                               |
-| Next.js 14 | app router   | [HTML form](examples/next14-approuter-html-submission)                                  |
-| Next.js 14 | app router   | [JavaScript (dynamic)](examples/next14-approuter-js-submission-dynamic)                 |
-| Next.js 14 | app router   | [JavaScript (static)](examples/next14-approuter-js-submission-static)                   |
-| Next.js 14 | app router   | [Sentry](examples/next14-approuter-sentry)                                              |
-| Next.js 14 | app router   | [Server action (form)](examples/next14-approuter-server-action-form-submission)         |
-| Next.js 14 | app router   | [Server action (non-form)](examples/next14-approuter-server-action-non-form-submission) |
-| Next.js 14 | pages router | [HTML form](examples/next14-pagesrouter-html-submission)                                |
-| SvelteKit  | vercel       | [HTML form](examples/sveltekit-vercel)                                                  |
-| SvelteKit  | cloudflare   | [HTML form](examples/sveltekit-cloudflare)                                              |
-
 ## API
 
 ```
