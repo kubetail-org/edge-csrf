@@ -1,4 +1,4 @@
-# Edge-CSRF > SvelteKit
+# Edge-CSRF SvelteKit Integration
 
 This is the documentation for the Edge-CSRF SvelteKit integration.
 
