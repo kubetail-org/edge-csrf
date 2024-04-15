@@ -9,7 +9,7 @@ This library implements the [signed double submit cookie pattern](https://cheats
 - Runs on both node and edge runtimes
 - Includes Next.js integration ([see here](src/nextjs))
 - Includes SvelteKit integration ([see here](src/sveltekit))
-- Includes low-level API for custom integrations (see below)
+- Includes low-level API for custom integrations ([see below](#api))
 - Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
 - Supports Server Actions via form and non-form submission
@@ -34,163 +34,7 @@ For details about each integration see:
 * [Next.js](src/nextjs)
 * [SvelteKit](src/sveltekit)
 
-## Next.js Quickstart (App Router)
-
-## Next.js Quickstart (Pages Router)
-
-## SvelteKit Quickstart
-
-To integrate Edge-CSRF with [Next.js](https://nextjs.org/), create a middleware file (`middleware.ts`) for your project and add the Edge-CSRF middleware:
-
-```typescript
-// middleware.ts
-
-import { createMiddleware } from 'edge-csrf/nextjs';
-
-// initalize csrf protection middleware
-const csrfMiddleware = createMiddleware({
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-  },
-});
-
-export const middleware = csrfMiddleware;
-```
-
-Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
-
-### App Router
-
-```typescript
-// app/page.tsx
-
-import { headers } from 'next/headers';
-
-export default function Page() {
-  const csrfToken = headers().get('X-CSRF-Token') || 'missing';
-
-  return (
-    <form action="/api/form-handler" method="post">
-      <input type="hidden" value={csrfToken}>
-      <input type="text" name="my-input">
-      <input type="submit">
-    </form>
-  );
-}
-```
-
-```typescript
-// app/form-handler/route.ts
-
-import { NextResponse } from 'next/server';
-
-export async function POST() {
-  return NextResponse.json({ status: 'success'});
-}
-```
-
-### Pages Router
-
-```typescript
-// pages/form.ts
-
-import type { NextPage, GetServerSideProps } from 'next';
-import React from 'react';
-
-type Props = {
-  csrfToken: string;
-};
-
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const csrfToken = res.getHeader('x-csrf-token') || 'missing';
-  return { props: { csrfToken } };
-}
-
-const FormPage: NextPage<Props> = ({ csrfToken }) => {
-  return (
-    <form action="/api/form-handler" method="post">
-      <input type="hidden" value={csrfToken}>
-      <input type="text" name="my-input">
-      <input type="submit">
-    </form>
-  );
-}
-
-export default FormPage;
-```
-
-```typescript
-// pages/api/form-handler.ts
-
-import type { NextApiRequest, NextApiResponse } from 'next';
-
-type Data = {
-  status: string
-};
-
-export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  // this code won't execute unless CSRF token passes validation 
-  res.status(200).json({ status: 'success' });
-}
-```
-
-## Sveltekit
-
-To integrate Edge-CSRF with [SvelteKit](https://kit.svelte.dev/), create a server-side hooks file (`hooks.server.ts`) for your project and add the Edge-CSRF handle:
-
-```typescript
-// src/hooks.server.ts
-
-import { createHandle } from 'edge-csrf/sveltekit';
-
-// initalize csrf protection handle
-const csrfHandle = createHandle({
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-  },
-});
-
-export const handle = csrfHandle;
-```
-
-Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the event's `locals` data object server-side. For example:
-
-```typescript
-// src/routes/+page.server.ts
-export async function load({ locals }) {
-	return {
-		csrfToken: locals.csrfToken,
-	};
-}
-
-export const actions = {
-	default: async () => {
-		return { success: true };
-	},
-};
-```
-
-```svelte
-<!-- src/routes/+page.svelte -->
-<script lang="ts">
-	export let data;
-
-  export let form;
-</script>
-{#if form?.success}
-<span>success</span>
-{:else}
-<form method="post">
-  <input type="hidden" value={data.csrfToken}>
-  <input type="text" name="my-input">
-  <input type="submit">
-</form>
-{/if}
-```
-
-## Examples
-
-See more examples in the [examples](examples) directory in this repository:
+Here are some [examples](examples) in this repository:
 
 | Framework                 | Implementation                                                                          |
 | ------------------------- | --------------------------------------------------------------------------------------- |
@@ -208,35 +52,66 @@ See more examples in the [examples](examples) directory in this repository:
 | SvelteKit (vercel)        | [HTML form](examples/sveltekit-vercel)                                                  |
 | SvelteKit (cloudflare)    | [HTML form](examples/sveltekit-cloudflare)                                              |
 
-## Configuration
-
-```javascript
-// default config
-
-{
-  cookie: {
-    name: '_csrfSecret',
-    path: '/',
-    maxAge: undefined,
-    domain: '',
-    secure: true,
-    httpOnly: true,
-    sameSite: 'strict'
-  },
-  excludePathPrefixes: ['/_next/'],
-  ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-  saltByteLength: 8,
-  secretByteLength: 18,
-  token: {
-    responseHeader: 'X-CSRF-Token',
-    value: undefined
-  }
-}
-```
-
 ## API
 
+```
+createSecret(length) - Create new secret (cryptographically secure)
 
+  * @param {int} length - Byte length of secret
+  * @returns {Uint8Array} - The secret
+
+  Example:
+  ```
+
+  ```
+
+createToken(secret, saltByteLength) - Create new CSRF token (cryptographically insecure salt hashed with secret)
+
+  * @param {Uint8Array} secret - The secret
+  * @param {int} saltByteLength - Salt length in number of bytes
+  * @returns {Promise<Uint8Array>} - A promise returning the token in Uint8Array format
+
+  Example:
+  ```
+  ```
+
+getTokenString(request) - Get CSRF token from request
+
+  * @param {Request} request - The request object
+  * @returns {Promise<string>} - A promise returning the token in string format
+
+  Example:
+  ```
+  ```
+
+verifyToken(token, secret) - Verify CSRF token
+
+  * @param {Uint8Array} token - The CSRF token
+  * @param {Uint8Array} secret - The CSRF secret
+  * @returns {Promise<boolean>} - A promise returning result of verification
+
+  Example:
+  ```
+  ```
+
+utoa(input) - Encode Uint8Array as base64 string
+
+  * @param {Uint8Array} input - The data to be converted from Uint8Array to base64
+  * @returns {string} The base64 encoded string
+
+  Example:
+  ```
+  ```
+
+atou(input) - Decode base64 string into Uint8Array
+
+  * @param {string} input - The data to be converted from base64 to Uint8Array
+  * @returns {Uint8Array} - The Uint8Array representing the input string
+
+  Example:
+  ```
+  ```
+```
 
 ## Development
 

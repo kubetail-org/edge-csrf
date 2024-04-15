@@ -1,10 +1,10 @@
 # Edge-CSRF > Next.js
 
-This is the documentation for the [Edge-CSRF](../) Next.js integration.
+This is the documentation for the Edge-CSRF Next.js integration.
 
 ## Quickstart
 
-To use Edge-CSRF, just add it as a dependency to your app:
+First, add Edge-CSRF as a dependency to your app:
 
 ```console
 npm install edge-csrf
@@ -14,7 +14,7 @@ pnpm add edge-csrf
 yarn add edge-csrf
 ```
 
-To integrate Edge-CSRF with [Next.js](https://nextjs.org/), create a middleware file (`middleware.ts`) for your project and add the Edge-CSRF middleware:
+Next, create a middleware file (`middleware.ts`) for your project and add the Edge-CSRF middleware:
 
 ```typescript
 // middleware.ts
@@ -59,7 +59,7 @@ export default function Page() {
 import { NextResponse } from 'next/server';
 
 export async function POST() {
-  return NextResponse.json({ status: 'success'});
+  return NextResponse.json({ status: 'success' });
 }
 ```
 

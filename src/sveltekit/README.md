@@ -1,10 +1,10 @@
 # Edge-CSRF > SvelteKit
 
-This is the documentation for the [Edge-CSRF](../) SvelteKit integration.
+This is the documentation for the Edge-CSRF SvelteKit integration.
 
 ## Quickstart
 
-To use Edge-CSRF, just add it as a dependency to your app:
+First, add Edge-CSRF as a dependency to your app:
 
 ```console
 npm install edge-csrf
@@ -14,7 +14,7 @@ pnpm add edge-csrf
 yarn add edge-csrf
 ```
 
-To integrate Edge-CSRF with [SvelteKit](https://kit.svelte.dev/), create a server-side hooks file (`hooks.server.ts`) for your project and add the Edge-CSRF handle:
+Next, create a server-side hooks file (`hooks.server.ts`) for your project and add the Edge-CSRF handle:
 
 ```typescript
 // src/hooks.server.ts
@@ -68,7 +68,7 @@ export const actions = {
 
 Finally, to make typescript aware of the new `locals` attributes you can add Edge-CSRF types to your app's types:
 
-```
+```typescript
 // src/app.d.ts
 
 import type { EdgeCsrfLocals } from 'edge-csrf/sveltekit';
@@ -104,7 +104,6 @@ export {};
   saltByteLength: 8,
   secretByteLength: 18,
   token: {
-    responseHeader: 'X-CSRF-Token',
     value: undefined
   }
 }
