@@ -7,15 +7,13 @@ This library implements the [signed double submit cookie pattern](https://cheats
 ## Features
 
 - Runs on both node and edge runtimes
-- Includes [Next.js middleware integration](src/nextjs) (Next.js 13, Next.js 14)
-- Includes [SvelteKit hooks integration](src/sveltekit)
+- Includes Next.js integration ([see here](src/nextjs))
+- Includes SvelteKit integration ([see here](src/sveltekit))
+- Includes low-level API for custom integrations (see below)
 - Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
 - Supports Server Actions via form and non-form submission
 - Customizable cookie options
-- TypeScript definitions included
-
-**Note: There's an issue with Next.js middleware in v13.3.X and v13.4.X that prevents edge-csrf from working properly with the pages-router in a dev environment (https://github.com/vercel/next.js/issues/48083, https://github.com/vercel/next.js/issues/48546)**
 
 ## Install
 
