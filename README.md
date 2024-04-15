@@ -7,8 +7,8 @@ This library implements the [signed double submit cookie pattern](https://cheats
 ## Features
 
 - Runs on both node and edge runtimes
-- Includes Next.js middleware integration (Next.js 13, Next.js 14)
-- Includes SvelteKit hooks integration
+- Includes [Next.js middleware integration](src/nextjs) (Next.js 13, Next.js 14)
+- Includes [SvelteKit hooks integration](src/sveltekit)
 - Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
 - Supports Server Actions via form and non-form submission
@@ -29,7 +29,18 @@ pnpm add edge-csrf
 yarn add edge-csrf
 ```
 
-## Next.js
+## Integrations
+
+For details about each integration see:
+
+* [Next.js](src/nextjs)
+* [SvelteKit](src/sveltekit)
+
+## Next.js Quickstart (App Router)
+
+## Next.js Quickstart (Pages Router)
+
+## SvelteKit Quickstart
 
 To integrate Edge-CSRF with [Next.js](https://nextjs.org/), create a middleware file (`middleware.ts`) for your project and add the Edge-CSRF middleware:
 
