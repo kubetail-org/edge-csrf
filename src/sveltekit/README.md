@@ -36,22 +36,22 @@ Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be reject
 ```typescript
 // src/routes/+page.server.ts
 export async function load({ locals }) {
-	return {
-		csrfToken: locals.csrfToken,
-	};
+  return {
+    csrfToken: locals.csrfToken,
+  };
 }
 
 export const actions = {
-	default: async () => {
-		return { success: true };
-	},
+  default: async () => {
+    return { success: true };
+  s},
 };
 ```
 
 ```svelte
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
-	export let data;
+  export let data;
 
   export let form;
 </script>
@@ -74,11 +74,11 @@ Finally, to make typescript aware of the new `locals` attributes you can add Edg
 import type { EdgeCsrfLocals } from 'edge-csrf/sveltekit';
 
 declare global {
-	namespace App {
+  namespace App {
     // ...
-		interface Locals extends EdgeCsrfLocals {}
+    interface Locals extends EdgeCsrfLocals {}
     // ...
-	}
+  }
 }
 
 export {};
