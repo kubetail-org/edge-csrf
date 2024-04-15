@@ -1,15 +1,15 @@
 # Edge-CSRF
 
-Edge-CSRF is a CSRF protection library that runs on the [edge runtime](https://edge-runtime.vercel.app/) (as well as the node runtime).
+Edge-CSRF is a CSRF protection library that runs on the [edge runtime](https://edge-runtime.vercel.app/).
 
-This library implements the [signed double submit cookie pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended) using the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf) except it only uses edge runtime dependencies so it can be used in both node environments and in edge functions (e.g. [Vercel Edge Functions](https://vercel.com/docs/functions/runtimes/edge-runtime), [Cloudflare Page Functions](https://developers.cloudflare.com/pages/functions/)). It comes with easy-to-use integrations for Next.js and SvelteKit plus a lower-level API for more custom implementations.
+This library implements the [signed double submit cookie pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended) using the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf) except it only uses edge runtime dependencies so it can be used in both node environments and in edge functions (e.g. [Vercel Edge Functions](https://vercel.com/docs/functions/runtimes/edge-runtime), [Cloudflare Page Functions](https://developers.cloudflare.com/pages/functions/)). It comes with easy-to-use integrations for Next.js and SvelteKit as well as a lower-level API for more custom implementations.
 
 ## Features
 
 - Runs on both node and edge runtimes
-- Includes Next.js integration ([see here](src/nextjs))
-- Includes SvelteKit integration ([see here](src/sveltekit))
-- Includes low-level API for custom integrations ([see below](#api))
+- Includes a Next.js integration ([see here](src/nextjs))
+- Includes a SvelteKit integration ([see here](src/sveltekit))
+- Includes a low-level API for custom integrations ([see below](#api))
 - Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
 - Supports Server Actions via form and non-form submission
@@ -31,8 +31,8 @@ yarn add edge-csrf
 
 For details about each integration see:
 
-* [Next.js](src/nextjs)
-* [SvelteKit](src/sveltekit)
+* [Next.js README](src/nextjs)
+* [SvelteKit README](src/sveltekit)
 
 Here are some [examples](examples) in this repository:
 
