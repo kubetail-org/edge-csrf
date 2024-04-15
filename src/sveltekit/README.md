@@ -84,6 +84,15 @@ declare global {
 export {};
 ```
 
+## Examples
+
+Here are some [examples](examples) in this repository:
+
+| Adapter    | Implementation                             |
+| ---------- | ------------------------------------------ |
+| vercel     | [HTML form](examples/sveltekit-vercel)     |
+| cloudflare | [HTML form](examples/sveltekit-cloudflare) |
+
 ## Configuration
 
 ```javascript
