@@ -60,29 +60,16 @@ createSecret(length) - Create new secret (cryptographically secure)
   * @param {int} length - Byte length of secret
   * @returns {Uint8Array} - The secret
 
-  Example:
-  \`\`\`
-
-  \`\`\`
-
 createToken(secret, saltByteLength) - Create new CSRF token (cryptographically insecure salt hashed with secret)
 
   * @param {Uint8Array} secret - The secret
   * @param {int} saltByteLength - Salt length in number of bytes
   * @returns {Promise<Uint8Array>} - A promise returning the token in Uint8Array format
 
-  Example:
-  ```
-  ```
-
-getTokenString(request) - Get CSRF token from request
+getTokenString(request) - Get the CSRF token from the request
 
   * @param {Request} request - The request object
   * @returns {Promise<string>} - A promise returning the token in string format
-
-  Example:
-  ```
-  ```
 
 verifyToken(token, secret) - Verify CSRF token
 
@@ -90,27 +77,15 @@ verifyToken(token, secret) - Verify CSRF token
   * @param {Uint8Array} secret - The CSRF secret
   * @returns {Promise<boolean>} - A promise returning result of verification
 
-  Example:
-  ```
-  ```
-
 utoa(input) - Encode Uint8Array as base64 string
 
   * @param {Uint8Array} input - The data to be converted from Uint8Array to base64
   * @returns {string} The base64 encoded string
 
-  Example:
-  ```
-  ```
-
 atou(input) - Decode base64 string into Uint8Array
 
   * @param {string} input - The data to be converted from base64 to Uint8Array
   * @returns {Uint8Array} - The Uint8Array representing the input string
-
-  Example:
-  ```
-  ```
 ```
 
 ## Development
