@@ -61,9 +61,9 @@ createSecret(length) - Create new secret (cryptographically secure)
   * @returns {Uint8Array} - The secret
 
   Example:
-  ```
+  \`\`\`
 
-  ```
+  \`\`\`
 
 createToken(secret, saltByteLength) - Create new CSRF token (cryptographically insecure salt hashed with secret)
 
