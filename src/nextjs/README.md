@@ -126,6 +126,39 @@ Here are some [examples](examples) in this repository:
 | Next.js 14 | app router   | [Server action (non-form)](examples/next14-approuter-server-action-non-form-submission) |
 | Next.js 14 | pages router | [HTML form](examples/next14-pagesrouter-html-submission)                                |
 
+## Lower-level implementations
+
+If you want lower-level control over the response or which routes CSRF protection will be applied to you can use the `createCsrfProtect()` method to create a function that you can use inside your own custom middleware:
+
+```typescript
+// middleware.ts
+
+import { CsrfError, createCsrfProtect } from 'edge-csrf/nextjs';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+// initalize csrf protection method
+const csrfProtect = createCsrfProtect({
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+  },
+});
+
+// Next.js middleware function
+export const middleware = async (request: NextRequest) => {
+  const response = NextResponse.next();
+
+  try {
+    await csrfProtect(request, response);
+  } catch (err) {
+    if (err instanceof CsrfError) return new NextResponse('invalid csrf token', { status: 403 });
+    throw err;
+  }
+    
+  return response;
+};
+```
+
 ## Configuration
 
 ```javascript

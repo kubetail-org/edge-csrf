@@ -95,6 +95,36 @@ Here are some [examples](examples) in this repository:
 | vercel     | [HTML form](examples/sveltekit-vercel)     |
 | cloudflare | [HTML form](examples/sveltekit-cloudflare) |
 
+## Lower-level implementations
+
+If you want lower-level control over the response or which routes CSRF protection will be applied to you can use the `createCsrfProtect()` method to create a function that you can use inside your own custom handle:
+
+```typescript
+// src/hooks.server.ts
+
+import type { Handle } from '@sveltejs/kit';
+import { CsrfError, createCsrfProtect } from 'edge-csrf/sveltekit';
+
+// initalize csrf protection method
+const csrfProtect = createCsrfProtect({
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+  },
+});
+
+// SvelteKit handle
+export const handle: Handle = async ({ event, resolve }) => {
+  try {
+    await csrfProtect(event);
+  } catch (err) {
+    if (err instanceof CsrfError) return new Response('invalid csrf token', { status: 403 });
+    throw err;
+  }
+    
+  return resolve(event);
+};
+```
+
 ## Configuration
 
 ```javascript
