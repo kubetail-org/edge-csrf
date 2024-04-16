@@ -153,6 +153,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 ## API
 
+The following are named exports in the the `edge-csrf/sveltekit` module:
+
 ### Types
 
 ```

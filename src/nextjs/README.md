@@ -187,6 +187,8 @@ export const middleware = async (request: NextRequest) => {
 
 ## API
 
+The following are named exports in the the `edge-csrf/nextjs` module:
+
 ### Types
 
 ```
@@ -216,5 +218,5 @@ createCsrfProtect([, options]) - Create a lower-level function that can be used 
                                  to implement CSRF protection for requests
 
   * @param {object} options - The configuration options
-  * @returns {CsrfProtectFunction} - The CSRF protection function
+  * @returns {NextCsrfProtectFunction} - The CSRF protection function
 ```
