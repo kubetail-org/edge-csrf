@@ -190,15 +190,18 @@ export const middleware = async (request: NextRequest) => {
 ### Types
 
 ```
-CsrfProtectFunction
+NextCsrfProtectFunction - A function that implements CSRF protection for Next.js requests
+
+  * @param {NextRequest} request - The Next.js request instance
+  * @param {NextResponse} response - The Next.js response instance
+  * @returns {Promise<void>} - The function completed successfully
+  * @throws {CsrfError} - The function encountered a CSRF error
 ```
 
 ### Classes
 
 ```
-Config
-
-CsrfError
+CsrfError - A class that inherits from Error and represents CSRF errors
 ```
 
 ### Methods
@@ -206,13 +209,12 @@ CsrfError
 ```
 createMiddleware([, options]) - Create a new instance of Next.js middleware
 
-  * @param {Partial<Config>} options - The configuration options
+  * @param {object} options - The configuration options
   * @returns {Middleware} - The middleware
 
 createCsrfProtect([, options]) - Create a lower-level function that can be used inside Next.js middleware
                                  to implement CSRF protection for requests
 
-  * @param {Partial<Config>} options - The configuration options
+  * @param {object} options - The configuration options
   * @returns {CsrfProtectFunction} - The CSRF protection function
 ```
-

@@ -152,15 +152,33 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 ## API
 
+### Types
+
+```
+SveltekitCsrfProtectFunction - A function that implements CSRF protection for SvelteKit request events
+
+  * @param {RequestEvent} event - The SvelteKit request event instance
+  * @returns {Promise<void>} - The function completed successfully
+  * @throws {CsrfError} - The function encountered a CSRF error
+```
+
+### Classes
+
+```
+CsrfError - A class that inherits from Error and represents CSRF errors
+```
+
+### Methods
+
 ```
 createHandle([, options]) - Create a new SvelteKit handle to be used in hooks.server.ts
 
-  * @param {Partial<Config>} [options] - The configuration options
+  * @param {object} [options] - The configuration options
   * @returns {Handle} - The handle
 
 createCsrfProtect([, options]) - Create a lower-level function that can be used inside a SvelteKit handle
                                  to implement CSRF protection for requests
 
-  * @param {Partial<Config>} [options] - The configuration options
-  * @returns {CsrfProtectFunction} - The CSRF protection function
+  * @param {object} [options] - The configuration options
+  * @returns {SveltekitCsrfProtectFunction} - The CSRF protection function
 ```
