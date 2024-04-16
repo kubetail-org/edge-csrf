@@ -1,28 +1,96 @@
 import { CsrfError } from '@/lib/errors';
-import { Config } from '@/lib/config';
-import type { CookieOptions, ConfigOptions } from '@/lib/config';
 import { createSecret, createToken, getTokenString, verifyToken, atou, utoa } from '@/lib/util';
+import type { TokenValueFunction } from '@/lib/util';
+
+export class CookieOptions {
+  domain: string = '';
+
+  httpOnly: boolean = true;
+
+  maxAge: number | undefined = undefined;
+
+  name: string = '_csrfSecret';
+
+  path: string = '/';
+
+  sameSite: boolean | 'none' | 'strict' | 'lax' = 'strict';
+
+  secure: boolean = true;
+
+  constructor(opts?: Partial<CookieOptions>) {
+    Object.assign(this, opts);
+  }
+}
+
+export class TokenOptions {
+  value: TokenValueFunction | undefined = undefined;
+
+  constructor(opts?: Partial<TokenOptions>) {
+    Object.assign(this, opts);
+  }
+}
 
 /**
- * Represents a cookie instance
+ * Represents CsrfProtect configuration object
  */
-export type Cookie  = CookieOptions & { value: string; };
+export class Config {
+  cookie: CookieOptions = new CookieOptions();
+
+  excludePathPrefixes: string[] = [];
+
+  ignoreMethods: string[] = ['GET', 'HEAD', 'OPTIONS'];
+
+  saltByteLength: number = 8;
+
+  secretByteLength: number = 18;
+
+  token: TokenOptions = new TokenOptions();
+
+  constructor(opts?: Partial<ConfigOptions>) {
+    const newOpts = opts || {};
+    if (newOpts.cookie) newOpts.cookie = new CookieOptions(newOpts.cookie);
+    if (newOpts.token) newOpts.token = new TokenOptions(newOpts.token);
+    Object.assign(this, opts);
+
+    // basic validation
+    if (this.saltByteLength < 1 || this.saltByteLength > 255) {
+      throw Error('saltBytLength must be greater than 0 and less than 256');
+    }
+
+    if (this.secretByteLength < 1 || this.secretByteLength > 255) {
+      throw Error('secretBytLength must be greater than 0 and less than 256');
+    }
+  }
+}
+
+/**
+ * Represents CsrfProtect configuration options object
+ */
+export interface ConfigOptions extends Omit<Config, 'cookie' | 'token'> {
+  cookie: Partial<CookieOptions>;
+  token: Partial<TokenOptions>;
+}
+
+/**
+ * Represents a cookie
+ */
+export type Cookie = CookieOptions & { value: string; };
 
 /**
  * Represents arguments for CsrfProtectionFunction
  */
-export type CsrfProtectFunctionArgs = {
+export type CsrfProtectArgs = {
   request: Request;
   url: { pathname: string; },
   getCookie: (name: string) => string | undefined;
-  setCookie: (cookie: CookieOptions & { value: string; } ) => void;
+  setCookie: (cookie: Cookie) => void;
 };
 
 /**
  * Represents signature of CSRF protect function
  */
-export type CsrfProtectFunction = {
-  (args: CsrfProtectFunctionArgs): Promise<string | undefined>;
+export type CsrfProtect = {
+  (args: CsrfProtectArgs): Promise<string | undefined>;
 };
 
 /**
@@ -31,7 +99,7 @@ export type CsrfProtectFunction = {
  * @returns {CsrfProtectFunction} - The CSRF protect function
  * @throws {CsrfError} - An error if CSRF validation failed
  */
-export function createCsrfProtect(opts?: Partial<ConfigOptions>): CsrfProtectFunction {
+export function createCsrfProtect(opts?: Partial<ConfigOptions>): CsrfProtect {
   const config = new Config(opts || {});
 
   return async (args) => {
@@ -50,8 +118,7 @@ export function createCsrfProtect(opts?: Partial<ConfigOptions>): CsrfProtectFun
     // if secret is missing, create new secret and set cookie
     if (secretStr === undefined) {
       secret = createSecret(config.secretByteLength);
-      const cookie = { ...config.cookie, value: utoa(secret) };
-      setCookie(cookie);
+      setCookie({ ...config.cookie, value: utoa(secret) });
     } else {
       secret = atou(secretStr);
     }

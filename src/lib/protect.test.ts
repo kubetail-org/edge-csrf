@@ -1,47 +1,47 @@
-import { parse, serialize } from 'cookie';
-import { NextRequest, NextResponse } from 'next/server';
+import { vi } from 'vitest';
 
 import { createCsrfProtect } from '@/lib/protect';
-import type { Cookie } from '@/lib/protect';
+import type { CsrfProtectFunctionArgs } from '@/lib/protect';
 import { createSecret, createToken, utoa, atou } from '@/lib/util';
 
 const csrfProtectDefault = createCsrfProtect();
 
-class TestRequest extends Request {
-  getCookie(name: string): string | undefined {
-    const headerVal = this.headers.get('cookie');
-    if (!headerVal) return;
-    return parse(headerVal)[name];
-  }
+class TestArgs implements CsrfProtectFunctionArgs {
+  request: CsrfProtectFunctionArgs['request'];
+  url: CsrfProtectFunctionArgs['url'];
+  getCookie: CsrfProtectFunctionArgs['getCookie'] = vi.fn();
+  setCookie: CsrfProtectFunctionArgs['setCookie'] = vi.fn();
 
-  setCookie(cookie: Cookie): void {
-    const cookieStr = serialize(cookie.name, cookie.value, cookie);
-
+  constructor(url: string, requestArgs?: RequestInit) {
+    this.request = new Request(url, requestArgs);
+    this.url = new URL(url);
   }
 }
-
-
 
 describe('csrfProtect tests', () => {
   it('should work in req.body', async () => {
     const secret = createSecret(8);
     const token = await createToken(secret, 8);
 
-    const request = new Request('http://example.com', {
+    const args = new TestArgs('http://example.com', {
       method: 'POST',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       body: `csrf_token=${encodeURIComponent(utoa(token))}`,
     });
-    request.headers.getSetCookie() .cookies .set('_csrfSecret', utoa(secret));
-  
-    const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(
-      request,
-      url: { pathname: '/' },
-    );
+
+    args.getCookie = vi.fn().mockImplementation((name: string) => {
+      if (name === '_csrfSecret') return utoa(secret);
+      return undefined;
+    });
+
+    const newToken = await csrfProtectDefault(args);
 
     // assertions
-    expect(csrfError).toEqual(null);
+    expect(args.getCookie).toHaveBeenCalledOnce();
+    expect(args.getCookie).toHaveBeenCalledWith('_csrfSecret');
+    expect(newToken).toBeDefined();
+    expect(newToken).toBeInstanceOf(String);
+    expect(newToken).not.toBe('');
   });
 
   /*

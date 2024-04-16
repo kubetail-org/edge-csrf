@@ -1,26 +1,49 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { Config } from '@/lib/config';
-import type { ConfigOptions } from '@/lib/config';
 import { CsrfError } from '@/lib/errors';
-import { createCsrfProtect as _createCsrfProtect } from '@/lib/protect';
+import { createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@/lib/protect';
+import type { ConfigOptions } from '@/lib/protect';
+
+export class NextTokenOptions extends TokenOptions {
+  responseHeader: string = 'X-CSRF-Token';
+
+  constructor(opts?: Partial<NextTokenOptions>) {
+    super(opts);
+  }
+}
+
+export class NextConfig extends Config {
+  excludePathPrefixes: string[] = ['/_next/'];
+
+  token: NextTokenOptions = new NextTokenOptions();
+
+  constructor(opts?: Partial<NextConfigOptions>) {
+    const newOpts = opts || {};
+    if (newOpts.token) newOpts.token = new NextTokenOptions(newOpts.token);
+    super(newOpts);
+  }
+}
+
+export interface NextConfigOptions extends Omit<ConfigOptions, 'token'> {
+  token: Partial<NextTokenOptions>;
+}
 
 /**
  * Represents signature of CSRF protect function to be used in Next.js middleware
  */
-export type NextCsrfProtectFunction = {
+export type NextCsrfProtect = {
   (request: NextRequest, response: NextResponse): Promise<void>;
 };
 
 /**
  * Create CSRF protection function for use in Next.js middleware
- * @param {Partial<ConfigOptions>} opts - Configuration options
+ * @param {Partial<NextConfigOptions>} opts - Configuration options
  * @returns {NextCsrfProtectFunction} - The CSRF protect function
  * @throws {CsrfError} - An error if CSRF validation failed
  */
-export function createCsrfProtect(opts?: Partial<ConfigOptions>): NextCsrfProtectFunction {
-  const config = new Config(opts);
+export function createCsrfProtect(opts?: Partial<NextConfigOptions>): NextCsrfProtect {
+  const config = new NextConfig(opts);
   const _csrfProtect = _createCsrfProtect(config);
 
   return async (request, response) => {
@@ -37,52 +60,12 @@ export function createCsrfProtect(opts?: Partial<ConfigOptions>): NextCsrfProtec
   };
 }
 
-//export function createCsrfProtect(opts?: Partial<ConfigOptions>): NextCsrfProtectFunction {
-//  const config = new Config(opts || {});
-//
-//  return async (request, response) => {
-//    // check excludePathPrefixes
-//    for (const pathPrefix of config.excludePathPrefixes) {
-//      if (request.nextUrl.pathname.startsWith(pathPrefix)) return;
-//    }
-//
-//    // get secret from cookies
-//    const secretStr = request.cookies.get(config.cookie.name)?.value;
-//
-//    let secret: Uint8Array;
-//
-//    // if secret is missing, create new secret and set cookie
-//    if (secretStr === undefined) {
-//      secret = createSecret(config.secretByteLength);
-//      const cookie = { ...config.cookie, value: utoa(secret) };
-//      response.cookies.set(cookie);
-//    } else {
-//      secret = atou(secretStr);
-//    }
-//
-//    // verify token
-//    if (!config.ignoreMethods.includes(request.method)) {
-//      const tokenStr = await getTokenString(request, config.token.value);
-//
-//      if (!await verifyToken(atou(tokenStr), secret)) {
-//        throw new CsrfError('csrf validation error');
-//      }
-//    }
-//
-//    // create new token for response
-//    const newToken = await createToken(secret, config.saltByteLength);
-//    response.headers.set(config.token.responseHeader, utoa(newToken));
-//
-//    return;
-//  };
-//}
-
 /**
  * Create Next.js middleware function
- * @param {Partial<ConfigOptions>} opts - Configuration options
+ * @param {Partial<NextConfigOptions>} opts - Configuration options
  * @returns Next Middleware function
  */
-export function createMiddleware(opts?: Partial<ConfigOptions>) {
+export function createMiddleware(opts?: Partial<NextConfigOptions>) {
   const csrfProtect = createCsrfProtect(opts);
 
   return async (request: NextRequest) => {
