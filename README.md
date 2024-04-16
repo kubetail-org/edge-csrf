@@ -38,7 +38,7 @@ For details about each integration see:
 
 ## Low-level API
 
-The following methods are named exports in the the top-level `edge-csrf` module:
+The following methods are named exports in the the top-level `edge-csrf` module. If you're using these methods you're probably working on a custom framework integration. If so, please consider contributing it back to this project!
 
 ```
 createSecret(length) - Create new secret (cryptographically secure)
