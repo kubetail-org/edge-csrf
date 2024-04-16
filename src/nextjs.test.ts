@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { createCsrfProtect } from './index';
+import { createCsrfProtect } from '@/nextjs';
 import { createSecret, createToken, utoa, atou } from '@/lib/util';
 
 const csrfProtectDefault = createCsrfProtect();

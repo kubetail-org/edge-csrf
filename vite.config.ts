@@ -13,11 +13,11 @@ export default defineConfig({
     lib: {
       entry: [
         resolve(__dirname, 'src/index.ts'),
-        resolve(__dirname, 'src/nextjs/index.ts'),
-        resolve(__dirname, 'src/sveltekit/index.ts'),
+        resolve(__dirname, 'src/nextjs.ts'),
+        resolve(__dirname, 'src/sveltekit.ts'),
       ],
       name: 'edge-csrf',
-      formats: ["es", "cjs"],
+      formats: ['es', 'cjs'],
     },
     rollupOptions: {
       plugins: [
@@ -35,7 +35,7 @@ export default defineConfig({
         preserveModulesRoot: 'src',
       },
     },
-  },
+  },  
   test: {
     environment: 'edge-runtime',
     globals: true,

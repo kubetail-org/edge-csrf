@@ -33,8 +33,8 @@ yarn add edge-csrf
 
 For details about each integration see:
 
-* [Next.js README](src/nextjs)
-* [SvelteKit README](src/sveltekit)
+* [Next.js README](docs/nextjs)
+* [SvelteKit README](docs/sveltekit)
 
 ## Low-level API
 
