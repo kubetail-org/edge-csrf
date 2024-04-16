@@ -1,6 +1,6 @@
 # Next.js
 
-This is the documentation for the Edge-CSRF Next.js integration.
+This is the documentation for the Edge-CSRF's Next.js integration.
 
 ## Quickstart
 

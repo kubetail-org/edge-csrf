@@ -1,6 +1,6 @@
 # SvelteKit
 
-This is the documentation for the Edge-CSRF SvelteKit integration.
+This is the documentation for Edge-CSRF's SvelteKit integration.
 
 ## Quickstart
 
