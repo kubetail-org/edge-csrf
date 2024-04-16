@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import csrf from './index';
-import { createSecret, createToken, utoa, atou } from './util';
+import { createCsrfProtect } from './index';
+import { createSecret, createToken, utoa, atou } from '@/lib/util';
 
-const csrfProtectDefault = csrf();
+const csrfProtectDefault = createCsrfProtect();
 
-describe('csrf validation tests', () => {
+describe('csrfProtect tests', () => {
   it('should work in req.body', async () => {
     const secret = createSecret(8);
     const token = await createToken(secret, 8);
@@ -277,7 +277,7 @@ describe('obtaining secrets tests', () => {
 describe('config option tests', () => {
   describe('cookie', () => {
     it('should respect configured `domain`', async () => {
-      const csrfProtect = csrf({ cookie: { domain: 'x.example.com' } });
+      const csrfProtect = createCsrfProtect({ cookie: { domain: 'x.example.com' } });
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -289,7 +289,7 @@ describe('config option tests', () => {
     });
 
     it.each([true, false])('should respect `httpOnly:%s`', async (httpOnly) => {
-      const csrfProtect = csrf({ cookie: { httpOnly } });
+      const csrfProtect = createCsrfProtect({ cookie: { httpOnly } });
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -301,7 +301,7 @@ describe('config option tests', () => {
     });
 
     it('should use session cookies by default', async () => {
-      const csrfProtect = csrf();
+      const csrfProtect = createCsrfProtect();
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -317,7 +317,7 @@ describe('config option tests', () => {
     });
 
     it('should respect configured `maxAge`', async () => {
-      const csrfProtect = csrf({ cookie: { maxAge: 60 * 60 * 24 } });
+      const csrfProtect = createCsrfProtect({ cookie: { maxAge: 60 * 60 * 24 } });
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -330,7 +330,7 @@ describe('config option tests', () => {
     });
 
     it('should respect configured `name`', async () => {
-      const csrfProtect = csrf({ cookie: { name: 'customName' } });
+      const csrfProtect = createCsrfProtect({ cookie: { name: 'customName' } });
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -341,7 +341,7 @@ describe('config option tests', () => {
     });
 
     it('should respect configured `path`', async () => {
-      const csrfProtect = csrf({ cookie: { path: '/sub-directory/' } });
+      const csrfProtect = createCsrfProtect({ cookie: { path: '/sub-directory/' } });
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -353,7 +353,7 @@ describe('config option tests', () => {
     });
 
     it('should respect configured `sameSite`', async () => {
-      const csrfProtect = csrf({ cookie: { sameSite: 'lax' } });
+      const csrfProtect = createCsrfProtect({ cookie: { sameSite: 'lax' } });
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -365,7 +365,7 @@ describe('config option tests', () => {
     });
 
     it.each([true, false])('should respect `secure:%s`', async (secure) => {
-      const csrfProtect = csrf({ cookie: { secure } });
+      const csrfProtect = createCsrfProtect({ cookie: { secure } });
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -379,7 +379,7 @@ describe('config option tests', () => {
 
   describe('igmoreMethods', () => {
     it('should respect configured ignoreMethods', async () => {
-      const csrfProtect = csrf({ ignoreMethods: ['POST'] });
+      const csrfProtect = createCsrfProtect({ ignoreMethods: ['POST'] });
 
       const request = new NextRequest('http://example.com', { method: 'POST' });
       const response = NextResponse.next();
@@ -392,7 +392,7 @@ describe('config option tests', () => {
 
   describe('excludePathPrefixes', () => {
     it('should respect configured excludePathPrefixes', async () => {
-      const csrfProtect = csrf({ excludePathPrefixes: ['/ignore-me/sub-path/'] });
+      const csrfProtect = createCsrfProtect({ excludePathPrefixes: ['/ignore-me/sub-path/'] });
 
       const request = new NextRequest('http://example.com/ignore-me/sub-path/file.jpg');
       const response = NextResponse.next();
@@ -408,7 +408,7 @@ describe('config option tests', () => {
   describe('saltByteLength', () => {
     it('should respect saltByteLength option', async () => {
       for (let byteLength = 10; byteLength < 20; byteLength += 1) {
-        const csrfProtect = csrf({ saltByteLength: byteLength });
+        const csrfProtect = createCsrfProtect({ saltByteLength: byteLength });
 
         const request = new NextRequest('http://example.com', { method: 'GET' });
         const response = NextResponse.next();
@@ -425,7 +425,7 @@ describe('config option tests', () => {
   describe('secretByteLength', () => {
     it('should respect secretByteLength option', async () => {
       for (let byteLength = 10; byteLength < 20; byteLength += 1) {
-        const csrfProtect = csrf({ secretByteLength: byteLength });
+        const csrfProtect = createCsrfProtect({ secretByteLength: byteLength });
 
         const request = new NextRequest('http://example.com', { method: 'GET' });
         const response = NextResponse.next();
@@ -441,7 +441,7 @@ describe('config option tests', () => {
 
   describe('token', () => {
     it('should respect configured responseHeader', async () => {
-      const csrfProtect = csrf({ token: { responseHeader: 'my-header' } });
+      const csrfProtect = createCsrfProtect({ token: { responseHeader: 'my-header' } });
 
       const request = new NextRequest('http://example.com', { method: 'GET' });
       const response = NextResponse.next();
@@ -452,9 +452,9 @@ describe('config option tests', () => {
     });
 
     it('should use custom value function', async () => {
-      const csrfProtect = csrf({
+      const csrfProtect = createCsrfProtect({
         token: {
-          value: async (request) => {
+          value: async (request: Request) => {
             const formData = await request.formData();
             const formDataVal = formData.get('my_key');
             return (typeof formDataVal === 'string') ? formDataVal : '';

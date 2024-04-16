@@ -16,12 +16,12 @@
       "require": "./dist/index.cjs"
     },
     "./nextjs": {
-      "import": "./dist/nextjs.js",
-      "require": "./dist/nextjs.cjs"
+      "import": "./dist/nextjs/index.js",
+      "require": "./dist/nextjs/index.cjs"
     },
     "./sveltekit": {
-      "import": "./dist/sveltekit.js",
-      "require": "./dist/sveltekit.cjs"
+      "import": "./dist/sveltekit/index.js",
+      "require": "./dist/sveltekit/index.cjs"
     }
   },
   "files": [

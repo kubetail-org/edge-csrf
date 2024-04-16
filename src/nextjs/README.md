@@ -133,7 +133,8 @@ If you want lower-level control over the response or which routes CSRF protectio
 ```typescript
 // middleware.ts
 
-import { CsrfError, createCsrfProtect } from 'edge-csrf/nextjs';
+import { CsrfError } from 'edge-csrf';
+import { createCsrfProtect } from 'edge-csrf/nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 

@@ -1,4 +1,4 @@
-import type { TokenValueFunction } from './util';
+import type { TokenValueFunction } from '@/lib/util';
 
 export class CookieOptions {
   domain: string = '';

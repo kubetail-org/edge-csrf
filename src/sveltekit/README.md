@@ -104,7 +104,8 @@ If you want lower-level control over the response or which routes CSRF protectio
 // src/hooks.server.ts
 
 import type { Handle } from '@sveltejs/kit';
-import { CsrfError, createCsrfProtect } from 'edge-csrf/sveltekit';
+import { CsrfError } from 'edge-csrf';
+import { createCsrfProtect } from 'edge-csrf/sveltekit';
 
 // initalize csrf protection method
 const csrfProtect = createCsrfProtect({

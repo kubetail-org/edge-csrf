@@ -4,11 +4,17 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+    },
+  },
   build: {
     lib: {
       entry: [
         resolve(__dirname, 'src/index.ts'),
-        resolve(__dirname, 'src/sveltekit.ts'),
+        resolve(__dirname, 'src/nextjs/index.ts'),
+        resolve(__dirname, 'src/sveltekit/index.ts'),
       ],
       name: 'edge-csrf',
       formats: ["es", "cjs"],
@@ -20,10 +26,14 @@ export default defineConfig({
           declaration: true,
           outDir: "dist",
           include: ['src/**/*'],
-          exclude: ['src/**/*.test.ts']
+          exclude: ['src/**/*.test.ts'],
         }),
       ],
-      external: [],
+      external: [/node_modules/],
+      output: {
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+      },
     },
   },
   test: {

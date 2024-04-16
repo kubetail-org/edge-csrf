@@ -1,33 +1,31 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { Config } from './config';
-import type { ConfigOptions } from './config';
-import {
-  createSecret,
-  getTokenString,
-  createToken,
-  verifyToken,
-  utoa,
-  atou,
-} from './util';
+import { Config } from '@/lib/config';
+import type { ConfigOptions } from '@/lib/config';
+import { CsrfError } from '@/lib/errors';
+import { createSecret, getTokenString, createToken, verifyToken, utoa, atou } from '@/lib/util';
 
-export type HandlerFunction = {
-  (request: NextRequest, response: NextResponse): Promise<Error | null>;
+/**
+ * Represents signature of CSRF protect function to be used in Next.js middleware
+ */
+export type NextCsrfProtectFunction = {
+  (request: NextRequest, response: NextResponse): Promise<void>;
 };
 
 /**
- * Create handler function for use in Next.js middleware
+ * Create CSRF protection function for use in Next.js middleware
  * @param {Partial<ConfigOptions>} opts - Configuration options
- * @returns Handler function
+ * @returns {NextCsrfProtectFunction} - The CSRF protect function
+ * @throws {CsrfError} - An error if CSRF validation failed
  */
-export function createHandler(opts?: Partial<ConfigOptions>): HandlerFunction {
+export function createCsrfProtect(opts?: Partial<ConfigOptions>): NextCsrfProtectFunction {
   const config = new Config(opts || {});
 
   return async (request, response) => {
     // check excludePathPrefixes
     for (const pathPrefix of config.excludePathPrefixes) {
-      if (request.nextUrl.pathname.startsWith(pathPrefix)) return null;
+      if (request.nextUrl.pathname.startsWith(pathPrefix)) return;
     }
 
     // get secret from cookies
@@ -49,7 +47,7 @@ export function createHandler(opts?: Partial<ConfigOptions>): HandlerFunction {
       const tokenStr = await getTokenString(request, config.token.value);
 
       if (!await verifyToken(atou(tokenStr), secret)) {
-        return new Error('csrf validation error');
+        throw new CsrfError('csrf validation error');
       }
     }
 
@@ -57,7 +55,7 @@ export function createHandler(opts?: Partial<ConfigOptions>): HandlerFunction {
     const newToken = await createToken(secret, config.saltByteLength);
     response.headers.set(config.token.responseHeader, utoa(newToken));
 
-    return null;
+    return;
   };
 }
 
@@ -67,17 +65,17 @@ export function createHandler(opts?: Partial<ConfigOptions>): HandlerFunction {
  * @returns Next Middleware function
  */
 export function createMiddleware(opts?: Partial<ConfigOptions>) {
-  const csrfHandler = createHandler(opts);
+  const csrfProtect = createCsrfProtect(opts);
 
   return async (request: NextRequest) => {
     const response = NextResponse.next();
 
     // csrf protection
-    const csrfError = await csrfHandler(request, response);
-
-    // check result
-    if (csrfError) {
-      return new NextResponse('invalid csrf token', { status: 403 });
+    try {
+      await csrfProtect(request, response);
+    } catch (err) {
+      if (err instanceof CsrfError) return new NextResponse('invalid csrf token', { status: 403 });
+      throw err;
     }
 
     return response;
