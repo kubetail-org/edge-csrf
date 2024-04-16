@@ -19,7 +19,7 @@ class TestArgs implements CsrfProtectFunctionArgs {
 }
 
 describe('csrfProtect tests', () => {
-  it('should work in req.body', async () => {
+  it('should work with token in req.body', async () => {
     const secret = createSecret(8);
     const token = await createToken(secret, 8);
 
