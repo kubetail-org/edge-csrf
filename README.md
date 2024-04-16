@@ -36,13 +36,16 @@ For details about each integration see:
 
 ## Low-level API
 
+The following methods are named exports in the the top-level `edge-csrf` module:
+
 ```
 createSecret(length) - Create new secret (cryptographically secure)
 
   * @param {int} length - Byte length of secret
   * @returns {Uint8Array} - The secret
 
-createToken(secret, saltByteLength) - Create new CSRF token (cryptographically insecure salt hashed with secret)
+createToken(secret, saltByteLength) - Create new CSRF token (cryptographically insecure
+                                      salt hashed with secret)
 
   * @param {Uint8Array} secret - The secret
   * @param {int} saltByteLength - Salt length in number of bytes
