@@ -187,6 +187,22 @@ export const middleware = async (request: NextRequest) => {
 
 ## API
 
+### Types
+
+```
+CsrfProtectFunction
+```
+
+### Classes
+
+```
+Config
+
+CsrfError
+```
+
+### Methods
+
 ```
 createMiddleware([, options]) - Create a new instance of Next.js middleware
 
@@ -199,3 +215,4 @@ createCsrfProtect([, options]) - Create a lower-level function that can be used 
   * @param {Partial<Config>} options - The configuration options
   * @returns {CsrfProtectFunction} - The CSRF protection function
 ```
+
