@@ -38,7 +38,7 @@ For details about each integration see:
 
 ## Low-level API
 
-The following methods are named exports in the the top-level `edge-csrf` module. If you're using these methods you're probably working on a custom framework integration. If so, please consider contributing it back to this project!
+The following methods are named exports in the the top-level `edge-csrf` module:
 
 ```
 createSecret(length) - Create new secret (cryptographically secure)
@@ -74,6 +74,8 @@ atou(input) - Decode base64 string into Uint8Array
   * @param {string} input - The data to be converted from base64 to Uint8Array
   * @returns {Uint8Array} - The Uint8Array representing the input string
 ```
+
+__Note__: If you're using these methods you're probably working on a custom framework integration. If so, please consider contributing it back to this project!
 
 ## Development
 
