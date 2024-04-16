@@ -14,6 +14,9 @@ devDependencies:
   '@sveltejs/kit':
     specifier: ^2.5.5
     version: 2.5.5(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.14)(vite@5.2.8)
+  '@types/cookie':
+    specifier: ^0.6.0
+    version: 0.6.0
   '@types/jest':
     specifier: ^29.5.12
     version: 29.5.12
@@ -32,6 +35,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^7.6.0
     version: 7.6.0(eslint@8.57.0)(typescript@5.4.5)
+  cookie:
+    specifier: ^0.6.0
+    version: 0.6.0
   eslint:
     specifier: ^8.57.0
     version: 8.57.0
