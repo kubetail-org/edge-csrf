@@ -119,3 +119,18 @@ Here are some [examples](examples) in this repository:
   }
 }
 ```
+
+## API
+
+```
+createHandle([, options]) - Create a new SvelteKit handle to be used in hooks.server.ts
+
+  * @param {Partial<Config>} [options] - The configuration options
+  * @returns {Handle} - The handle
+
+createCsrfProtect([, options]) - Create a lower-level function that can be used inside a SvelteKit handle
+                                 to implement CSRF protection for requests
+
+  * @param {Partial<Config>} [options] - The configuration options
+  * @returns {CsrfProtectFunction} - The CSRF protection function
+```

@@ -151,3 +151,18 @@ Here are some [examples](examples) in this repository:
   }
 }
 ```
+
+## API
+
+```
+createMiddleware([, options]) - Create a new instance of Next.js middleware
+
+  * @param {Partial<Config>} options - The configuration options
+  * @returns {Middleware} - The middleware
+
+createCsrfProtect([, options]) - Create a lower-level function that can be used inside Next.js middleware
+                                 to implement CSRF protection for requests
+
+  * @param {Partial<Config>} options - The configuration options
+  * @returns {CsrfProtectFunction} - The CSRF protection function
+```

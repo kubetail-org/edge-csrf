@@ -2,7 +2,7 @@
 
 Edge-CSRF is a CSRF protection library that runs on the [edge runtime](https://edge-runtime.vercel.app/).
 
-This library implements the [signed double submit cookie pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended) except it only uses edge runtime dependencies so it can be used in both node environments and in edge functions (e.g. [Vercel Edge Functions](https://vercel.com/docs/functions/runtimes/edge-runtime), [Cloudflare Page Functions](https://developers.cloudflare.com/pages/functions/)). It comes with easy-to-use integrations for Next.js and SvelteKit as well as a lower-level API for more custom implementations.
+This library helps you to implement the [signed double submit cookie pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended) except it only uses edge runtime dependencies so it can be used in both node environments and in edge functions (e.g. [Vercel Edge Functions](https://vercel.com/docs/functions/runtimes/edge-runtime), [Cloudflare Page Functions](https://developers.cloudflare.com/pages/functions/)). The recommended way to use this library is via its drop-in integrations for [Next.js](src/nextjs) and [SvelteKit](src/sveltekit) though it also has a lower-level API for more custom implementations.
 
 ## Features
 
@@ -34,7 +34,7 @@ For details about each integration see:
 * [Next.js README](src/nextjs)
 * [SvelteKit README](src/sveltekit)
 
-## API
+## Low-level API
 
 ```
 createSecret(length) - Create new secret (cryptographically secure)
@@ -53,7 +53,7 @@ getTokenString(request) - Get the CSRF token from the request
   * @param {Request} request - The request object
   * @returns {Promise<string>} - A promise returning the token in string format
 
-verifyToken(token, secret) - Verify CSRF token
+verifyToken(token, secret) - Verify the CSRF token and secret obtained from the request
 
   * @param {Uint8Array} token - The CSRF token
   * @param {Uint8Array} secret - The CSRF secret
@@ -100,4 +100,4 @@ To build Edge-CSRF for production, run the `build` command:
 pnpm build
 ```
 
-The production files will be located in the `dist/` directory.
+The build artifacts will be located in the `dist/` directory.
