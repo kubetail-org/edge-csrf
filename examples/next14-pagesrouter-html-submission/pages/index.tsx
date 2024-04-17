@@ -14,7 +14,6 @@ const Home: NextPage<Props> = ({ csrfToken }) => {
     <>      
       <p>CSRF token value: {csrfToken}</p>
       <h2>HTML Form Submission Example</h2>
-      <p style={{ color: 'red' }}>Note: Example uses Next.js &lt; 13.3</p>
       <form action="/api/form-handler" method="post">
         <legend>Form without CSRF (should fail):</legend>
         <input type="text" name="input1" />

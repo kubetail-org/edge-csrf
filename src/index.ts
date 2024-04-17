@@ -1,5 +1,5 @@
 // errors exports
-export type {
+export {
   CsrfError,
 } from '@/lib/errors';
 

@@ -1,7 +1,7 @@
 {
   "name": "edge-csrf",
   "description": "CSRF protection for Next.js middleware",
-  "version": "2.0.0-rc1",
+  "version": "2.0.0-rc4",
   "author": "Andres Morey",
   "license": "MIT",
   "repository": "kubetail-org/edge-csrf",
@@ -9,19 +9,18 @@
   "sideEffects": false,
   "main": "dist/index.cjs",
   "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
     "./nextjs": {
-      "import": "./dist/nextjs/index.js",
-      "require": "./dist/nextjs/index.cjs"
+      "import": "./dist/nextjs.js",
+      "require": "./dist/nextjs.cjs"
     },
     "./sveltekit": {
-      "import": "./dist/sveltekit/index.js",
-      "require": "./dist/sveltekit/index.cjs"
+      "import": "./dist/sveltekit.js",
+      "require": "./dist/sveltekit.cjs"
     }
   },
   "files": [
@@ -36,7 +35,6 @@
   "devDependencies": {
     "@edge-runtime/vm": "^3.2.0",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@sveltejs/kit": "^2.5.5",
     "@types/cookie": "^0.6.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.5",
@@ -44,7 +42,6 @@
     "@types/react-dom": "^18.2.24",
     "@typescript-eslint/eslint-plugin": "^7.6.0",
     "@typescript-eslint/parser": "^7.6.0",
-    "cookie": "^0.6.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
