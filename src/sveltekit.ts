@@ -1,4 +1,4 @@
-import type { Handle, RequestEvent } from '@sveltejs/kit';
+import type { Handle, RequestEvent, Cookies } from '@sveltejs/kit';
 
 import { CsrfError } from '@/lib/errors';
 import { createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@/lib/protect';
@@ -18,10 +18,17 @@ export interface EdgeCsrfLocals {
 }
 
 /**
+ * Represents partial request event used by SvelteKitCsrfProtect
+ */
+export interface SvelteKitCsrfProtectRequestEvent extends Pick<RequestEvent, 'request' | 'url' | 'locals'> {
+  cookies: Pick<Cookies, 'get' | 'set'>;
+}
+
+/**
  * Represents signature of CSRF protect function to be used in SvelteKit handle
  */
 export type SveltekitCsrfProtect = {
-  (request: RequestEvent): Promise<void>;
+  (event: SvelteKitCsrfProtectRequestEvent): Promise<void>;
 };
 
 /**
@@ -39,7 +46,7 @@ export function createCsrfProtect(opts?: Partial<SveltekitConfigOptions>): Svelt
     const token = await _csrfProtect({
       request: event.request,
       url: event.url,
-      getCookie: (name) => event.cookies.get(name)?.valueOf(),
+      getCookie: (name) => event.cookies.get(name),
       setCookie: (cookie) => event.cookies.set(cookie.name, cookie.value, cookie),
     });
 

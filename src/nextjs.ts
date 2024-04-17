@@ -5,26 +5,37 @@ import { CsrfError } from '@/lib/errors';
 import { createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@/lib/protect';
 import type { ConfigOptions } from '@/lib/protect';
 
+/**
+ * Represents token options in config
+ */
 export class NextTokenOptions extends TokenOptions {
   responseHeader: string = 'X-CSRF-Token';
 
   constructor(opts?: Partial<NextTokenOptions>) {
     super(opts);
+    Object.assign(this, opts);
   }
 }
 
+/**
+ * Represents configuration object
+ */
 export class NextConfig extends Config {
   excludePathPrefixes: string[] = ['/_next/'];
 
   token: NextTokenOptions = new NextTokenOptions();
 
   constructor(opts?: Partial<NextConfigOptions>) {
+    super(opts);
     const newOpts = opts || {};
     if (newOpts.token) newOpts.token = new NextTokenOptions(newOpts.token);
-    super(newOpts);
+    Object.assign(this, newOpts);
   }
 }
 
+/**
+ * Represents configuration options object
+ */
 export interface NextConfigOptions extends Omit<ConfigOptions, 'token'> {
   token: Partial<NextTokenOptions>;
 }

@@ -2,6 +2,9 @@ import { CsrfError } from '@/lib/errors';
 import { createSecret, createToken, getTokenString, verifyToken, atou, utoa } from '@/lib/util';
 import type { TokenValueFunction } from '@/lib/util';
 
+/**
+ * Represents cookie options in config
+ */
 export class CookieOptions {
   domain: string = '';
 
@@ -22,6 +25,9 @@ export class CookieOptions {
   }
 }
 
+/**
+ * Represents token options in config
+ */
 export class TokenOptions {
   value: TokenValueFunction | undefined = undefined;
 
@@ -34,8 +40,6 @@ export class TokenOptions {
  * Represents CsrfProtect configuration object
  */
 export class Config {
-  cookie: CookieOptions = new CookieOptions();
-
   excludePathPrefixes: string[] = [];
 
   ignoreMethods: string[] = ['GET', 'HEAD', 'OPTIONS'];
@@ -44,13 +48,15 @@ export class Config {
 
   secretByteLength: number = 18;
 
+  cookie: CookieOptions = new CookieOptions();
+
   token: TokenOptions = new TokenOptions();
 
   constructor(opts?: Partial<ConfigOptions>) {
     const newOpts = opts || {};
     if (newOpts.cookie) newOpts.cookie = new CookieOptions(newOpts.cookie);
     if (newOpts.token) newOpts.token = new TokenOptions(newOpts.token);
-    Object.assign(this, opts);
+    Object.assign(this, newOpts);
 
     // basic validation
     if (this.saltByteLength < 1 || this.saltByteLength > 255) {

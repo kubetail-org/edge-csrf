@@ -1,253 +1,307 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { createCsrfProtect } from '@/nextjs';
-import { createSecret, createToken, utoa, atou } from '@/lib/util';
+import { CsrfError } from '@/lib/errors';
+import { NextConfig, NextTokenOptions, createCsrfProtect } from './nextjs';
+import * as util from '@/lib/util';
 
-const csrfProtectDefault = createCsrfProtect();
+describe('NextTokenOptions tests', () => {
+  it('returns default values when options are absent', () => {
+    const tokenOpts = new NextTokenOptions();
+    expect(tokenOpts.responseHeader).toEqual('X-CSRF-Token');
+  });
 
-describe('csrfProtect tests', () => {
+  it('handles overrides', () => {
+    const tokenOpts = new NextTokenOptions({ responseHeader: 'XXX' });
+    expect(tokenOpts.responseHeader).toEqual('XXX');
+  });
+
+  it('handles overrides of parent attributes', () => {
+    const fn = async () => '';
+    const tokenOpts = new NextTokenOptions({ value: fn });
+    expect(tokenOpts.value).toBe(fn);
+  });
+});
+
+describe('NextConfig tests', () => {
+  it('returns default config when options are absent', () => {
+    const config = new NextConfig();
+    expect(config.excludePathPrefixes).toEqual(['/_next/']);
+    expect(config.token instanceof NextTokenOptions).toBe(true);
+  });
+
+  it('handles top-level overrides', () => {
+    const config = new NextConfig({ excludePathPrefixes: ['/xxx/']});
+    expect(config.excludePathPrefixes).toEqual(['/xxx/']);
+  });
+
+  it('handles nested token overrides', () => {
+    const config = new NextConfig({ token: { responseHeader: 'XXX' } });
+    expect(config.token.responseHeader).toEqual('XXX');
+  });
+});
+
+describe('csrfProtect unit tests', () => {
+  it('get/set cookie using request/response methods', async () => {
+    const request = new NextRequest('http://example.com');
+    const response = NextResponse.next();
+
+    request.cookies.get = vi.fn();
+    response.cookies.set = vi.fn();
+
+    const csrfProtect = createCsrfProtect();
+    await csrfProtect(request, response);
+
+    expect(request.cookies.get).toHaveBeenCalledOnce();
+    expect(response.cookies.set).toHaveBeenCalledOnce();
+  });
+
+  it('adds token to response header', async () => {
+    const request = new NextRequest('http://example.com');
+    const response = NextResponse.next();
+
+    const csrfProtect = createCsrfProtect();
+    await csrfProtect(request, response);
+
+    const token = response.headers.get('X-CSRF-Token');
+    expect(token).toBeDefined();
+    expect(token).not.toBe('');
+  });
+});
+
+describe('csrfProtect integration tests', () => {
+  const csrfProtectDefault = createCsrfProtect();
+
   it('should work in req.body', async () => {
-    const secret = createSecret(8);
-    const token = await createToken(secret, 8);
+    const secretUint8 = util.createSecret(8);
+    const tokenUint8 = await util.createToken(secretUint8, 8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      body: `csrf_token=${encodeURIComponent(utoa(token))}`,
+      body: `csrf_token=${encodeURIComponent(util.utoa(tokenUint8))}`,
     });
-    request.cookies.set('_csrfSecret', utoa(secret));
+    request.cookies.set('_csrfSecret', util.utoa(secretUint8));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
+    await csrfProtectDefault(request, response);
 
     // assertions
-    expect(csrfError).toEqual(null);
+    const newTokenStr = response.headers.get('X-CSRF-Token');
+    expect(newTokenStr).toBeDefined();
+    expect(newTokenStr).not.toBe('');
   });
 
   it('should work in x-csrf-token header', async () => {
-    const secret = createSecret(8);
-    const token = await createToken(secret, 8);
+    const secret = util.createSecret(8);
+    const token = await util.createToken(secret, 8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
-      headers: { 'x-csrf-token': utoa(token) },
+      headers: { 'x-csrf-token': util.utoa(token) },
     });
-    request.cookies.set('_csrfSecret', utoa(secret));
+    request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
+    await csrfProtectDefault(request, response);
 
     // assertions
-    expect(csrfError).toEqual(null);
+    const newTokenStr = response.headers.get('X-CSRF-Token');
+    expect(newTokenStr).toBeDefined();
+    expect(newTokenStr).not.toBe('');
   });
 
   it('should handle server action form submissions', async () => {
-    const secret = createSecret(8);
-    const token = await createToken(secret, 8);
+    const secret = util.createSecret(8);
+    const token = await util.createToken(secret, 8);
 
     const formData = new FormData();
-    formData.set('csrf_token', utoa(token));
+    formData.set('csrf_token', util.utoa(token));
     formData.set('key1', 'val1');
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
       body: formData,
     });
-    request.cookies.set('_csrfSecret', utoa(secret));
+    request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
+    await csrfProtectDefault(request, response);
 
     // assertions
-    expect(csrfError).toEqual(null);
+    const newTokenStr = response.headers.get('X-CSRF-Token');
+    expect(newTokenStr).toBeDefined();
+    expect(newTokenStr).not.toBe('');
   });
 
   it('should handle server action non-form submissions', async () => {
-    const secret = createSecret(8);
-    const token = await createToken(secret, 8);
+    const secret = util.createSecret(8);
+    const token = await util.createToken(secret, 8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify([utoa(token), 'arg']),
+      body: JSON.stringify([util.utoa(token), 'arg']),
     });
-    request.cookies.set('_csrfSecret', utoa(secret));
+    request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
+    await csrfProtectDefault(request, response);
 
     // assertions
-    expect(csrfError).toEqual(null);
+    const newTokenStr = response.headers.get('X-CSRF-Token');
+    expect(newTokenStr).toBeDefined();
+    expect(newTokenStr).not.toBe('');
   });
 
   it('should fail with token from different secret', async () => {
-    const evilSecret = createSecret(8);
-    const goodSecret = createSecret(8);
-    const token = await createToken(evilSecret, 8);
+    const evilSecret = util.createSecret(8);
+    const goodSecret = util.createSecret(8);
+    const token = await util.createToken(evilSecret, 8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
-      headers: { 'x-csrf-token': utoa(token) },
+      headers: { 'x-csrf-token': util.utoa(token) },
     });
-    request.cookies.set('_csrfSecret', utoa(goodSecret));
+    request.cookies.set('_csrfSecret', util.utoa(goodSecret));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with an invalid token', async () => {
-    const secret = createSecret(8);
+    const secret = util.createSecret(8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
       headers: { 'x-csrf-token': btoa(String.fromCharCode(100)) },
     });
-    request.cookies.set('_csrfSecret', utoa(secret));
+    request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with non-base64 token', async () => {
-    const secret = createSecret(8);
+    const secret = util.createSecret(8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
       headers: { 'x-csrf-token': '-' },
     });
-    request.cookies.set('_csrfSecret', utoa(secret));
+    request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with no token', async () => {
-    const secret = createSecret(8);
+    const secret = util.createSecret(8);
 
     const request = new NextRequest('http://example.com', { method: 'POST' });
-    request.cookies.set('_csrfSecret', utoa(secret));
+    request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with empty token', async () => {
-    const secret = createSecret(8);
+    const secret = util.createSecret(8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
       headers: { 'x-csrf-token': '' },
     });
-    request.cookies.set('_csrfSecret', utoa(secret));
+    request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with non-base64 secret', async () => {
-    const secret = createSecret(8);
-    const token = await createToken(secret, 8);
+    const secret = util.createSecret(8);
+    const token = await util.createToken(secret, 8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
-      headers: { 'x-csrf-token': utoa(token) },
+      headers: { 'x-csrf-token': util.utoa(token) },
     });
     request.cookies.set('_csrfSecret', '-');
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with an invalid secret', async () => {
-    const secret = createSecret(8);
-    const token = await createToken(secret, 8);
+    const secret = util.createSecret(8);
+    const token = await util.createToken(secret, 8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
-      headers: { 'x-csrf-token': utoa(token) },
+      headers: { 'x-csrf-token': util.utoa(token) },
     });
     request.cookies.set('_csrfSecret', btoa(String.fromCharCode(100)));
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with no secret', async () => {
-    const secret = createSecret(8);
-    const token = await createToken(secret, 8);
+    const secret = util.createSecret(8);
+    const token = await util.createToken(secret, 8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
-      headers: { 'x-csrf-token': utoa(token) },
+      headers: { 'x-csrf-token': util.utoa(token) },
     });
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with empty secret', async () => {
-    const secret = createSecret(8);
-    const token = await createToken(secret, 8);
+    const secret = util.createSecret(8);
+    const token = await util.createToken(secret, 8);
 
     const request = new NextRequest('http://example.com', {
       method: 'POST',
-      headers: { 'x-csrf-token': utoa(token) },
+      headers: { 'x-csrf-token': util.utoa(token) },
     });
     request.cookies.set('_csrfSecret', '');
 
     const response = NextResponse.next();
-    const csrfError = await csrfProtectDefault(request, response);
-
-    // assertions
-    expect(csrfError).toBeInstanceOf(Error);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 });
 
 describe('obtaining secrets tests', () => {
+  const csrfProtectDefault = createCsrfProtect();
+
   describe('sets new secret when missing from request', () => {
     const methods = ['GET', 'POST'];
 
     it.each(methods)('%s request', async (method) => {
       const request = new NextRequest('http://example.com', { method });
       const response = NextResponse.next();
-      await csrfProtectDefault(request, response);
+
+      try { await csrfProtectDefault(request, response); }
+      catch {}
+
       expect(response.cookies.get('_csrfSecret')).not.toEqual(undefined);
     });
   });
 
   describe('keeps existing secret when present in request', () => {
     const methods = ['GET', 'POST'];
-    const secretStr = utoa(createSecret(8));
+    const secretStr = util.utoa(util.createSecret(8));
 
     it.each(methods)('%s request', async (method) => {
       const request = new NextRequest('http://example.com', { method });
       request.cookies.set('_csrfSecret', secretStr);
       const response = NextResponse.next();
-      await csrfProtectDefault(request, response);
+
+      try { await csrfProtectDefault(request, response); }
+      catch {}
+
       expect(response.cookies.get('_csrfSecret')).toEqual(undefined);
     });
   });
@@ -271,212 +325,5 @@ describe('obtaining secrets tests', () => {
     expect(secret1).not.toEqual(undefined);
     expect(secret2).not.toEqual(undefined);
     expect(secret1).not.toEqual(secret2);
-  });
-});
-
-describe('config option tests', () => {
-  describe('cookie', () => {
-    it('should respect configured `domain`', async () => {
-      const csrfProtect = createCsrfProtect({ cookie: { domain: 'x.example.com' } });
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-      const cookie = response.cookies.get('_csrfSecret')!;
-
-      // assertions
-      expect(cookie.domain).toEqual('x.example.com');
-    });
-
-    it.each([true, false])('should respect `httpOnly:%s`', async (httpOnly) => {
-      const csrfProtect = createCsrfProtect({ cookie: { httpOnly } });
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-      const setCookie = response.headers.get('set-cookie');
-
-      // assertions
-      expect(setCookie?.includes('HttpOnly')).toEqual(httpOnly);
-    });
-
-    it('should use session cookies by default', async () => {
-      const csrfProtect = createCsrfProtect();
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-      const cookie = response.cookies.get('_csrfSecret')!;
-      const setCookie = response.headers.get('set-cookie') || '';
-
-      // assertions
-      expect(cookie.maxAge).toEqual(undefined);
-      expect(cookie.expires).toEqual(undefined);
-      expect(setCookie.includes('Max-Age')).toEqual(false);
-      expect(setCookie.includes('Expires')).toEqual(false);
-    });
-
-    it('should respect configured `maxAge`', async () => {
-      const csrfProtect = createCsrfProtect({ cookie: { maxAge: 60 * 60 * 24 } });
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-      const cookie = response.cookies.get('_csrfSecret')!;
-
-      // assertions
-      expect(cookie.maxAge).toEqual(86400);
-      expect(cookie.expires).not.toEqual(undefined);
-    });
-
-    it('should respect configured `name`', async () => {
-      const csrfProtect = createCsrfProtect({ cookie: { name: 'customName' } });
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-
-      // assertions
-      expect(response.cookies.get('customName')).not.toEqual(undefined);
-    });
-
-    it('should respect configured `path`', async () => {
-      const csrfProtect = createCsrfProtect({ cookie: { path: '/sub-directory/' } });
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-      const cookie = response.cookies.get('_csrfSecret')!;
-
-      // assertions
-      expect(cookie.path).toEqual('/sub-directory/');
-    });
-
-    it('should respect configured `sameSite`', async () => {
-      const csrfProtect = createCsrfProtect({ cookie: { sameSite: 'lax' } });
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-      const cookie = response.cookies.get('_csrfSecret')!;
-
-      // assertions
-      expect(cookie.sameSite).toEqual('lax');
-    });
-
-    it.each([true, false])('should respect `secure:%s`', async (secure) => {
-      const csrfProtect = createCsrfProtect({ cookie: { secure } });
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-      const setCookie = response.headers.get('set-cookie')!;
-
-      // assertions
-      expect(setCookie.includes('Secure')).toEqual(secure);
-    });
-  });
-
-  describe('igmoreMethods', () => {
-    it('should respect configured ignoreMethods', async () => {
-      const csrfProtect = createCsrfProtect({ ignoreMethods: ['POST'] });
-
-      const request = new NextRequest('http://example.com', { method: 'POST' });
-      const response = NextResponse.next();
-      const csrfError = await csrfProtect(request, response);
-
-      // assertions
-      expect(csrfError).toEqual(null);
-    });
-  });
-
-  describe('excludePathPrefixes', () => {
-    it('should respect configured excludePathPrefixes', async () => {
-      const csrfProtect = createCsrfProtect({ excludePathPrefixes: ['/ignore-me/sub-path/'] });
-
-      const request = new NextRequest('http://example.com/ignore-me/sub-path/file.jpg');
-      const response = NextResponse.next();
-      const csrfError = await csrfProtect(request, response);
-
-      // assertions
-      expect(response.headers.get('x-csrf-token')).toEqual(null);
-      expect(response.headers.get('set-cookie')).toEqual(null);
-      expect(csrfError).toEqual(null);
-    });
-  });
-
-  describe('saltByteLength', () => {
-    it('should respect saltByteLength option', async () => {
-      for (let byteLength = 10; byteLength < 20; byteLength += 1) {
-        const csrfProtect = createCsrfProtect({ saltByteLength: byteLength });
-
-        const request = new NextRequest('http://example.com', { method: 'GET' });
-        const response = NextResponse.next();
-
-        await csrfProtect(request, response);
-        const token = atou(response.headers.get('x-csrf-token')!);
-
-        // assertions
-        expect(token.byteLength).toEqual(22 + byteLength);
-      }
-    });
-  });
-
-  describe('secretByteLength', () => {
-    it('should respect secretByteLength option', async () => {
-      for (let byteLength = 10; byteLength < 20; byteLength += 1) {
-        const csrfProtect = createCsrfProtect({ secretByteLength: byteLength });
-
-        const request = new NextRequest('http://example.com', { method: 'GET' });
-        const response = NextResponse.next();
-
-        await csrfProtect(request, response);
-        const secret = atou(response.cookies.get('_csrfSecret')!.value);
-
-        // assertions
-        expect(secret.byteLength).toEqual(byteLength);
-      }
-    });
-  });
-
-  describe('token', () => {
-    it('should respect configured responseHeader', async () => {
-      const csrfProtect = createCsrfProtect({ token: { responseHeader: 'my-header' } });
-
-      const request = new NextRequest('http://example.com', { method: 'GET' });
-      const response = NextResponse.next();
-      await csrfProtect(request, response);
-
-      // assertions
-      expect(response.headers.get('my-header')).not.toEqual(null);
-    });
-
-    it('should use custom value function', async () => {
-      const csrfProtect = createCsrfProtect({
-        token: {
-          value: async (request: Request) => {
-            const formData = await request.formData();
-            const formDataVal = formData.get('my_key');
-            return (typeof formDataVal === 'string') ? formDataVal : '';
-          },
-        },
-      });
-
-      const secret = createSecret(8);
-      const token = await createToken(secret, 8);
-
-      const request = new NextRequest('http://example.com', {
-        method: 'POST',
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        body: `my_key=${encodeURIComponent(utoa(token))}`,
-      });
-      request.cookies.set('_csrfSecret', utoa(secret));
-
-      const response = NextResponse.next();
-      const csrfError = await csrfProtect(request, response);
-
-      // assertions
-      expect(csrfError).toEqual(null);
-    });
   });
 });
