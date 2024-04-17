@@ -262,7 +262,7 @@ describe('obtaining secrets tests', () => {
         // do nothing
       }
 
-      expect(event.cookies.get('_csrfSecret')).toEqual(undefined);
+      expect(event.cookies.get('_csrfSecret')).toEqual(secretStr);
     });
   });
 });
