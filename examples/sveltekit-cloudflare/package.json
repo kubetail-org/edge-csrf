@@ -26,6 +26,6 @@
   },
   "type": "module",
   "dependencies": {
-    "edge-csrf": "2.0.0-rc2"
+    "edge-csrf": "2.0.0-rc3"
   }
 }

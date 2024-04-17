@@ -15,8 +15,8 @@ dependencies:
     specifier: ^18.2.14
     version: 18.2.25
   edge-csrf:
-    specifier: 2.0.0-rc2
-    version: 2.0.0-rc2(@sveltejs/kit@2.5.6)(next@13.5.6)
+    specifier: 2.0.0-rc3
+    version: 2.0.0-rc3(@sveltejs/kit@2.5.6)(next@13.5.6)
   eslint:
     specifier: ^8.52.0
     version: 8.57.0
@@ -24,7 +24,7 @@ dependencies:
     specifier: ^13.5.6
     version: 13.5.6(eslint@8.57.0)(typescript@5.4.5)
   next:
-    specifier: ^13.5.6
+    specifier: 13.5.6
     version: 13.5.6(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18.2.0
@@ -1172,8 +1172,8 @@ packages:
       esutils: 2.0.3
     dev: false
 
-  /edge-csrf@2.0.0-rc2(@sveltejs/kit@2.5.6)(next@13.5.6):
-    resolution: {integrity: sha512-ZJcUCJQInXrkuc8sa46E2CSObIaTs8qW7v5qEx+O2kdHUxLktyI+X/cpIKpuSi6jPIUdKANI2q/70FKHV5xf0w==}
+  /edge-csrf@2.0.0-rc3(@sveltejs/kit@2.5.6)(next@13.5.6):
+    resolution: {integrity: sha512-7syyAlAcjXRt/xBNTh8WQ2FHqmo355XdkFbNBVqdMeBecJf/k+Wax2amP+ApFSoJZOU6rxG74gBMZNdcw3dqTg==}
     peerDependencies:
       '@sveltejs/kit': ^2.5.5
       next: ^13.0.0 || ^14.0.0
