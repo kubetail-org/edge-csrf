@@ -9,18 +9,22 @@
   "sideEffects": false,
   "main": "dist/index.cjs",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     },
     "./nextjs": {
       "import": "./dist/nextjs.js",
-      "require": "./dist/nextjs.cjs"
+      "require": "./dist/nextjs.cjs",
+      "types": "./dist/nextjs.d.ts"
     },
     "./sveltekit": {
       "import": "./dist/sveltekit.js",
-      "require": "./dist/sveltekit.cjs"
+      "require": "./dist/sveltekit.cjs",
+      "types": "./dist/sveltekit.d.ts"
     }
   },
   "files": [
@@ -53,7 +57,7 @@
     "vitest": "^1.4.0",
     "vitest-environment-miniflare": "^2.14.2"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "@sveltejs/kit": "^2.5.5",
     "next": "^13.0.0 || ^14.0.0"
   },
