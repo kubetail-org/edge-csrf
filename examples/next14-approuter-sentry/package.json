@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@sentry/nextjs": "^7.93.0",
-    "edge-csrf": "2.0.0-rc1",
+    "edge-csrf": "2.0.0-rc2",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18"

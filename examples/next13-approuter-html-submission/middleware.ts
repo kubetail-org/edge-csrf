@@ -1,4 +1,4 @@
-import csrf from 'edge-csrf';
+import { createMiddleware } from 'edge-csrf/nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
