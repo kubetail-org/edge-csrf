@@ -30,7 +30,7 @@ describe('NextConfig tests', () => {
   });
 
   it('handles top-level overrides', () => {
-    const config = new NextConfig({ excludePathPrefixes: ['/xxx/']});
+    const config = new NextConfig({ excludePathPrefixes: ['/xxx/'] });
     expect(config.excludePathPrefixes).toEqual(['/xxx/']);
   });
 
@@ -283,8 +283,11 @@ describe('obtaining secrets tests', () => {
       const request = new NextRequest('http://example.com', { method });
       const response = NextResponse.next();
 
-      try { await csrfProtectDefault(request, response); }
-      catch {}
+      try {
+        await csrfProtectDefault(request, response);
+      } catch (err) {
+        // do nothing
+      }
 
       expect(response.cookies.get('_csrfSecret')).not.toEqual(undefined);
     });
@@ -299,8 +302,11 @@ describe('obtaining secrets tests', () => {
       request.cookies.set('_csrfSecret', secretStr);
       const response = NextResponse.next();
 
-      try { await csrfProtectDefault(request, response); }
-      catch {}
+      try {
+        await csrfProtectDefault(request, response);
+      } catch (err) {
+        // do nothing
+      }
 
       expect(response.cookies.get('_csrfSecret')).toEqual(undefined);
     });

@@ -113,7 +113,7 @@ export function createCsrfProtect(opts?: Partial<ConfigOptions>): CsrfProtect {
 
     // check excludePathPrefixes
     for (const pathPrefix of config.excludePathPrefixes) {
-      if (url.pathname.startsWith(pathPrefix)) return;
+      if (url.pathname.startsWith(pathPrefix)) return undefined;
     }
 
     // get secret from cookies

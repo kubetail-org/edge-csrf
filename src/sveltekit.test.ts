@@ -1,7 +1,5 @@
-import type { RequestEvent as _RequestEvent, Cookies as _Cookies } from '@sveltejs/kit';
-
 import { CsrfError } from '@/lib/errors';
-import { createCsrfProtect  } from './sveltekit';
+import { createCsrfProtect } from './sveltekit';
 import type { SvelteKitCsrfProtectRequestEvent } from './sveltekit';
 import * as util from '@/lib/util';
 
@@ -16,6 +14,7 @@ class Cookies {
     return this.jar[name];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   set(name: string, value: string, _: any) {
     this.jar[name] = value;
   }
@@ -55,7 +54,7 @@ describe('csrfProtect integration tests', () => {
     await csrfProtectDefault(event);
 
     // assertions
-    const csrfToken = event.locals.csrfToken;
+    const { csrfToken } = event.locals;
     expect(csrfToken).toBeDefined();
     expect(csrfToken).not.toBe('');
   });
@@ -73,7 +72,7 @@ describe('csrfProtect integration tests', () => {
     await csrfProtectDefault(event);
 
     // assertions
-    const csrfToken = event.locals.csrfToken;
+    const { csrfToken } = event.locals;
     expect(csrfToken).toBeDefined();
     expect(csrfToken).not.toBe('');
   });
@@ -95,7 +94,7 @@ describe('csrfProtect integration tests', () => {
     await csrfProtectDefault(event);
 
     // assertions
-    const csrfToken = event.locals.csrfToken;
+    const { csrfToken } = event.locals;
     expect(csrfToken).toBeDefined();
     expect(csrfToken).not.toBe('');
   });
@@ -114,7 +113,7 @@ describe('csrfProtect integration tests', () => {
     await csrfProtectDefault(event);
 
     // assertions
-    const csrfToken = event.locals.csrfToken;
+    const { csrfToken } = event.locals;
     expect(csrfToken).toBeDefined();
     expect(csrfToken).not.toBe('');
   });
@@ -230,7 +229,6 @@ describe('csrfProtect integration tests', () => {
   });
 });
 
-
 describe('obtaining secrets tests', () => {
   const csrfProtectDefault = createCsrfProtect();
 
@@ -240,8 +238,11 @@ describe('obtaining secrets tests', () => {
     it.each(methods)('%s request', async (method) => {
       const event = new RequestEvent('http://example.com', { method });
 
-      try { await csrfProtectDefault(event); }
-      catch {}
+      try {
+        await csrfProtectDefault(event);
+      } catch (err) {
+        // do nothing
+      }
 
       expect(event.cookies.get('_csrfSecret')).not.toEqual(undefined);
     });
@@ -255,8 +256,11 @@ describe('obtaining secrets tests', () => {
       const event = new RequestEvent('http://example.com', { method });
       event.cookies.set('_csrfSecret', secretStr, null);
 
-      try { await csrfProtectDefault(event); }
-      catch {}
+      try {
+        await csrfProtectDefault(event);
+      } catch (err) {
+        // do nothing
+      }
 
       expect(event.cookies.get('_csrfSecret')).toEqual(undefined);
     });

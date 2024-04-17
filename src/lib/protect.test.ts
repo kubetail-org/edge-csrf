@@ -111,8 +111,11 @@ describe('csrfProtect tests', () => {
    */
   class TestArgs implements CsrfProtectArgs {
     request: CsrfProtectArgs['request'];
+
     url: CsrfProtectArgs['url'];
+
     getCookie: CsrfProtectArgs['getCookie'] = vi.fn();
+
     setCookie: CsrfProtectArgs['setCookie'] = vi.fn();
 
     constructor(url: string = 'http://example.com/', requestArgs?: RequestInit) {
@@ -123,7 +126,7 @@ describe('csrfProtect tests', () => {
 
   describe('exits early when pathname in `excludePathPrefixes`', async () => {
     const csrfProtect = createCsrfProtect({
-      excludePathPrefixes: ['/test-path1/', '/test-path2/']
+      excludePathPrefixes: ['/test-path1/', '/test-path2/'],
     });
 
     const urls = [
@@ -200,10 +203,10 @@ describe('csrfProtect tests', () => {
       const csrfProtect = createCsrfProtect();
       const args = new TestArgs('http://example.com/', { method });
       await csrfProtect(args);
-  
+
       // assertions
       expect(getTokenStringMock).toHaveBeenCalledTimes(0);
-      expect(verifyTokenMock).toHaveBeenCalledTimes(0);  
+      expect(verifyTokenMock).toHaveBeenCalledTimes(0);
     });
   });
 

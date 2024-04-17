@@ -60,7 +60,7 @@ export function createCsrfProtect(opts?: Partial<NextConfigOptions>): NextCsrfPr
   return async (request, response) => {
     // execute protect function
     const token = await _csrfProtect({
-      request: request,
+      request,
       url: request.nextUrl,
       getCookie: (name) => request.cookies.get(name)?.value,
       setCookie: (cookie) => response.cookies.set(cookie),
