@@ -1,24 +1,25 @@
 # Edge-CSRF
 
-Edge-CSRF is CSRF protection for [Next.js](https://nextjs.org/) that runs in middleware (edge runtime).
+Edge-CSRF is a CSRF protection library that runs on the [edge runtime](https://edge-runtime.vercel.app/).
 
-This library uses the cookie strategy from [expressjs/csurf](https://github.com/expressjs/csurf) and the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf) except it only uses Next.js edge runtime dependencies so it can be used in [Next.js middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware).
+This library helps you to implement the [signed double submit cookie pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended) except it only uses edge runtime dependencies so it can be used in both node environments and in edge functions (e.g. [Vercel Edge Functions](https://vercel.com/docs/functions/runtimes/edge-runtime), [Cloudflare Page Functions](https://developers.cloudflare.com/pages/functions/)). The recommended way to use this library is via its drop-in integrations for [Next.js](src/nextjs) and [SvelteKit](src/sveltekit) though it also has a lower-level API for more custom implementations.
+
+We hope you enjoy using this software. Contributions and suggestions are welcome!
 
 ## Features
 
-- Supports app-router and pages-router Next.js 13 and Next.js 14
-- Runs in edge runtime
-- Implements cookie strategy from [expressjs/csurf](https://github.com/expressjs/csurf) and the crypto logic from [pillarjs/csrf](https://github.com/pillarjs/csrf)
+- Runs on both node and edge runtimes
+- Includes a Next.js integration ([see here](src/nextjs))
+- Includes a SvelteKit integration ([see here](src/sveltekit))
+- Includes a low-level API for custom integrations ([see below](#api))
 - Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
+- Supports Server Actions via form and non-form submission
 - Customizable cookie options
-- TypeScript definitions included
 
-**Note: There's an issue with Next.js middleware in v13.3.X and v13.4.X that prevents edge-csrf from working properly with the pages-router in a dev environment (https://github.com/vercel/next.js/issues/48083, https://github.com/vercel/next.js/issues/48546)**
+## Install
 
-## Quickstart
-
-To use Edge-CSRF, first add it as a dependency to your app:
+To use Edge-CSRF, just add it as a dependency to your app:
 
 ```console
 npm install edge-csrf
@@ -28,247 +29,53 @@ pnpm add edge-csrf
 yarn add edge-csrf
 ```
 
-Next, create a middleware file (`middleware.ts`) for your project and add the Edge-CSRF middleware:
+## Integrations
 
-```typescript
-// middleware.ts
+For details about each integration see:
 
-import csrf from 'edge-csrf';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+* [Next.js README](docs/nextjs.md)
+* [SvelteKit README](docs/sveltekit.md)
 
-// initalize protection function
-const csrfProtect = csrf({
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-  },
-});
+## Low-level API
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-
-  // csrf protection
-  const csrfError = await csrfProtect(request, response);
-
-  // check result
-  if (csrfError) {
-      return new NextResponse('invalid csrf token', { status: 403 });
-  }
-    
-  return response;
-}
-```
-
-Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
-
-### App Router
-
-```typescript
-// app/page.tsx
-
-import { headers } from 'next/headers';
-
-export default function Page() {
-  const csrfToken = headers().get('X-CSRF-Token') || 'missing';
-
-  return (
-    <form action="/api/form-handler" method="post">
-      <input type="hidden" value={csrfToken}>
-      <input type="text" name="my-input">
-      <input type="submit">
-    </form>
-  );
-}
-```
-
-```typescript
-// app/form-handler/route.ts
-
-import { NextResponse } from 'next/server';
-
-export async function POST() {
-  return NextResponse.json({ status: 'success'});
-}
-```
-
-### Pages Router
-
-```typescript
-// pages/form.ts
-
-import type { NextPage, GetServerSideProps } from 'next';
-import React from 'react';
-
-type Props = {
-  csrfToken: string;
-};
-
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const csrfToken = res.getHeader('x-csrf-token') || 'missing';
-  return { props: { csrfToken } };
-}
-
-const FormPage: NextPage<Props> = ({ csrfToken }) => {
-  return (
-    <form action="/api/form-handler" method="post">
-      <input type="hidden" value={csrfToken}>
-      <input type="text" name="my-input">
-      <input type="submit">
-    </form>
-  );
-}
-
-export default FormPage;
-```
-
-```typescript
-// pages/api/form-handler.ts
-
-import type { NextApiRequest, NextApiResponse } from 'next';
-
-type Data = {
-  status: string
-};
-
-export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  // this code won't execute unless CSRF token passes validation 
-  res.status(200).json({ status: 'success' });
-}
-```
-
-## Examples
-
-See more examples in the [examples](examples) directory in this repository:
-
-| Next.js Version | Router | Implementation                                                                          |
-| --------------- | ------ | --------------------------------------------------------------------------------------- |
-| 13              | app    | [HTML form](examples/next13-approuter-html-submission)                                  |
-| 13              | app    | [JavaScript (dynamic)](examples/next13-approuter-js-submission-dynamic)                 |
-| 13              | app    | [JavaScript (static)](examples/next13-approuter-js-submission-static)                   |
-| 13              | pages  | [HTML form](examples/next13-pagesrouter-html-submmission)                               |
-| 14              | app    | [HTML form](examples/next14-approuter-html-submission)                                  |
-| 14              | app    | [JavaScript (dynamic)](examples/next14-approuter-js-submission-dynamic)                 |
-| 14              | app    | [JavaScript (static)](examples/next14-approuter-js-submission-static)                   | 
-| 14              | app    | [Sentry](examples/next14-approuter-sentry)                                              |
-| 14              | app    | [Server action (form)](examples/next14-approuter-server-action-form-submission)         |
-| 14              | app    | [Server action (non-form)](examples/next14-approuter-server-action-non-form-submission) |
-| 14              | pages  | [HTML form](examples/next14-pagesrouter-html-submission)                                |
-
-## Server Actions
-
-Edge-CSRF supports server actions with both form and non-form submission in the latest version of Next.js (14).
-
-### Form Submission
-
-With server actions that get executed via form submission, you can add the CSRF token as a hidden field to the form ([see example](examples/next14-approuter-server-action-form-submission)):
-
-```tsx
-import { revalidatePath } from 'next/cache';
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
-
-export default function Page() {
-  const csrfToken = headers().get('X-CSRF-Token') || 'missing';
-
-  async function myAction(formData: FormData) {
-    'use server';
-    console.log('passed csrf validation');
-    revalidatePath('/');
-    redirect('/');
-  }
-
-  return (
-    <form action={myAction}>
-      <legend>Server Action with Form Submission Example:</legend>
-      <input type="hidden" name="csrf_token" value={csrfToken} />
-      <input type="text" name="myarg" />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-### Non-Form Submission
-
-With server actions that get executed by JavaScript calls (non-form), you can pass the CSRF token as the first argument to the function ([see example](examples/next14-approuter-server-action-non-form-submission)):
-
-```tsx
-// lib/actions.ts
-'use server';
-
-export async function exampleFn(csrfToken: string, data: { key1: string; key2: string; }) {
-  console.log(data);
-}
+The following methods are named exports in the the top-level `edge-csrf` module:
 
 ```
+createSecret(length) - Create new secret (cryptographically secure)
 
-```tsx
-// app/page.tsx
-'use client';
+  * @param {int} length - Byte length of secret
+  * @returns {Uint8Array} - The secret
 
-import { exampleFn } from '../lib/actions';
+createToken(secret, saltByteLength) - Create new CSRF token (cryptographically insecure
+                                      salt hashed with secret)
 
-export default function Page() {
-  const handleClick = async () => {
-    const csrfResp = await fetch('/csrf-token');
-    const { csrfToken } = await csrfResp.json();
+  * @param {Uint8Array} secret - The secret
+  * @param {int} saltByteLength - Salt length in number of bytes
+  * @returns {Promise<Uint8Array>} - A promise returning the token in Uint8Array format
 
-    const data = { 
-      key1: 'val1',
-      key2: 'val2',
-    };
+getTokenString(request) - Get the CSRF token from the request
 
-    // use token as first argument to server action
-    await exampleFn(csrfToken, data);
-  };
+  * @param {Request} request - The request object
+  * @returns {Promise<string>} - A promise returning the token in string format
 
-  return (
-    <>
-      <h2>Server Action with Non-Form Submission Example:</h2>
-      <button onClick={handleClick}>Click me</button>
-    </>
-  );
-}
+verifyToken(token, secret) - Verify the CSRF token and secret obtained from the request
+
+  * @param {Uint8Array} token - The CSRF token
+  * @param {Uint8Array} secret - The CSRF secret
+  * @returns {Promise<boolean>} - A promise returning result of verification
+
+utoa(input) - Encode Uint8Array as base64 string
+
+  * @param {Uint8Array} input - The data to be converted from Uint8Array to base64
+  * @returns {string} The base64 encoded string
+
+atou(input) - Decode base64 string into Uint8Array
+
+  * @param {string} input - The data to be converted from base64 to Uint8Array
+  * @returns {Uint8Array} - The Uint8Array representing the input string
 ```
 
-## Configuration
-
-To configure the CSRF middleware function just pass an object containing your options to the initialization method:
-
-```javascript
-const csrfProtect = csrf({
-  cookie: {
-    name: '_myCsrfSecret'
-  },
-  secretByteLength: 20
-});
-```
-
-Here are the default configuration values:
-
-```javascript
-// default config
-
-{
-  cookie: {
-    name: '_csrfSecret',
-    path: '/',
-    maxAge: undefined,
-    domain: '',
-    secure: true,
-    httpOnly: true,
-    sameSite: 'strict'
-  },
-  excludePathPrefixes: ['/_next/'],
-  ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-  saltByteLength: 8,
-  secretByteLength: 18,
-  token: {
-    responseHeader: 'X-CSRF-Token',
-    value: undefined
-  }
-}
-```
+__Note__: If you're using these methods you're probably working on a custom framework integration. If so, please consider contributing it back to this project!
 
 ## Development
 
@@ -284,10 +91,10 @@ pnpm install
 
 ### Run the unit tests
 
-Edge-CSRF uses jest for testing (via vitest). To run the tests, use the `test` command:
+Edge-CSRF uses jest for testing (via vitest). To run the tests in node, edge and miniflare environments, use the `test-all` command:
 
 ```console
-pnpm test
+pnpm test-all
 ```
 
 The test files are colocated with the source code in the `src/` directory, with the filename format `{name}.test.ts`.
@@ -300,4 +107,4 @@ To build Edge-CSRF for production, run the `build` command:
 pnpm build
 ```
 
-The production files will be located in the `dist/` directory.
+The build artifacts will be located in the `dist/` directory.

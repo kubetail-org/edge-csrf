@@ -25,6 +25,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
 
+    /* import paths */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+
     /* misc */
     "types": [
       "vitest/globals"

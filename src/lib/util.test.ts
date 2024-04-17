@@ -146,7 +146,7 @@ describe('getTokenString', () => {
       method: 'POST',
       body: JSON.stringify({ 'custom-token-name': 'my-token' }),
     });
-    const valueFn = async (request: NextRequest) => (await request.json())['custom-token-name'];
+    const valueFn = async (request: Request) => (await request.json())['custom-token-name'];
     const tokenStr = await util.getTokenString(requestOuter, valueFn);
     expect(tokenStr).toEqual('my-token');
   });

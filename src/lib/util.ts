@@ -1,7 +1,5 @@
-import type { NextRequest } from 'next/server';
-
 export type TokenValueFunction = {
-  (request: NextRequest): Promise<string>
+  (request: Request): Promise<string>
 };
 
 /**
@@ -62,10 +60,10 @@ function getTokenValueFromFormData(formData: FormData): File | string | undefine
 
 /**
  * Get CSRF token from request
- * @param {NextRequest} request - The request object
+ * @param {Request} request - The request object
  * @param {ValueFunc|null} valueFn - Function to retrieve token value from request
  */
-export async function getTokenString(request: NextRequest, valueFn?: TokenValueFunction): Promise<string> {
+export async function getTokenString(request: Request, valueFn?: TokenValueFunction): Promise<string> {
   if (valueFn !== undefined) return valueFn(request);
 
   // check the `x-csrf-token` request header
