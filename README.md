@@ -31,7 +31,7 @@ yarn add edge-csrf
 
 ## Quickstart (Next.js)
 
-First, create a middleware file (`middleware.ts`) for your project and add the Edge-CSRF middleware:
+To use Edge-CSRF with your Next.js app, first create a middleware file (`middleware.ts`) for your project and add the Edge-CSRF middleware:
 
 ```typescript
 // middleware.ts
@@ -80,7 +80,7 @@ export async function POST() {
 
 ## Quickstart (SvelteKit)
 
-First, create a server-side hooks file (`hooks.server.ts`) for your project and add the Edge-CSRF handle:
+To use Edge-CSRF with your SvelteKit app, first create a server-side hooks file (`hooks.server.ts`) for your project and add the Edge-CSRF handle:
 
 ```typescript
 // src/hooks.server.ts
