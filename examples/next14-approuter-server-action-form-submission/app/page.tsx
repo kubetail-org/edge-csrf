@@ -1,14 +1,16 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
 import '../styles/globals.css';
 
 export default function Page() {
   const csrfToken = headers().get('X-CSRF-Token') || 'missing';
 
-  async function myAction(formData: FormData) {
+  async function myAction() {
     'use server';
+
+    // eslint-disable-next-line no-console
     console.log('passed csrf validation');
     revalidatePath('/');
     redirect('/');
@@ -16,7 +18,10 @@ export default function Page() {
 
   return (
     <>
-      <p>CSRF token value: {csrfToken}</p>
+      <p>
+        CSRF token value:
+        {csrfToken}
+      </p>
       <h2>Server Action Form Submission Example:</h2>
       <p>NOTE: Look at browser network logs and server console for submission feedback</p>
       <h3>Example 1:</h3>

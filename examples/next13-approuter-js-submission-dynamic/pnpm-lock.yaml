@@ -15,8 +15,8 @@ dependencies:
     specifier: ^18.2.14
     version: 18.2.25
   edge-csrf:
-    specifier: 2.0.0-rc6
-    version: 2.0.0-rc6
+    specifier: 2.0.0-rc7
+    version: 2.0.0-rc7
   eslint:
     specifier: ^8.52.0
     version: 8.57.0
@@ -686,8 +686,8 @@ packages:
       esutils: 2.0.3
     dev: false
 
-  /edge-csrf@2.0.0-rc6:
-    resolution: {integrity: sha512-G8xGeWI/az/5sU9ozCkKFD/ASQDLtZnoWOcqbOi8sS7SpSn7++K9fU4fuuXIaybS8irBbYB7HCNwswnc8ZsmzQ==}
+  /edge-csrf@2.0.0-rc7:
+    resolution: {integrity: sha512-9+r9jnWStACk8sHUFGyCJtPLgUPah+cWeaT5kHGjVqCrcRmlgm5xPDhckwoYoqonJMAgQtieuNEC5e5H56vteQ==}
     dev: false
 
   /emoji-regex@9.2.2:

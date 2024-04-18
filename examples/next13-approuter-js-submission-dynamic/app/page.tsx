@@ -14,29 +14,33 @@ export default function Page() {
   }, []);
 
   // method to generate form handlers
-  const onSubmit = (tokenVal: string | null): React.FormEventHandler<HTMLFormElement> => {
-    return async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (tokenVal: string | null): React.FormEventHandler<HTMLFormElement> => (
+    async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       // get form values
       const data = new FormData(event.currentTarget);
 
       // build fetch args
-      const fetchArgs = {method: 'POST', headers: {}, body: JSON.stringify(data)};
-      if (tokenVal != null) fetchArgs.headers = {'X-CSRF-Token': tokenVal};
- 
+      const fetchArgs = { method: 'POST', headers: {}, body: JSON.stringify(data) };
+      if (tokenVal != null) fetchArgs.headers = { 'X-CSRF-Token': tokenVal };
+
       // send to backend
       const response = await fetch('/form-handler', fetchArgs);
 
       // show response
+      // eslint-disable-next-line no-alert
       alert(response.statusText);
-    };
-  }
+    }
+  );
 
   return (
     <>
       <h2>JavaScript Form Submission Example:</h2>
-      <p>CSRF token value: {csrfToken}</p>
+      <p>
+        CSRF token value:
+        {csrfToken}
+      </p>
       <form onSubmit={onSubmit(null)}>
         <legend>Form without CSRF (should fail):</legend>
         <input type="text" name="input1" />
