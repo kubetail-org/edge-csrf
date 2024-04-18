@@ -29,7 +29,7 @@ export default defineConfig({
           exclude: ['src/**/*.test.ts'],
         }),
       ],
-      external: [/node_modules/],
+      external: ['next/server'],
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',

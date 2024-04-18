@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { NextResponse } from 'next/server';
 
 import { CsrfError } from '@/lib/errors';

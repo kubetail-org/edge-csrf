@@ -1,7 +1,7 @@
 {
   "name": "edge-csrf",
   "description": "CSRF protection for Next.js middleware",
-  "version": "2.0.0-rc4",
+  "version": "2.0.0-rc6",
   "author": "Andres Morey",
   "license": "MIT",
   "repository": "kubetail-org/edge-csrf",
@@ -9,18 +9,22 @@
   "sideEffects": false,
   "main": "dist/index.cjs",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     },
     "./nextjs": {
       "import": "./dist/nextjs.js",
-      "require": "./dist/nextjs.cjs"
+      "require": "./dist/nextjs.cjs",
+      "types": "./dist/nextjs.d.ts"
     },
     "./sveltekit": {
       "import": "./dist/sveltekit.js",
-      "require": "./dist/sveltekit.cjs"
+      "require": "./dist/sveltekit.cjs",
+      "types": "./dist/sveltekit.d.ts"
     }
   },
   "files": [
@@ -35,6 +39,7 @@
   "devDependencies": {
     "@edge-runtime/vm": "^3.2.0",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@sveltejs/kit": "^2.5.6",
     "@types/cookie": "^0.6.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.5",
@@ -52,10 +57,6 @@
     "vite": "^5.2.8",
     "vitest": "^1.4.0",
     "vitest-environment-miniflare": "^2.14.2"
-  },
-  "peerDependencies": {
-    "@sveltejs/kit": "^2.5.5",
-    "next": "^13.0.0 || ^14.0.0"
   },
   "keywords": [
     "csrf",
