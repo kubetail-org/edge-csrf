@@ -1,7 +1,7 @@
 {
   "name": "edge-csrf",
   "description": "CSRF protection for Next.js middleware",
-  "version": "2.0.0-rc6",
+  "version": "2.0.0-rc7",
   "author": "Andres Morey",
   "license": "MIT",
   "repository": "kubetail-org/edge-csrf",
