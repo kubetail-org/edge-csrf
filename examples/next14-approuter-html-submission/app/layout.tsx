@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'edge-csrf html form submission example'
+  title: 'edge-csrf html form submission example',
 };
 
 export default function Layout({
