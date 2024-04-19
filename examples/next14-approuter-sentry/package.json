@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@edge-csrf/nextjs": "2.0.0-rc9",
     "@sentry/nextjs": "^7.93.0",
-    "edge-csrf": "2.0.0-rc7",
     "next": "14.2.1",
     "react": "^18",
     "react-dom": "^18"

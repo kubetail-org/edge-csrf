@@ -1,0 +1,35 @@
+{
+  "name": "@edge-csrf/nextjs",
+  "version": "0.0.0",
+  "description": "Edge-CSRF Next.js integration library",
+  "author": "Andres Morey",
+  "license": "MIT",
+  "repository": "kubetail-org/edge-csrf",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "lint": "eslint \"./src/**/*.ts{,x}\"",
+    "test": "vitest",
+    "test-all": "vitest run --environment node && vitest run --environment edge-runtime && vitest run --environment miniflare"
+  },
+  "devDependencies": {
+    "next": "^14.2.0"
+  },
+  "peerDependencies": {
+    "next": "^13.0.0 || ^14.0.0"
+  },
+  "keywords": [
+    "csrf",
+    "tokens",
+    "edge",
+    "nextjs",
+    "next"
+  ]
+}

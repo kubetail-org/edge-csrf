@@ -26,10 +26,10 @@
     "noUnusedParameters": true,
 
     /* import paths */
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "./src/*"
+      "@shared/*": [
+        "shared/src/*"
       ]
     },
 
@@ -38,9 +38,6 @@
       "vitest/globals"
     ]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
   "exclude": [
     "node_modules",
     "dist"

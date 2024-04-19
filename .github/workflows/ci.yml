@@ -17,7 +17,7 @@ jobs:
         with:
           version: 8
       - run: pnpm install
-      - run: pnpm lint
+      - run: pnpm -r lint
 
   test:
     runs-on: ubuntu-latest
@@ -30,10 +30,10 @@ jobs:
         with:
           version: 8
       - run: pnpm install
-      - run: pnpm test run -- --environment node
-      - run: pnpm test run -- --environment edge-runtime
-      - run: pnpm build # only necessary for miniflare
-      - run: pnpm test run -- --environment miniflare
+      - run: pnpm -r test run -- --environment node
+      - run: pnpm -r test run -- --environment edge-runtime
+      - run: pnpm -r build # only necessary for miniflare
+      - run: pnpm -r test run -- --environment miniflare
 
   build:
     runs-on: ubuntu-latest
@@ -46,4 +46,4 @@ jobs:
         with:
           version: 8
       - run: pnpm install
-      - run: pnpm build
+      - run: pnpm -r build

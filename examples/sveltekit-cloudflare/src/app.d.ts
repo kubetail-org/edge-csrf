@@ -1,4 +1,4 @@
-import type { EdgeCsrfLocals } from 'edge-csrf/sveltekit';
+import type { EdgeCsrfLocals } from '@edge-csrf/sveltekit';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
