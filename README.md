@@ -193,7 +193,7 @@ Edge-CSRF uses jest for testing (via vitest). To run the tests in node, edge and
 pnpm test-all
 ```
 
-The test files are colocated with the source code in the `src/` directory, with the filename format `{name}.test.ts`.
+The test files are colocated with the source code in each package's `src/` directory, with the filename format `{name}.test.ts`.
 
 ### Build for production
 
@@ -203,4 +203,4 @@ To build Edge-CSRF for production, run the `build` command:
 pnpm build
 ```
 
-The build artifacts will be located in the `dist/` directory.
+The build artifacts will be located in the `dist/` directory of each package.

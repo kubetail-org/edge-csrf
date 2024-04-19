@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r build",
+    "clean": "pnpm -r exec rm -rf node_modules",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test run",
     "test-all": "pnpm -r test-all"
