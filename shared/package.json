@@ -1,0 +1,10 @@
+{
+  "name": "@edge-csrf/shared",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts{,x}\"",
+    "test": "vitest",
+    "test-all": "vitest run --environment node && vitest run --environment edge-runtime && vitest run --environment miniflare"
+	}
+}

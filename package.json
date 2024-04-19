@@ -1,68 +1,25 @@
 {
-  "name": "edge-csrf",
-  "description": "CSRF protection for Next.js middleware",
-  "version": "2.0.0-rc7",
-  "author": "Andres Morey",
-  "license": "MIT",
-  "repository": "kubetail-org/edge-csrf",
-  "type": "module",
-  "sideEffects": false,
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
-    },
-    "./nextjs": {
-      "import": "./dist/nextjs.js",
-      "require": "./dist/nextjs.cjs",
-      "types": "./dist/nextjs.d.ts"
-    },
-    "./sveltekit": {
-      "import": "./dist/sveltekit.js",
-      "require": "./dist/sveltekit.cjs",
-      "types": "./dist/sveltekit.d.ts"
-    }
-  },
-  "files": [
-    "/dist"
-  ],
+  "private": true,
   "scripts": {
-    "build": "tsc && vite build",
-    "lint": "eslint \"./src/**/*.ts{,x}\"",
-    "test": "vitest",
-    "test-all": "vitest run --environment node && vitest run --environment edge-runtime && vitest run --environment miniflare"
+    "build": "lerna run build",
+    "lint": "lerna run lint",
+    "test": "lerna run test -- run",
+    "test-all": "lerna run test-all"
   },
   "devDependencies": {
     "@edge-runtime/vm": "^3.2.0",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "@sveltejs/kit": "^2.5.6",
-    "@types/cookie": "^0.6.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.5",
-    "@types/react": "^18.2.74",
-    "@types/react-dom": "^18.2.24",
     "@typescript-eslint/eslint-plugin": "^7.6.0",
     "@typescript-eslint/parser": "^7.6.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
-    "next": "^14.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "lerna": "^8.1.2",
+    "tsup": "^8.0.2",
     "typescript": "^5.4.4",
     "vite": "^5.2.8",
     "vitest": "^1.4.0",
     "vitest-environment-miniflare": "^2.14.2"
-  },
-  "keywords": [
-    "csrf",
-    "tokens",
-    "edge",
-    "nextjs",
-    "next"
-  ]
+  }
 }

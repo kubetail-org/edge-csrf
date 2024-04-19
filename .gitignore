@@ -29,3 +29,6 @@ vite.config.ts.timestamp-*
 # wrangler files
 .wrangler
 .dev.vars
+
+# lerna
+.nx

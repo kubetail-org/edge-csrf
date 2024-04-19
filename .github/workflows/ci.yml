@@ -30,10 +30,10 @@ jobs:
         with:
           version: 8
       - run: pnpm install
-      - run: pnpm test run -- --environment node
-      - run: pnpm test run -- --environment edge-runtime
+      - run: pnpm test -- --environment node
+      - run: pnpm test -- --environment edge-runtime
       - run: pnpm build # only necessary for miniflare
-      - run: pnpm test run -- --environment miniflare
+      - run: pnpm test -- --environment miniflare
 
   build:
     runs-on: ubuntu-latest
