@@ -15,9 +15,7 @@
   ],
   "scripts": {
     "build": "tsc && vite build",
-    "lint": "eslint \"./src/**/*.ts{,x}\"",
-    "test": "vitest",
-    "test-all": "vitest run --environment node && vitest run --environment edge-runtime && vitest run --environment miniflare"
+    "lint": "eslint \"./src/**/*.ts{,x}\""
 	},
   "keywords": [
     "csrf",
