@@ -2,10 +2,10 @@ import type { NextRequest } from 'next/server';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NextResponse } from 'next/server';
 
-import { CsrfProtectError, createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@shared/protect';
+import { CsrfError, createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@shared/protect';
 import type { ConfigOptions } from '@shared/protect';
 
-export { CsrfProtectError };
+export { CsrfError };
 
 /**
  * Represents token options in config
@@ -53,7 +53,7 @@ export type NextCsrfProtect = {
  * Create CSRF protection function for use in Next.js middleware
  * @param {Partial<NextConfigOptions>} opts - Configuration options
  * @returns {NextCsrfProtectFunction} - The CSRF protect function
- * @throws {CsrfProtectError} - An error if CSRF validation failed
+ * @throws {CsrfError} - An error if CSRF validation failed
  */
 export function createCsrfProtect(opts?: Partial<NextConfigOptions>): NextCsrfProtect {
   const config = new NextConfig(opts);
@@ -88,7 +88,7 @@ export function createMiddleware(opts?: Partial<NextConfigOptions>) {
     try {
       await csrfProtect(request, response);
     } catch (err) {
-      if (err instanceof CsrfProtectError) return new NextResponse('invalid csrf token', { status: 403 });
+      if (err instanceof CsrfError) return new NextResponse('invalid csrf token', { status: 403 });
       throw err;
     }
 

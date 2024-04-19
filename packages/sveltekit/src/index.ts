@@ -1,9 +1,9 @@
 import type { Handle, RequestEvent, Cookies } from '@sveltejs/kit';
 
-import { CsrfProtectError, createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@shared/protect';
+import { CsrfError, createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@shared/protect';
 import type { ConfigOptions } from '@shared/protect';
 
-export { CsrfProtectError };
+export { CsrfError };
 
 export type SveltekitTokenOptions = TokenOptions;
 
@@ -36,7 +36,7 @@ export type SveltekitCsrfProtect = {
  * Create CSRF protection function for use in a SvelteKit handle
  * @param {Partial<SveltekitConfigOptions>} opts - Configuration options
  * @returns {SveltekitCsrfProtectFunction} - The CSRF protect function
- * @throws {CsrfProtectError} - An error if CSRF validation failed
+ * @throws {CsrfError} - An error if CSRF validation failed
  */
 export function createCsrfProtect(opts?: Partial<SveltekitConfigOptions>): SveltekitCsrfProtect {
   const config = new Config(opts);
@@ -68,7 +68,7 @@ export function createHandle(opts?: Partial<SveltekitConfigOptions>): Handle {
     try {
       await csrfProtect(event);
     } catch (err) {
-      if (err instanceof CsrfProtectError) return new Response('invalid csrf token', { status: 403 });
+      if (err instanceof CsrfError) return new Response('invalid csrf token', { status: 403 });
       throw err;
     }
 

@@ -4,7 +4,7 @@ import type { TokenValueFunction } from './util';
 /**
  * Represents a generic CSRF protection error
  */
-export class CsrfProtectError extends Error {}
+export class CsrfError extends Error {}
 
 /**
  * Represents cookie options in config
@@ -107,7 +107,7 @@ export type CsrfProtect = {
  * Create CSRF protection function
  * @param {Partial<ConfigOptions>} opts - Configuration options
  * @returns {CsrfProtectFunction} - The CSRF protect function
- * @throws {CsrfProtectError} - An error if CSRF validation failed
+ * @throws {CsrfError} - An error if CSRF validation failed
  */
 export function createCsrfProtect(opts?: Partial<ConfigOptions>): CsrfProtect {
   const config = new Config(opts || {});
@@ -138,7 +138,7 @@ export function createCsrfProtect(opts?: Partial<ConfigOptions>): CsrfProtect {
       const tokenStr = await getTokenString(request, config.token.value);
 
       if (!await verifyToken(atou(tokenStr), secret)) {
-        throw new CsrfProtectError('csrf validation error');
+        throw new CsrfError('csrf validation error');
       }
     }
 

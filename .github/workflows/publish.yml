@@ -24,8 +24,8 @@ jobs:
         with:
           version: 8
       - run: pnpm install
-      - run: pnpm build
+      - run: pnpm -r build
       - run: /bin/bash set-version.sh ${{ steps.tagName.outputs.tag }}
-      - run: pnpm publish -r --no-git-checks --access public
+      - run: pnpm -r publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

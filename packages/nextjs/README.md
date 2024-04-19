@@ -133,7 +133,7 @@ If you want lower-level control over the response or which routes CSRF protectio
 ```typescript
 // middleware.ts
 
-import { CsrfProtectError, createCsrfProtect } from '@edge-csrf/nextjs';
+import { CsrfError, createCsrfProtect } from '@edge-csrf/nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -197,13 +197,13 @@ NextCsrfProtectFunction - A function that implements CSRF protection for Next.js
   * @param {NextRequest} request - The Next.js request instance
   * @param {NextResponse} response - The Next.js response instance
   * @returns {Promise<void>} - The function completed successfully
-  * @throws {CsrfProtectError} - The function encountered a CSRF error
+  * @throws {CsrfError} - The function encountered a CSRF error
 ```
 
 ### Classes
 
 ```
-CsrfProtectError - A class that inherits from Error and represents CSRF errors
+CsrfError - A class that inherits from Error and represents CSRF errors
 ```
 
 ### Methods

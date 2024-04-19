@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 
-import { Config, CookieOptions, CsrfProtectError, TokenOptions, createCsrfProtect } from './protect';
+import { Config, CookieOptions, CsrfError, TokenOptions, createCsrfProtect } from './protect';
 import type { ConfigOptions, Cookie, CsrfProtectArgs } from './protect';
 import * as util from './util';
 
@@ -235,12 +235,12 @@ describe('csrfProtect tests', () => {
     expect(verifyTokenMock).toHaveBeenCalledOnce();
   });
 
-  it('raises CsrfProtectError when verifyToken() returns false', async () => {
+  it('raises CsrfError when verifyToken() returns false', async () => {
     verifyTokenMock = vi.spyOn(util, 'verifyToken').mockResolvedValue(false);
 
     const args = new TestArgs('http://example.com/', { method: 'POST' });
     const csrfProtect = createCsrfProtect();
-    await expect(csrfProtect(args)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtect(args)).rejects.toThrow(CsrfError);
     expect(verifyTokenMock).toHaveBeenCalledOnce();
   });
 

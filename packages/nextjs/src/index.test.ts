@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import * as util from '@shared/util';
 
-import { CsrfProtectError, NextConfig, NextTokenOptions, createCsrfProtect } from './index';
+import { CsrfError, NextConfig, NextTokenOptions, createCsrfProtect } from './index';
 
 describe('NextTokenOptions tests', () => {
   it('returns default values when options are absent', () => {
@@ -165,7 +165,7 @@ describe('csrfProtect integration tests', () => {
     request.cookies.set('_csrfSecret', util.utoa(goodSecret));
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with an invalid token', async () => {
@@ -178,7 +178,7 @@ describe('csrfProtect integration tests', () => {
     request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with non-base64 token', async () => {
@@ -191,7 +191,7 @@ describe('csrfProtect integration tests', () => {
     request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with no token', async () => {
@@ -201,7 +201,7 @@ describe('csrfProtect integration tests', () => {
     request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with empty token', async () => {
@@ -214,7 +214,7 @@ describe('csrfProtect integration tests', () => {
     request.cookies.set('_csrfSecret', util.utoa(secret));
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with non-base64 secret', async () => {
@@ -228,7 +228,7 @@ describe('csrfProtect integration tests', () => {
     request.cookies.set('_csrfSecret', '-');
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with an invalid secret', async () => {
@@ -242,7 +242,7 @@ describe('csrfProtect integration tests', () => {
     request.cookies.set('_csrfSecret', btoa(String.fromCharCode(100)));
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with no secret', async () => {
@@ -255,7 +255,7 @@ describe('csrfProtect integration tests', () => {
     });
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with empty secret', async () => {
@@ -269,7 +269,7 @@ describe('csrfProtect integration tests', () => {
     request.cookies.set('_csrfSecret', '');
 
     const response = NextResponse.next();
-    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
 });
 

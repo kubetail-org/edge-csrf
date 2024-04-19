@@ -1,6 +1,6 @@
 import * as util from '@shared/util';
 
-import { CsrfProtectError, createCsrfProtect } from './index';
+import { CsrfError, createCsrfProtect } from './index';
 import type { SvelteKitCsrfProtectRequestEvent } from './index';
 
 /**
@@ -129,7 +129,7 @@ describe('csrfProtect integration tests', () => {
     });
     event.cookies.set('_csrfSecret', util.utoa(goodSecret), null);
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with an invalid token', async () => {
@@ -141,7 +141,7 @@ describe('csrfProtect integration tests', () => {
     });
     event.cookies.set('_csrfSecret', util.utoa(secret), null);
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with non-base64 token', async () => {
@@ -153,7 +153,7 @@ describe('csrfProtect integration tests', () => {
     });
     event.cookies.set('_csrfSecret', util.utoa(secret), null);
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with no token', async () => {
@@ -162,7 +162,7 @@ describe('csrfProtect integration tests', () => {
     const event = new RequestEvent('http://example.com', { method: 'POST' });
     event.cookies.set('_csrfSecret', util.utoa(secret), null);
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with empty token', async () => {
@@ -174,7 +174,7 @@ describe('csrfProtect integration tests', () => {
     });
     event.cookies.set('_csrfSecret', util.utoa(secret), null);
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with non-base64 secret', async () => {
@@ -187,7 +187,7 @@ describe('csrfProtect integration tests', () => {
     });
     event.cookies.set('_csrfSecret', '-', null);
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with an invalid secret', async () => {
@@ -200,7 +200,7 @@ describe('csrfProtect integration tests', () => {
     });
     event.cookies.set('_csrfSecret', btoa(String.fromCharCode(100)), null);
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with no secret', async () => {
@@ -212,7 +212,7 @@ describe('csrfProtect integration tests', () => {
       headers: { 'x-csrf-token': util.utoa(token) },
     });
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 
   it('should fail with empty secret', async () => {
@@ -225,7 +225,7 @@ describe('csrfProtect integration tests', () => {
     });
     event.cookies.set('_csrfSecret', '', null);
 
-    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfProtectError);
+    await expect(csrfProtectDefault(event)).rejects.toThrow(CsrfError);
   });
 });
 

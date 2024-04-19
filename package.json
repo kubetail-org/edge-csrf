@@ -1,10 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "build": "lerna run build",
-    "lint": "lerna run lint",
-    "test": "lerna run test -- run",
-    "test-all": "lerna run test-all"
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test run",
+    "test-all": "pnpm -r test-all"
   },
   "devDependencies": {
     "@edge-runtime/vm": "^3.2.0",

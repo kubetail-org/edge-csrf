@@ -104,7 +104,7 @@ If you want lower-level control over the response or which routes CSRF protectio
 // src/hooks.server.ts
 
 import type { Handle } from '@sveltejs/kit';
-import { CsrfProtectError, createCsrfProtect } from '@edge-csrf/sveltekit';
+import { CsrfError, createCsrfProtect } from '@edge-csrf/sveltekit';
 
 // initalize csrf protection method
 const csrfProtect = createCsrfProtect({
@@ -162,13 +162,13 @@ SveltekitCsrfProtectFunction - A function that implements CSRF protection for Sv
 
   * @param {RequestEvent} event - The SvelteKit request event instance
   * @returns {Promise<void>} - The function completed successfully
-  * @throws {CsrfProtectError} - The function encountered a CSRF error
+  * @throws {CsrfError} - The function encountered a CSRF error
 ```
 
 ### Classes
 
 ```
-CsrfProtectError - A class that inherits from Error and represents CSRF errors
+CsrfError - A class that inherits from Error and represents CSRF errors
 ```
 
 ### Methods
