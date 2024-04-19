@@ -9,7 +9,6 @@ We hope you enjoy using this software. Contributions and suggestions are welcome
 ## Features
 
 - Runs on both node and edge runtimes
-- No external dependencies
 - Includes a Next.js integration ([see here](packages/nextjs))
 - Includes a SvelteKit integration ([see here](packages/sveltekit))
 - Includes a low-level API for custom integrations ([see here](packages/core))
@@ -17,6 +16,12 @@ We hope you enjoy using this software. Contributions and suggestions are welcome
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
 - Supports Server Actions via form and non-form submission
 - Customizable cookie options
+
+## Integrations
+
+* [Next.js](packages/nextjs)
+* [SvelteKit](packages/sveltekit)
+* [Core API](packages/core)
 
 ## Quickstart (Next.js)
 
@@ -161,17 +166,6 @@ declare global {
 
 export {};
 ```
-
-## Integrations
-
-For details about each integration see:
-
-* [Next.js README](packages/nextjs)
-* [SvelteKit README](packages/sveltekit)
-
-You can also create custom implementations using Edge-CSRF's low-level API:
-
-* [Core API README](packages/core)
 
 ## Development
 
