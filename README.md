@@ -15,7 +15,7 @@ We hope you enjoy using this software. Contributions and suggestions are welcome
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
 - Gets token from HTTP request header or from request body
 - Supports Server Actions via form and non-form submission
-- Customizable cookie options
+- Customizable cookie and other options
 
 ## Integrations
 
