@@ -99,7 +99,7 @@ Next, create a server-side hooks file (`hooks.server.ts`) for your project and a
 ```typescript
 // src/hooks.server.ts
 
-import { createCsrfHandle } from 'edge-csrf/sveltekit';
+import { createCsrfHandle } from '@edge-csrf/sveltekit';
 
 // initalize csrf protection handle
 const csrfHandle = createCsrfHandle({
