@@ -12,8 +12,8 @@ We hope you enjoy using this software. Contributions and suggestions are welcome
 - Includes a Next.js integration ([see here](packages/nextjs))
 - Includes a SvelteKit integration ([see here](packages/sveltekit))
 - Includes a low-level API for custom integrations ([see here](packages/core))
-- Gets token from HTTP request header (`X-CSRF-Token`) or from request body field (`csrf_token`)
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
+- Gets token from HTTP request header or from request body
 - Supports Server Actions via form and non-form submission
 - Customizable cookie options
 
