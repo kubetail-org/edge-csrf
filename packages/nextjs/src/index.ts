@@ -78,7 +78,7 @@ export function createCsrfProtect(opts?: Partial<NextConfigOptions>): NextCsrfPr
  * @param {Partial<NextConfigOptions>} opts - Configuration options
  * @returns Next Middleware function
  */
-export function createMiddleware(opts?: Partial<NextConfigOptions>) {
+export function createCsrfMiddleware(opts?: Partial<NextConfigOptions>) {
   const csrfProtect = createCsrfProtect(opts);
 
   return async (request: NextRequest) => {

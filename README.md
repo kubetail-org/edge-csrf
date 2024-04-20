@@ -40,10 +40,10 @@ Next, create a middleware file (`middleware.ts`) for your project and add the Ed
 ```typescript
 // middleware.ts
 
-import { createMiddleware } from '@edge-csrf/nextjs';
+import { createCsrfMiddleware } from '@edge-csrf/nextjs';
 
 // initalize csrf protection middleware
-const csrfMiddleware = createMiddleware({
+const csrfMiddleware = createCsrfMiddleware({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
   },
@@ -99,10 +99,10 @@ Next, create a server-side hooks file (`hooks.server.ts`) for your project and a
 ```typescript
 // src/hooks.server.ts
 
-import { createHandle } from 'edge-csrf/sveltekit';
+import { createCsrfHandle } from 'edge-csrf/sveltekit';
 
 // initalize csrf protection handle
-const csrfHandle = createHandle({
+const csrfHandle = createCsrfHandle({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
   },
@@ -154,12 +154,12 @@ Finally, to make typescript aware of the new `locals` attributes you can add Edg
 ```typescript
 // src/app.d.ts
 
-import type { EdgeCsrfLocals } from '@edge-csrf/sveltekit';
+import type { CsrfLocals } from '@edge-csrf/sveltekit';
 
 declare global {
   namespace App {
     // ...
-    interface Locals extends EdgeCsrfLocals {}
+    interface Locals extends CsrfLocals {}
     // ...
   }
 }
