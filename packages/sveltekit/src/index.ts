@@ -14,7 +14,7 @@ export type SveltekitConfigOptions = ConfigOptions;
 /**
  * Represents locals added to Svelte by Edge-CSRF
  */
-export interface EdgeCsrfLocals {
+export interface CsrfLocals {
   csrfToken?: string;
 }
 
@@ -61,7 +61,7 @@ export function createCsrfProtect(opts?: Partial<SveltekitConfigOptions>): Svelt
  * @param {Partial<SveltekitConfigOptions>} opts - Configuration options
  * @returns {Handle} The SvelteKit handle
  */
-export function createHandle(opts?: Partial<SveltekitConfigOptions>): Handle {
+export function createCsrfHandle(opts?: Partial<SveltekitConfigOptions>): Handle {
   const csrfProtect = createCsrfProtect(opts);
 
   return async ({ event, resolve }) => {

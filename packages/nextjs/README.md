@@ -19,10 +19,10 @@ Next, create a middleware file (`middleware.ts`) for your project and add the Ed
 ```typescript
 // middleware.ts
 
-import { createMiddleware } from '@edge-csrf/nextjs';
+import { createCsrfMiddleware } from '@edge-csrf/nextjs';
 
 // initalize csrf protection middleware
-const csrfMiddleware = createMiddleware({
+const csrfMiddleware = createCsrfMiddleware({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
   },
@@ -209,7 +209,7 @@ CsrfError - A class that inherits from Error and represents CSRF errors
 ### Methods
 
 ```
-createMiddleware([, options]) - Create a new instance of Next.js middleware
+createCsrfMiddleware([, options]) - Create a new instance of Next.js middleware
 
   * @param {object} options - The configuration options
   * @returns {Middleware} - The middleware

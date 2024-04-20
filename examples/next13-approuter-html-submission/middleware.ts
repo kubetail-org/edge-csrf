@@ -1,7 +1,7 @@
-import { createMiddleware } from '@edge-csrf/nextjs';
+import { createCsrfMiddleware } from '@edge-csrf/nextjs';
 
 // initalize csrf protection middleware
-const csrfMiddleware = createMiddleware({
+const csrfMiddleware = createCsrfMiddleware({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
   },
