@@ -158,7 +158,7 @@ The following are named exports in the the `@edge-csrf/sveltekit` module:
 ### Types
 
 ```
-SveltekitCsrfProtectFunction - A function that implements CSRF protection for SvelteKit request events
+SveltekitCsrfProtect - A function that implements CSRF protection for SvelteKit request events
 
   * @param {RequestEvent} event - The SvelteKit request event instance
   * @returns {Promise<void>} - The function completed successfully
@@ -183,5 +183,5 @@ createCsrfProtect([, options]) - Create a lower-level function that can be used 
                                  to implement CSRF protection for requests
 
   * @param {object} [options] - The configuration options
-  * @returns {SveltekitCsrfProtectFunction} - The CSRF protection function
+  * @returns {SveltekitCsrfProtect} - The CSRF protection function
 ```
