@@ -26,6 +26,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@edge-csrf/sveltekit": "2.0.0-rc9"
+    "@edge-csrf/sveltekit": "^2.0.0"
   }
 }
