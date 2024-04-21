@@ -1,0 +1,32 @@
+{
+  "name": "@edge-csrf/sveltekit",
+  "version": "0.0.0",
+  "description": "Edge-CSRF SvelteKit integration library",
+  "author": "Andres Morey",
+  "license": "MIT",
+  "repository": "kubetail-org/edge-csrf",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "lint": "eslint \"./src/**/*.ts{,x}\"",
+    "test": "vitest",
+    "test-all": "vitest run --environment node && vitest run --environment edge-runtime && vitest run --environment miniflare"
+	},
+  "devDependencies": {
+    "@sveltejs/kit": "^2.5.6"
+  },
+  "keywords": [
+    "csrf",
+    "tokens",
+    "edge",
+    "sveltekit",
+    "svelte"
+  ]
+}

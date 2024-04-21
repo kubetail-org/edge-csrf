@@ -7,7 +7,7 @@ export default function Page() {
     const csrfResp = await fetch('/csrf-token');
     const { csrfToken } = await csrfResp.json();
 
-    const data = { 
+    const data = {
       key1: 'val1',
       key2: 'val2',
     };
@@ -34,9 +34,9 @@ export default function Page() {
       <h2>Server Action Non-Form Submission Examples:</h2>
       <p>NOTE: Look at browser network logs and server console for submission feedback</p>
       <h3>Example with object argument:</h3>
-      <button onClick={handleClick1}>Click me</button>
+      <button type="button" onClick={handleClick1}>Click me</button>
       <h3>Example with FormData argument:</h3>
-      <button onClick={handleClick2}>Click me</button>
+      <button type="button" onClick={handleClick2}>Click me</button>
     </>
   );
 }

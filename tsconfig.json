@@ -25,14 +25,19 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
 
+    /* import paths */
+    "baseUrl": "./",
+    "paths": {
+      "@shared/*": [
+        "shared/src/*"
+      ]
+    },
+
     /* misc */
     "types": [
       "vitest/globals"
     ]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
   "exclude": [
     "node_modules",
     "dist"

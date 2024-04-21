@@ -12,6 +12,9 @@ jobs:
       packages: write
       contents: read
     steps:
+      - name: Get tag name
+        uses: olegtarasov/get-tag@2.1.3
+        id: tagName
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -21,7 +24,8 @@ jobs:
         with:
           version: 8
       - run: pnpm install
-      - run: pnpm build
-      - run: pnpm publish --no-git-checks --access public
+      - run: pnpm -r build
+      - run: /bin/bash set-version.sh ${{ steps.tagName.outputs.tag }}
+      - run: pnpm -r publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

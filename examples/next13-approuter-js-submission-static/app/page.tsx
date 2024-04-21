@@ -5,7 +5,7 @@ import '../styles/globals.css';
 export default function Page() {
   const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     // prevent default form submission
-    ev.preventDefault()
+    ev.preventDefault();
 
     // get form values
     const data = new FormData(ev.currentTarget);
@@ -22,8 +22,9 @@ export default function Page() {
     const response = await fetch('/form-handler', fetchArgs);
 
     // show response
+    // eslint-disable-next-line no-alert
     alert(response.statusText);
-  }
+  };
 
   return (
     <>

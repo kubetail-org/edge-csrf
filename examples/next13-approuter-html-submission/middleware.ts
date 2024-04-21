@@ -1,23 +1,10 @@
-import csrf from 'edge-csrf';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { createCsrfMiddleware } from '@edge-csrf/nextjs';
 
-const csrfProtect = csrf({
+// initalize csrf protection middleware
+const csrfMiddleware = createCsrfMiddleware({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
   },
 });
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-
-  // csrf protection
-  const csrfError = await csrfProtect(request, response);
-
-  // check result
-  if (csrfError) {
-    return new NextResponse('invalid csrf token', { status: 403 });
-  }
-
-  return response;
-}
+export const middleware = csrfMiddleware;

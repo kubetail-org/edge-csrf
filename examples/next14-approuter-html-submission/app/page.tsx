@@ -7,7 +7,10 @@ export default function Page() {
 
   return (
     <>
-      <p>CSRF token value: {csrfToken}</p>
+      <p>
+        CSRF token value:
+        {csrfToken}
+      </p>
       <h2>HTML Form Submission Example:</h2>
       <form action="/form-handler" method="post">
         <legend>Form without CSRF (should fail):</legend>
