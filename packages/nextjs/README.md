@@ -192,7 +192,7 @@ The following are named exports in the the `@edge-csrf/nextjs` module:
 ### Types
 
 ```
-NextCsrfProtectFunction - A function that implements CSRF protection for Next.js requests
+NextCsrfProtect - A function that implements CSRF protection for Next.js requests
 
   * @param {NextRequest} request - The Next.js request instance
   * @param {NextResponse} response - The Next.js response instance
@@ -218,5 +218,5 @@ createCsrfProtect([, options]) - Create a lower-level function that can be used 
                                  to implement CSRF protection for requests
 
   * @param {object} options - The configuration options
-  * @returns {NextCsrfProtectFunction} - The CSRF protection function
+  * @returns {NextCsrfProtect} - The CSRF protection function
 ```
