@@ -2,7 +2,7 @@
 
 Edge-CSRF is a CSRF protection library for JavaScript that runs on the [edge runtime](https://edge-runtime.vercel.app/).
 
-The Edge-CSRF library helps you to implement the [signed double submit cookie pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended) except it only uses edge runtime dependencies so it can be used in both node environments and in edge functions (e.g. [Vercel Edge Functions](https://vercel.com/docs/functions/runtimes/edge-runtime), [Cloudflare Page Functions](https://developers.cloudflare.com/pages/functions/)). The recommended way to use this library is via its drop-in integrations for [Next.js](src/nextjs) and [SvelteKit](src/sveltekit) though it also has a lower-level API for more custom implementations.
+The Edge-CSRF library helps you to implement the [signed double submit cookie pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie-recommended) except it only uses edge runtime dependencies so it can be used in both node environments and in edge functions (e.g. [Vercel Edge Functions](https://vercel.com/docs/functions/runtimes/edge-runtime), [Cloudflare Page Functions](https://developers.cloudflare.com/pages/functions/)). The recommended way to use this library is via its drop-in integrations for Next.js and SvelteKit though it also has a lower-level API for more custom implementations.
 
 We hope you enjoy using this software. Contributions and suggestions are welcome!
 
@@ -25,7 +25,7 @@ We hope you enjoy using this software. Contributions and suggestions are welcome
 
 ## Quickstart (Next.js)
 
-First, install the Edge-CSRF Next.js integration library:
+First, install Edge-CSRF's Next.js integration library:
 
 ```console
 npm install @edge-csrf/nextjs
@@ -84,7 +84,7 @@ export async function POST() {
 
 ## Quickstart (SvelteKit)
 
-First, install the Edge-CSRF SvelteKit integration library:
+First, install Edge-CSRF's SvelteKit integration library:
 
 ```console
 npm install @edge-csrf/sveltekit

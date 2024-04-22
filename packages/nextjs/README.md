@@ -1,6 +1,6 @@
 # Next.js
 
-This is the documentation for the Edge-CSRF's Next.js integration. The integration works with Next.js 13 and Next.js 14.
+This is the documentation for Edge-CSRF's Next.js integration. The integration works with Next.js 13 and Next.js 14.
 
 ## Quickstart
 
