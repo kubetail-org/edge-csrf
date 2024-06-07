@@ -56,6 +56,16 @@ importers:
         specifier: ^14.2.0
         version: 14.2.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
+  packages/node:
+    dependencies:
+      cookie:
+        specifier: ^0.6.0
+        version: 0.6.0
+    devDependencies:
+      '@types/cookie':
+        specifier: ^0.6.0
+        version: 0.6.0
+
   packages/sveltekit:
     devDependencies:
       '@sveltejs/kit':
