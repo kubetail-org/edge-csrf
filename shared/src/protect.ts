@@ -90,7 +90,7 @@ export type Cookie = CookieOptions & { value: string; };
  * Represents arguments for CsrfProtectionFunction
  */
 export type CsrfProtectArgs = {
-  request: Request;
+  request: Request,
   url: { pathname: string; },
   getCookie: (name: string) => string | undefined;
   setCookie: (cookie: Cookie) => void;
