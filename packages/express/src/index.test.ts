@@ -56,11 +56,81 @@ describe('csrfProtectMiddleware integration tests', () => {
     expect(token).not.toBe('');
   });
 
-  it('should work in req.body', async () => {
+  it('should work with express.json()', async () => {
+    // init app
+    const app = express();
+    app.use(express.json());
+  
+    const csrfMiddleware = createCsrfMiddleware();
+    app.use(csrfMiddleware)
+  
+    app.post('/', function (_, res) {
+      res.status(200).json({ 'success': true });
+    });
+    
+    // make request
     const secretUint8 = util.createSecret(8);
     const tokenUint8 = await util.createToken(secretUint8, 8);
 
-    const resp = await request(testApp)
+    const resp = await request(app)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .set('Cookie', [`_csrfSecret=${util.utoa(secretUint8)}`])
+      .send(JSON.stringify({ csrf_token: util.utoa(tokenUint8) }))
+      .expect(200);
+
+    // assertions
+    const newTokenStr = resp.headers['x-csrf-token'];
+    expect(newTokenStr).toBeDefined();
+    expect(newTokenStr).not.toBe('');
+  });
+
+  it('should work with express.text()', async () => {
+    // init app
+    const app = express();
+    app.use(express.text());
+  
+    const csrfMiddleware = createCsrfMiddleware();
+    app.use(csrfMiddleware)
+  
+    app.post('/', function (_, res) {
+      res.status(200).json({ 'success': true });
+    });
+    
+    // make request
+    const secretUint8 = util.createSecret(8);
+    const tokenUint8 = await util.createToken(secretUint8, 8);
+
+    const resp = await request(app)
+      .post('/')
+      .set('Content-Type', 'text/plain')
+      .set('Cookie', [`_csrfSecret=${util.utoa(secretUint8)}`])
+      .send(util.utoa(tokenUint8))
+      .expect(200);
+
+    // assertions
+    const newTokenStr = resp.headers['x-csrf-token'];
+    expect(newTokenStr).toBeDefined();
+    expect(newTokenStr).not.toBe('');
+  });
+
+  it('should work with express.urlencoded()', async () => {
+    // init app
+    const app = express();
+    app.use(express.urlencoded({ extended: false }));
+  
+    const csrfMiddleware = createCsrfMiddleware();
+    app.use(csrfMiddleware)
+  
+    app.post('/', function (_, res) {
+      res.status(200).json({ 'success': true });
+    });
+    
+    // make request
+    const secretUint8 = util.createSecret(8);
+    const tokenUint8 = await util.createToken(secretUint8, 8);
+
+    const resp = await request(app)
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .set('Cookie', [`_csrfSecret=${util.utoa(secretUint8)}`])

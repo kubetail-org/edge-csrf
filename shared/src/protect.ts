@@ -136,7 +136,6 @@ export function createCsrfProtect(opts?: Partial<ConfigOptions>): CsrfProtect {
     // verify token
     if (!config.ignoreMethods.includes(request.method)) {
       const tokenStr = await getTokenString(request, config.token.value);
-
       if (!await verifyToken(atou(tokenStr), secret)) {
         throw new CsrfError('csrf validation error');
       }

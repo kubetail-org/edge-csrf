@@ -72,9 +72,16 @@ export function createCsrfProtect(opts?: Partial<ExpressConfigOptions>): Express
       else if (value !== undefined) headers.append(key, value);
     });
 
-    let body: URLSearchParams | undefined;
+    let body: URLSearchParams | string | undefined;
     if (!['GET', 'HEAD'].includes(req.method)) {
-      body = new URLSearchParams(req.body);
+      const contentType = headers.get('content-type') || 'text/plain';
+      if (typeof req.body === 'string') {
+        body = req.body;
+      } else if (typeof req.body === 'object' && ['application/json', 'application/ld+json'].includes(contentType)) {
+        body = JSON.stringify(req.body);
+      } else {
+        body = new URLSearchParams(req.body);
+      }
     }
 
     // init request object
