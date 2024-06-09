@@ -48,15 +48,6 @@ importers:
         specifier: ^2.14.2
         version: 2.14.2(vitest@1.5.0(@edge-runtime/vm@3.2.0)(@types/node@20.12.7))
 
-  examples/express:
-    dependencies:
-      '@edge-csrf/express':
-        specifier: ^0.0.0
-        version: link:../../packages/express
-      express:
-        specifier: ^4.19.2
-        version: 4.19.2
-
   packages/core: {}
 
   packages/express:
