@@ -1,0 +1,41 @@
+{
+  "name": "@edge-csrf/express",
+  "version": "0.0.0",
+  "description": "Edge-CSRF Express integration library",
+  "author": "Andres Morey",
+  "license": "MIT",
+  "repository": "kubetail-org/edge-csrf",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "lint": "eslint \"./src/**/*.ts{,x}\"",
+    "test": "vitest",
+    "test-all": "vitest run --environment node && vitest run --environment edge-runtime && vitest run --environment miniflare"
+  },
+  "keywords": [
+    "csrf",
+    "tokens",
+    "edge",
+    "express"
+  ],
+  "dependencies": {
+    "cookie": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.6.0",
+    "@types/express": "^4.17.21",
+    "@types/supertest": "^6.0.2",
+    "express": "^4.19.2",
+    "supertest": "^7.0.0"
+  },
+  "peerDependencies": {
+    "express": "^4.0.0"
+  }
+}

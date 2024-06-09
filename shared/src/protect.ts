@@ -90,7 +90,7 @@ export type Cookie = CookieOptions & { value: string; };
  * Represents arguments for CsrfProtectionFunction
  */
 export type CsrfProtectArgs = {
-  request: Request;
+  request: Request,
   url: { pathname: string; },
   getCookie: (name: string) => string | undefined;
   setCookie: (cookie: Cookie) => void;
@@ -136,7 +136,6 @@ export function createCsrfProtect(opts?: Partial<ConfigOptions>): CsrfProtect {
     // verify token
     if (!config.ignoreMethods.includes(request.method)) {
       const tokenStr = await getTokenString(request, config.token.value);
-
       if (!await verifyToken(atou(tokenStr), secret)) {
         throw new CsrfError('csrf validation error');
       }
