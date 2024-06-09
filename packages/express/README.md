@@ -39,7 +39,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(csrfMiddleware);
 
 // define handlers
-...
+app.get('/', (_, res) => {
+  res.status(200).json({ success: true });
+});
 
 // start server
 app.listen(port, () => {
@@ -54,25 +56,25 @@ Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be reject
 ...
 
 // define handlers
-app.get('/', (req, res) => {
+app.get('/my-form', (req, res) => {
   const csrfToken = res.getHeader('X-CSRF-Token') || 'missing';
   res.send(`
     <p>CSRF token value: ${csrfToken}</p>
     <h2>HTML Form Submission Example:</h2>
-    <form action="/form-handler" method="post">
+    <form action="/my-form" method="post">
       <legend>Form without CSRF (should fail):</legend>
       <input type="text" name="input1" />
       <button type="submit">Submit</button>
     </form>
     <br />
-    <form action="/form-handler" method="post">
+    <form action="/my-form" method="post">
       <legend>Form with incorrect CSRF (should fail):</legend>
       <input type="hidden" name="csrf_token" value="notvalid" />
       <input type="text" name="input1" />
       <button type="submit">Submit</button>
     </form>
     <br />
-    <form action="/form-handler" method="post">
+    <form action="/my-form" method="post">
       <legend>Form with CSRF (should succeed):</legend>
       <input type="hidden" name="csrf_token" value="${csrfToken}" />
       <input type="text" name="input1" />
@@ -81,7 +83,7 @@ app.get('/', (req, res) => {
   `);
 });
 
-app.post('/form-handler', (req, res) => {
+app.post('/my-form', (req, res) => {
   res.send('success');
 });
 
