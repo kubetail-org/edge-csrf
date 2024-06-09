@@ -1,18 +1,10 @@
-import type { Request as ExpressRequest, Response as ExpressResponse } from 'express';
+import express from 'express';
+import type { Express, Request as ExpressRequest, Response as ExpressResponse } from 'express';
+import request from 'supertest';
 
 import * as util from '@shared/util';
 
-import { CsrfError, ExpressConfig, ExpressTokenOptions, createCsrfProtect } from './index';
-
-function mockExpressRequest(url: string): ExpressRequest {
-  const request = {url: url, body: undefined};
-  return request as ExpressRequest;
-}
-
-function mockExpressResponse(): ExpressResponse {
-  const response = { headers: {} };
-  return response as ExpressResponse;
-}
+import { CsrfError, ExpressConfig, ExpressTokenOptions, createCsrfProtect, createCsrfMiddleware } from './index';
 
 describe('NextTokenOptions tests', () => {
   it('returns default values when options are absent', () => {
@@ -50,55 +42,33 @@ describe('NextConfig tests', () => {
   });
 });
 
-describe('csrfProtect unit tests', () => {
-  /*
-  it('get/set cookie using request/response methods', async () => {
-    const request = mockExpressRequest('http://example.com');
-
-    request.cookies.get = vi.fn();
-    response.cookies.set = vi.fn();
-
-    const csrfProtect = createCsrfProtect();
-    await csrfProtect(request, response);
-
-    expect(request.cookies.get).toHaveBeenCalledOnce();
-    expect(response.cookies.set).toHaveBeenCalledOnce();
-  });
-  */
+describe('csrfProtectMiddleware integration tests', () => {
+  const testApp = createApp();
 
   it('adds token to response header', async () => {
-    const request = mockExpressRequest('http://example.com');
-    const response = mockExpressResponse();
+    const resp = await request(testApp)
+      .get('/')
+      .expect(200);
 
-    const csrfProtect = createCsrfProtect();
-    await csrfProtect(request, response);
-
-    const token = response.headers.get('X-CSRF-Token');
+    // assertions
+    const token = resp.header['x-csrf-token'];
     expect(token).toBeDefined();
     expect(token).not.toBe('');
   });
-});
-
-/*
-describe('csrfProtect integration tests', () => {
-  const csrfProtectDefault = createCsrfProtect();
 
   it('should work in req.body', async () => {
     const secretUint8 = util.createSecret(8);
     const tokenUint8 = await util.createToken(secretUint8, 8);
 
-    const request = new NextRequest('http://example.com', {
-      method: 'POST',
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      body: `csrf_token=${encodeURIComponent(util.utoa(tokenUint8))}`,
-    });
-    request.cookies.set('_csrfSecret', util.utoa(secretUint8));
-
-    const response = NextResponse.next();
-    await csrfProtectDefault(request, response);
+    const resp = await request(testApp)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('Cookie', [`_csrfSecret=${util.utoa(secretUint8)}`])
+      .send(`csrf_token=${encodeURIComponent(util.utoa(tokenUint8))}`)
+      .expect(200);
 
     // assertions
-    const newTokenStr = response.headers.get('X-CSRF-Token');
+    const newTokenStr = resp.headers['x-csrf-token'];
     expect(newTokenStr).toBeDefined();
     expect(newTokenStr).not.toBe('');
   });
@@ -107,21 +77,19 @@ describe('csrfProtect integration tests', () => {
     const secret = util.createSecret(8);
     const token = await util.createToken(secret, 8);
 
-    const request = new NextRequest('http://example.com', {
-      method: 'POST',
-      headers: { 'x-csrf-token': util.utoa(token) },
-    });
-    request.cookies.set('_csrfSecret', util.utoa(secret));
-
-    const response = NextResponse.next();
-    await csrfProtectDefault(request, response);
+    const resp = await request(testApp)
+      .post('/')
+      .set('Cookie', [`_csrfSecret=${util.utoa(secret)}`])
+      .set('X-CSRF-Token', util.utoa(token))
+      .expect(200);
 
     // assertions
-    const newTokenStr = response.headers.get('X-CSRF-Token');
+    const newTokenStr = resp.headers['x-csrf-token'];
     expect(newTokenStr).toBeDefined();
     expect(newTokenStr).not.toBe('');
   });
 
+  /*
   it('should handle server action form submissions', async () => {
     const secret = util.createSecret(8);
     const token = await util.createToken(secret, 8);
@@ -283,8 +251,10 @@ describe('csrfProtect integration tests', () => {
     const response = NextResponse.next();
     await expect(csrfProtectDefault(request, response)).rejects.toThrow(CsrfError);
   });
+  */
 });
 
+/*
 describe('obtaining secrets tests', () => {
   const csrfProtectDefault = createCsrfProtect();
 
@@ -346,3 +316,21 @@ describe('obtaining secrets tests', () => {
   });
 });
 */
+
+function createApp(): Express {  
+  const app = express();
+  app.use(express.urlencoded({ extended: false }));
+
+  const csrfMiddleware = createCsrfMiddleware();
+  app.use(csrfMiddleware)
+
+  app.get('/', function(_, res) {
+    res.status(200).json({ 'success': true });
+  });
+
+  app.post('/', function(_, res) {
+    res.status(200).json({ 'success': true });
+  });
+
+  return app;
+}

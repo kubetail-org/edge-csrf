@@ -1,5 +1,5 @@
 import * as cookielib from 'cookie';
-import type { Request as ExpressRequest, Response as ExpressResponse, NextFunction as ExpressNextFunction } from 'express';
+import type { Request as ExpressRequest, Response as ExpressResponse, RequestHandler as ExpressRequestHandler } from 'express';
 
 import { CsrfError, createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@shared/protect';
 import type { ConfigOptions } from '@shared/protect';
@@ -102,10 +102,10 @@ export function createCsrfProtect(opts?: Partial<ExpressConfigOptions>): Express
  * @param {Partial<ExpressConfigOptions>} opts - Configuration options
  * @returns Express Middleware function
  */
-export function createCsrfMiddleware(opts?: Partial<ExpressConfigOptions>) {
+export function createCsrfMiddleware(opts?: Partial<ExpressConfigOptions>): ExpressRequestHandler {
   const csrfProtect = createCsrfProtect(opts);
 
-  return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
+  return async (req, res, next) => {
     // csrf protection
     try {
       await csrfProtect(req, res);
