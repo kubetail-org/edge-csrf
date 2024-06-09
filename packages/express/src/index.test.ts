@@ -6,6 +6,24 @@ import * as util from '@shared/util';
 
 import { ExpressConfig, ExpressTokenOptions, createCsrfMiddleware } from './index';
 
+function createApp(): Express {
+  const app = express();
+  app.use(express.urlencoded({ extended: false }));
+
+  const csrfMiddleware = createCsrfMiddleware();
+  app.use(csrfMiddleware);
+
+  app.get('/', (_, res) => {
+    res.status(200).json({ success: true });
+  });
+
+  app.post('/', (_, res) => {
+    res.status(200).json({ success: true });
+  });
+
+  return app;
+}
+
 describe('NextTokenOptions tests', () => {
   it('returns default values when options are absent', () => {
     const tokenOpts = new ExpressTokenOptions();
@@ -60,14 +78,14 @@ describe('csrfProtectMiddleware integration tests', () => {
     // init app
     const app = express();
     app.use(express.json());
-  
+
     const csrfMiddleware = createCsrfMiddleware();
-    app.use(csrfMiddleware)
-  
-    app.post('/', function (_, res) {
-      res.status(200).json({ 'success': true });
+    app.use(csrfMiddleware);
+
+    app.post('/', (_, res) => {
+      res.status(200).json({ success: true });
     });
-    
+
     // make request
     const secretUint8 = util.createSecret(8);
     const tokenUint8 = await util.createToken(secretUint8, 8);
@@ -89,14 +107,14 @@ describe('csrfProtectMiddleware integration tests', () => {
     // init app
     const app = express();
     app.use(express.text());
-  
+
     const csrfMiddleware = createCsrfMiddleware();
-    app.use(csrfMiddleware)
-  
-    app.post('/', function (_, res) {
-      res.status(200).json({ 'success': true });
+    app.use(csrfMiddleware);
+
+    app.post('/', (_, res) => {
+      res.status(200).json({ success: true });
     });
-    
+
     // make request
     const secretUint8 = util.createSecret(8);
     const tokenUint8 = await util.createToken(secretUint8, 8);
@@ -118,14 +136,14 @@ describe('csrfProtectMiddleware integration tests', () => {
     // init app
     const app = express();
     app.use(express.urlencoded({ extended: false }));
-  
+
     const csrfMiddleware = createCsrfMiddleware();
-    app.use(csrfMiddleware)
-  
-    app.post('/', function (_, res) {
-      res.status(200).json({ 'success': true });
+    app.use(csrfMiddleware);
+
+    app.post('/', (_, res) => {
+      res.status(200).json({ success: true });
     });
-    
+
     // make request
     const secretUint8 = util.createSecret(8);
     const tokenUint8 = await util.createToken(secretUint8, 8);
@@ -216,7 +234,7 @@ describe('csrfProtectMiddleware integration tests', () => {
 
     await request(testApp)
       .post('/')
-      .set('Cookie', [`_csrfSecret=-`])
+      .set('Cookie', ['_csrfSecret=-'])
       .set('X-CSRF-Token', util.utoa(token))
       .expect(403);
   });
@@ -311,21 +329,3 @@ describe('obtaining secrets tests', () => {
     expect(setCookie1[0]).not.toEqual(setCookie2[0]);
   });
 });
-
-function createApp(): Express {
-  const app = express();
-  app.use(express.urlencoded({ extended: false }));
-
-  const csrfMiddleware = createCsrfMiddleware();
-  app.use(csrfMiddleware)
-
-  app.get('/', function (_, res) {
-    res.status(200).json({ 'success': true });
-  });
-
-  app.post('/', function (_, res) {
-    res.status(200).json({ 'success': true });
-  });
-
-  return app;
-}

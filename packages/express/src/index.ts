@@ -87,7 +87,7 @@ export function createCsrfProtect(opts?: Partial<ExpressConfigOptions>): Express
     // init request object
     const request = new Request(url, {
       method: req.method,
-      headers: headers,
+      headers,
       body,
     });
 

@@ -1,5 +1,4 @@
 import { createCsrfMiddleware } from '@edge-csrf/express';
-//import bodyParser from 'body-parser';
 import express from 'express';
 
 // initalize csrf protection middleware
