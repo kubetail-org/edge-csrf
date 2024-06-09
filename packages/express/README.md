@@ -16,7 +16,7 @@ yarn add @edge-csrf/express
 
 Next, add the Edge-CSRF middleware to your app:
 
-```
+```javascript
 // app.js
 import { createCsrfMiddleware } from '@edge-csrf/express';
 import express from 'express';
@@ -51,7 +51,7 @@ app.listen(port, () => {
 
 Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
 
-```
+```javascript
 // app.js
 ...
 
