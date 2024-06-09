@@ -30,7 +30,7 @@ First, install Edge-CSRF's Next.js integration library:
 ```console
 npm install @edge-csrf/nextjs
 # or
-pnpm add @edge-edge-csrf/nextjs
+pnpm add @edge-csrf/nextjs
 # or
 yarn add @edge-csrf/nextjs
 ```
@@ -89,7 +89,7 @@ First, install Edge-CSRF's SvelteKit integration library:
 ```console
 npm install @edge-csrf/sveltekit
 # or
-pnpm add @edge-edge-csrf/sveltekit
+pnpm add @edge-csrf/sveltekit
 # or
 yarn add @edge-csrf/sveltekit
 ```
@@ -174,7 +174,7 @@ First, install Edge-CSRF's Express integration library:
 ```console
 npm install @edge-csrf/express
 # or
-pnpm add @edge-edge-csrf/express
+pnpm add @edge-csrf/express
 # or
 yarn add @edge-csrf/express
 ```
