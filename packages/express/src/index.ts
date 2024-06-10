@@ -7,6 +7,20 @@ import type { ConfigOptions } from '@shared/protect';
 export { CsrfError };
 
 /**
+ * Parse request body as string
+ * @param {ExpressRequest} req - The node http request
+ * @returns Promise that resolves to the body
+ */
+function getRequestBody(req: ExpressRequest): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', (chunk) => body += chunk.toString());
+    req.on('end', () => resolve(body));
+    req.on('error', (err) => reject(err));
+  });
+}
+
+/**
  * Represents token options in config
  */
 export class ExpressTokenOptions extends TokenOptions {
@@ -72,23 +86,11 @@ export function createCsrfProtect(opts?: Partial<ExpressConfigOptions>): Express
       else if (value !== undefined) headers.append(key, value);
     });
 
-    let body: URLSearchParams | string | undefined;
-    if (!['GET', 'HEAD'].includes(req.method)) {
-      const contentType = headers.get('content-type') || 'text/plain';
-      if (typeof req.body === 'string') {
-        body = req.body;
-      } else if (typeof req.body === 'object' && ['application/json', 'application/ld+json'].includes(contentType)) {
-        body = JSON.stringify(req.body);
-      } else {
-        body = new URLSearchParams(req.body);
-      }
-    }
-
     // init request object
     const request = new Request(url, {
       method: req.method,
       headers,
-      body,
+      body: ['GET', 'HEAD'].includes(req.method || '') ? undefined : await getRequestBody(req),
     });
 
     // execute protect function
