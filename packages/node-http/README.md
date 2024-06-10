@@ -1,6 +1,6 @@
 # Node-HTTP
 
-This is the documentation for Edge-CSRF's Node `http` module integration.
+This is the documentation for Edge-CSRF's Node built-in http module integration.
 
 ## Quickstart
 
