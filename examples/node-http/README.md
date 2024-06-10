@@ -15,7 +15,7 @@ yarn install
 Next, run the server:
 
 ```bash
-node app.js
+node server.js
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
