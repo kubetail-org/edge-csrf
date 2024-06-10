@@ -1,65 +1,74 @@
-import express from 'express';
-import type { Express } from 'express';
+import { createServer } from 'http';
+
 import request from 'supertest';
 
 import * as util from '@shared/util';
 
-import { ExpressConfig, ExpressTokenOptions, createCsrfMiddleware } from './index';
+import { CsrfError, createCsrfProtect, NodeHttpConfig, NodeHttpTokenOptions } from './index';
 
-function createApp(): Express {
-  const csrfMiddleware = createCsrfMiddleware();
+function createApp() {
+  const csrfProtect = createCsrfProtect();
 
-  const app = express();
-  app.use(csrfMiddleware);
+  return createServer(async (req, res) => {
+    // apply csrf protection
+    try {
+      await csrfProtect(req, res);
+    } catch (err) {
+      if (err instanceof CsrfError) {
+        res.writeHead(403);
+        res.end('invalid csrf token');
+        return;
+      }
+      throw err;
+    }
 
-  app.get('/', (_, res) => {
-    res.status(200).json({ success: true });
+    if (req.url === '/' && ['GET', 'POST'].includes(req.method || '')) {
+      res.writeHead(200);
+      res.end('ok');
+    } else {
+      res.writeHead(404);
+      res.end('not found');
+    }
   });
-
-  app.post('/', (_, res) => {
-    res.status(200).json({ success: true });
-  });
-
-  return app;
 }
 
-describe('ExpressTokenOptions tests', () => {
+describe('NodeHttpTokenOptions tests', () => {
   it('returns default values when options are absent', () => {
-    const tokenOpts = new ExpressTokenOptions();
+    const tokenOpts = new NodeHttpTokenOptions();
     expect(tokenOpts.responseHeader).toEqual('X-CSRF-Token');
   });
 
   it('handles overrides', () => {
-    const tokenOpts = new ExpressTokenOptions({ responseHeader: 'XXX' });
+    const tokenOpts = new NodeHttpTokenOptions({ responseHeader: 'XXX' });
     expect(tokenOpts.responseHeader).toEqual('XXX');
   });
 
   it('handles overrides of parent attributes', () => {
     const fn = async () => '';
-    const tokenOpts = new ExpressTokenOptions({ value: fn });
+    const tokenOpts = new NodeHttpTokenOptions({ value: fn });
     expect(tokenOpts.value).toBe(fn);
   });
 });
 
-describe('ExpressConfig tests', () => {
+describe('NodeHttpConfig tests', () => {
   it('returns default config when options are absent', () => {
-    const config = new ExpressConfig();
+    const config = new NodeHttpConfig();
     expect(config.excludePathPrefixes).toEqual([]);
-    expect(config.token instanceof ExpressTokenOptions).toBe(true);
+    expect(config.token instanceof NodeHttpTokenOptions).toBe(true);
   });
 
   it('handles top-level overrides', () => {
-    const config = new ExpressConfig({ excludePathPrefixes: ['/xxx/'] });
+    const config = new NodeHttpConfig({ excludePathPrefixes: ['/xxx/'] });
     expect(config.excludePathPrefixes).toEqual(['/xxx/']);
   });
 
   it('handles nested token overrides', () => {
-    const config = new ExpressConfig({ token: { responseHeader: 'XXX' } });
+    const config = new NodeHttpConfig({ token: { responseHeader: 'XXX' } });
     expect(config.token.responseHeader).toEqual('XXX');
   });
 });
 
-describe('csrfProtectMiddleware integration tests', () => {
+describe('csrfProtect integration tests', async () => {
   const testApp = createApp();
 
   it('adds token to response header', async () => {
