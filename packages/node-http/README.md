@@ -1,140 +1,92 @@
-# Express
+# Node-HTTP
 
-This is the documentation for Edge-CSRF's Express integration.
+This is the documentation for Edge-CSRF's Node `http` module integration.
 
 ## Quickstart
 
 First, add the integration library as a dependency:
 
 ```console
-npm install @edge-csrf/express
+npm install @edge-csrf/node-http
 # or
-pnpm add @edge-csrf/express
+pnpm add @edge-csrf/node-http
 # or
-yarn add @edge-csrf/express
+yarn add @edge-csrf/node-http
 ```
 
-Next, add the Edge-CSRF middleware to your app:
+Next, add the Edge-CSRF CSRF protection function to your app:
 
 ```javascript
-// app.js
+// server.js
 
-import { createCsrfMiddleware } from '@edge-csrf/express';
-import express from 'express';
+import { createServer } from 'http';
+
+import { createCsrfProtect } from '@edge-csrf/node-http';
 
 // initalize csrf protection middleware
-const csrfMiddleware = createCsrfMiddleware({
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-  },
-});
-
-// init app
-const app = express();
-const port = 3000;
-
-// add body parsing middleware
-app.use(express.urlencoded({ extended: false }));
-
-// add csrf middleware
-app.use(csrfMiddleware);
-
-// define handlers
-app.get('/', (_, res) => {
-  res.status(200).json({ success: true });
-});
-
-// start server
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-});
-```
-
-Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
-
-```javascript
-// app.js
-...
-
-// define handlers
-app.get('/my-form', (req, res) => {
-  const csrfToken = res.getHeader('X-CSRF-Token') || 'missing';
-  res.send(`
-    <!doctype html>
-    <html>
-      <body>
-        <p>CSRF token value: ${csrfToken}</p>
-        <form action="/my-form" method="post">
-          <legend>Form with CSRF (should succeed):</legend>
-          <input type="hidden" name="csrf_token" value="${csrfToken}" />
-          <input type="text" name="input1" />
-          <button type="submit">Submit</button>
-        </form>
-      </body>
-    </html>
-  `);
-});
-
-app.post('/my-form', (req, res) => {
-  res.send('success');
-});
-
-...
-```
-
-## Example
-
-Check out the example Express app in this repository: [Express example](examples/express).
-
-## Lower-level implementations
-
-If you want lower-level control over the response or which routes CSRF protection will be applied to you can use the `createCsrfProtect()` method to create a function that you can use inside your own custom middleware:
-
-```typescript
-// app.js
-
-import { CsrfError, createCsrfProtect } from '@edge-csrf/express';
-import express from 'express';
-
-// initalize csrf protection method
 const csrfProtect = createCsrfProtect({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
   },
 });
 
-// init app
-const app = express();
-const port = 3000;
-
-// add body parsing middleware
-app.use(express.urlencoded({ extended: false }));
-
-// add csrf middleware
-app.use(async (req, res, next) => {
+// init server
+const server = createServer(async (req, res) => {
+  // apply csrf protection
   try {
-    await csrfProtect(req, res)
+    await csrfProtect(req, res);
   } catch (err) {
     if (err instanceof CsrfError) {
-      res.statusCode = 403;
-      res.send('invalid csrf token');
-      res.end();
+      res.writeHead(403);
+      res.end('invalid csrf token');
       return;
     }
     throw err;
   }
-});
 
-// define handlers
-app.get('/', (_, res) => {
-  res.status(200).json({ success: true });
+  // add handler
+  if (req.url === '/') {
+    if (req.method === 'GET') {
+      const csrfToken = res.getHeader('X-CSRF-Token') || 'missing';
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(`
+        <!doctype html>
+        <html>
+          <body>
+            <form action="/" method="post">
+              <legend>Form with CSRF (should succeed):</legend>
+              <input type="hidden" name="csrf_token" value="${csrfToken}" />
+              <input type="text" name="input1" />
+              <button type="submit">Submit</button>
+            </form>
+          </body>
+        </html>
+      `);
+      return;
+    }
+
+    if (req.method === 'POST') {
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.end('success');
+      return;
+    }
+  }
+
+  res.writeHead(404);
+  res.end('not found');
 });
 
 // start server
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+server.listen(3000, () => {
+  console.log('Server is listening on port 3000');
 });
 ```
+
+With the CSRF protection method, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. 
+
+## Example
+
+Check out the example Node-HTTP server in this repository: [Node-HTTP example](examples/node-http).
 
 ## Configuration
 
@@ -163,15 +115,15 @@ app.listen(port, () => {
 
 ## API
 
-The following are named exports in the the `@edge-csrf/express` module:
+The following are named exports in the the `@edge-csrf/node-http` module:
 
 ### Types
 
 ```
-ExpressCsrfProtect - A function that implements CSRF protection for Express requests
+NodeHttpCsrfProtect - A function that implements CSRF protection for Node http requests
 
-  * @param {Request} request - The Express request instance
-  * @param {Response} response - The Express response instance
+  * @param {IncomingMessage} request - The Node HTTP module request instance
+  * @param {ServerResponse} response - The Node HTTP module response instance
   * @returns {Promise<void>} - The function completed successfully
   * @throws {CsrfError} - The function encountered a CSRF error
 ```
@@ -185,14 +137,9 @@ CsrfError - A class that inherits from Error and represents CSRF errors
 ### Methods
 
 ```
-createCsrfMiddleware([, options]) - Create a new instance of Express middleware
-
-  * @param {object} options - The configuration options
-  * @returns {ReqestHandler} - The middleware
-
-createCsrfProtect([, options]) - Create a lower-level function that can be used inside Express middleware
+createCsrfProtect([, options]) - Create a function that can be used inside Node HTTP handlers
                                  to implement CSRF protection for requests
 
   * @param {object} options - The configuration options
-  * @returns {ExpressCsrfProtect} - The CSRF protection function
+  * @returns {NodeHttpCsrfProtect} - The CSRF protection function
 ```

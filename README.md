@@ -198,38 +198,18 @@ const csrfMiddleware = createCsrfMiddleware({
 const app = express();
 const port = 3000;
 
-// add body parsing middleware
-app.use(express.urlencoded({ extended: false }));
-
 // add csrf middleware
 app.use(csrfMiddleware);
 
 // define handlers
-app.get('/', (_, res) => {
-  res.status(200).json({ success: true });
-});
-
-// start server
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-});
-```
-
-Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
-
-```javascript
-// app.js
-...
-
-// define handlers
-app.get('/my-form', (req, res) => {
+app.get('/', (req, res) => {
   const csrfToken = res.getHeader('X-CSRF-Token') || 'missing';
   res.send(`
     <!doctype html>
     <html>
       <body>
         <p>CSRF token value: ${csrfToken}</p>
-        <form action="/my-form" method="post">
+        <form action="/" method="post">
           <legend>Form with CSRF (should succeed):</legend>
           <input type="hidden" name="csrf_token" value="${csrfToken}" />
           <input type="text" name="input1" />
@@ -240,12 +220,99 @@ app.get('/my-form', (req, res) => {
   `);
 });
 
-app.post('/my-form', (req, res) => {
+app.post('/', (req, res) => {
   res.send('success');
 });
 
-...
+// start server
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+});
 ```
+
+With the middleware installed, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. 
+
+## Quickstart (Node-HTTP)
+
+First, install Edge-CSRF's Node-HTTP integration library:
+
+```console
+npm install @edge-csrf/node-http
+# or
+pnpm add @edge-csrf/node-http
+# or
+yarn add @edge-csrf/node-http
+```
+
+Next, add the Edge-CSRF CSRF protection function to your request handlers:
+
+```javascript
+// server.js
+
+import { createServer } from 'http';
+
+import { createCsrfProtect } from '@edge-csrf/node-http';
+
+// initalize csrf protection middleware
+const csrfProtect = createCsrfProtect({
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+  },
+});
+
+// init server
+const server = createServer(async (req, res) => {
+  // apply csrf protection
+  try {
+    await csrfProtect(req, res);
+  } catch (err) {
+    if (err instanceof CsrfError) {
+      res.writeHead(403);
+      res.end('invalid csrf token');
+      return;
+    }
+    throw err;
+  }
+
+  // add handler
+  if (req.url === '/') {
+    if (req.method === 'GET') {
+      const csrfToken = res.getHeader('X-CSRF-Token') || 'missing';
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(`
+        <!doctype html>
+        <html>
+          <body>
+            <form action="/" method="post">
+              <legend>Form with CSRF (should succeed):</legend>
+              <input type="hidden" name="csrf_token" value="${csrfToken}" />
+              <input type="text" name="input1" />
+              <button type="submit">Submit</button>
+            </form>
+          </body>
+        </html>
+      `);
+      return;
+    }
+
+    if (req.method === 'POST') {
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.end('success');
+      return;
+    }
+  }
+
+  res.writeHead(404);
+  res.end('not found');
+});
+
+// start server
+server.listen(3000, () => {
+  console.log('Server is listening on port 3000');
+});
+```
+
+With the CSRF protection method, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. 
 
 ## Development
 
