@@ -33,9 +33,6 @@ const csrfMiddleware = createCsrfMiddleware({
 const app = express();
 const port = 3000;
 
-// add body parsing middleware
-app.use(express.urlencoded({ extended: false }));
-
 // add csrf middleware
 app.use(csrfMiddleware);
 
@@ -106,9 +103,6 @@ const csrfProtect = createCsrfProtect({
 // init app
 const app = express();
 const port = 3000;
-
-// add body parsing middleware
-app.use(express.urlencoded({ extended: false }));
 
 // add csrf middleware
 app.use(async (req, res, next) => {
