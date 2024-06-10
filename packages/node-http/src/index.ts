@@ -15,7 +15,7 @@ export { CsrfError };
 function getRequestBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     let body = '';
-    req.on('data', (chunk) => body += chunk.toString());
+    req.on('data', (chunk) => { body += chunk.toString(); });
     req.on('end', () => resolve(body));
     req.on('error', (err) => reject(err));
   });
@@ -78,9 +78,8 @@ export function createCsrfProtect(opts?: Partial<NodeHttpConfigOptions>): NodeHt
     const cookies = cookielib.parse(req.headers.cookie || '');
 
     // init url
-    const host = req.headers.host;
-    const originalUrl = req.url || '';
-    const url = new URL(`http://${host}${originalUrl}`);
+    const { url: originalUrl, headers: { host } } = req;
+    const url = new URL(`http://${host}${originalUrl || ''}`);
 
     // init headers
     const headers = new Headers();

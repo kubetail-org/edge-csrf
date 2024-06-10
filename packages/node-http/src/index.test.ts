@@ -27,7 +27,7 @@ function createApp() {
       res.end('ok');
     } else {
       res.writeHead(404);
-      res.end('not found');  
+      res.end('not found');
     }
   });
 }
