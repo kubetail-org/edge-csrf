@@ -18,7 +18,7 @@ interface IncomingMessageWithBody extends IncomingMessage {
  */
 function getRequestBody(req: IncomingMessageWithBody): Promise<string> {
   return new Promise((resolve, reject) => {
-    let buffer: any[] = [];
+    const buffer: any[] = [];
 
     const onAborted = () => {
       reject(new Error('request aborted'));
@@ -28,12 +28,12 @@ function getRequestBody(req: IncomingMessageWithBody): Promise<string> {
       buffer.push(chunk);
     };
 
-    const onEnd = () => { 
+    const onEnd = () => {
       // add `body` to request for downstream readers
       req.body = Buffer.concat(buffer);
 
       // resolve promise
-      resolve(req.body.toString())
+      resolve(req.body.toString());
     };
 
     const onErr = (err: Error) => {
@@ -46,7 +46,7 @@ function getRequestBody(req: IncomingMessageWithBody): Promise<string> {
       req.removeListener('err', onErr);
       req.removeListener('aborted', onAborted);
       req.removeListener('close', onClose);
-    }
+    };
 
     // attach listeners
     req.on('aborted', onAborted);
