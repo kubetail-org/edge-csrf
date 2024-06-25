@@ -15,8 +15,20 @@ export { CsrfError };
 function getRequestBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     let body = '';
-    req.on('data', (chunk) => { body += chunk.toString(); });
-    req.on('end', () => resolve(body));
+
+    req.on('data', (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on('end', () => {
+      // reset body
+      req.push(body);
+      req.push(null);
+
+      // resolve promise
+      resolve(body);
+    });
+
     req.on('error', (err) => reject(err));
   });
 }
