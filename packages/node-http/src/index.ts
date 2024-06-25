@@ -7,29 +7,53 @@ import type { ConfigOptions } from '@shared/protect';
 
 export { CsrfError };
 
+interface IncomingMessageWithBody extends IncomingMessage {
+  body?: any;
+}
+
 /**
  * Parse request body as string
  * @param {IncomingMessage} req - The node http request
  * @returns Promise that resolves to the body
  */
-function getRequestBody(req: IncomingMessage): Promise<string> {
+function getRequestBody(req: IncomingMessageWithBody): Promise<string> {
   return new Promise((resolve, reject) => {
-    let body = '';
+    let buffer: any[] = [];
 
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
+    const onAborted = () => {
+      reject(new Error('request aborted'));
+    };
 
-    req.on('end', () => {
-      // reset body
-      req.push(body);
-      req.push(null);
+    const onData = (chunk: any) => {
+      buffer.push(chunk);
+    };
+
+    const onEnd = () => { 
+      // add `body` to request for downstream readers
+      req.body = Buffer.concat(buffer);
 
       // resolve promise
-      resolve(body);
-    });
+      resolve(req.body.toString())
+    };
 
-    req.on('error', (err) => reject(err));
+    const onErr = (err: Error) => {
+      reject(err);
+    };
+
+    const onClose = () => {
+      req.removeListener('data', onData);
+      req.removeListener('end', onEnd);
+      req.removeListener('err', onErr);
+      req.removeListener('aborted', onAborted);
+      req.removeListener('close', onClose);
+    }
+
+    // attach listeners
+    req.on('aborted', onAborted);
+    req.on('data', onData);
+    req.on('end', onEnd);
+    req.on('err', onErr);
+    req.on('close', onClose);
   });
 }
 
