@@ -18,6 +18,8 @@ export class CookieOptions {
 
   name: string = '_csrfSecret';
 
+  partitioned: boolean | undefined = undefined;
+
   path: string = '/';
 
   sameSite: boolean | 'none' | 'strict' | 'lax' = 'strict';
