@@ -11,6 +11,7 @@ describe('CookieOptions tests', () => {
     expect(cookieOpts.httpOnly).toEqual(true);
     expect(cookieOpts.maxAge).toEqual(undefined);
     expect(cookieOpts.name).toEqual('_csrfSecret');
+    expect(cookieOpts.partitioned).toEqual(undefined);
     expect(cookieOpts.path).toEqual('/');
     expect(cookieOpts.sameSite).toEqual('strict');
     expect(cookieOpts.secure).toEqual(true);
