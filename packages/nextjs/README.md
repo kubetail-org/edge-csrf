@@ -179,6 +179,7 @@ export const middleware = async (request: NextRequest) => {
   saltByteLength: 8,
   secretByteLength: 18,
   token: {
+    fieldName: 'csrf_token',
     responseHeader: 'X-CSRF-Token',
     value: undefined
   }

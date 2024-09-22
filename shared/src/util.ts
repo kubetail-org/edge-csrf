@@ -1,6 +1,6 @@
-export type TokenValueFunction = {
-  (request: Request): Promise<string>
-};
+import { TokenOptions } from './config';
+
+const defaultTokenOpts = new TokenOptions();
 
 /**
  * Create new secret (cryptographically secure)
@@ -49,11 +49,9 @@ export function atou(inputB64: string): Uint8Array {
  * Get CSRF token from form
  * @param {FormData} formData - The form data object
  */
-const formDataKeyRegex = /^(\d+_)*csrf_token$/;
-
-function getTokenValueFromFormData(formData: FormData): File | string | undefined {
+function getTokenValueFromFormData(formData: FormData, tokenOpts: TokenOptions = defaultTokenOpts): File | string | undefined {
   for (const [key, value] of formData.entries()) {
-    if (formDataKeyRegex.test(key)) return value;
+    if (tokenOpts._fieldNameRegex.test(key)) return value;
   }
   return undefined;
 }
@@ -63,12 +61,14 @@ function getTokenValueFromFormData(formData: FormData): File | string | undefine
  * @param {Request} request - The request object
  * @param {ValueFunc|null} valueFn - Function to retrieve token value from request
  */
-export async function getTokenString(request: Request, valueFn?: TokenValueFunction): Promise<string> {
-  if (valueFn !== undefined) return valueFn(request);
+export async function getTokenString(request: Request, tokenOpts: TokenOptions = defaultTokenOpts): Promise<string> {
+  if (tokenOpts.value !== undefined) return tokenOpts.value(request);
 
   // check the `x-csrf-token` request header
   const token = request.headers.get('x-csrf-token');
   if (token !== null) return token;
+
+  const { fieldName } = tokenOpts;
 
   // check request body
   const contentType = request.headers.get('content-type') || 'text/plain';
@@ -76,15 +76,15 @@ export async function getTokenString(request: Request, valueFn?: TokenValueFunct
   // url-encoded or multipart/form-data
   if (contentType === 'application/x-www-form-urlencoded' || contentType.startsWith('multipart/form-data')) {
     const formData = await request.formData();
-    const formDataVal = getTokenValueFromFormData(formData);
+    const formDataVal = getTokenValueFromFormData(formData, tokenOpts);
     if (typeof formDataVal === 'string') return formDataVal;
     return '';
   }
 
   // json-encoded
   if (contentType === 'application/json' || contentType === 'application/ld+json') {
-    const json = await request.json() as { csrf_token: unknown; };
-    const jsonVal = json.csrf_token;
+    const json = await request.json() as any;
+    const jsonVal = json[fieldName];
     if (typeof jsonVal === 'string') return jsonVal;
     return '';
   }
@@ -109,7 +109,7 @@ export async function getTokenString(request: Request, valueFn?: TokenValueFunct
 
       if (typeofArgs0 === 'object') {
         // if first argument is an object, look for token there
-        return args0.csrf_token || '';
+        return args0[fieldName] || '';
       }
 
       return args0;
