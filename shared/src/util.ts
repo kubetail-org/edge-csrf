@@ -100,14 +100,16 @@ export async function getTokenString(request: Request, valueFn?: TokenValueFunct
       if (!Array.isArray(args) || args.length === 0) return rawVal;
 
       const args0 = args[0];
+      const typeofArgs0 = typeof args0;
 
-      switch (typeof args0) {
-        case 'string':
-          // treat first string argument as csrf token
-          return args0;
-        case 'object':
-          // if first argument is an object, look for token there
-          return args0.csrf_token || '';
+      if (typeofArgs0 === 'string') {
+        // treat first string argument as csrf token
+        return args0;
+      }
+
+      if (typeofArgs0 === 'object') {
+        // if first argument is an object, look for token there
+        return args0.csrf_token || '';
       }
 
       return args0;
