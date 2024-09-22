@@ -2,8 +2,9 @@ import type { IncomingMessage, ServerResponse } from 'http';
 
 import * as cookielib from 'cookie';
 
-import { CsrfError, createCsrfProtect as _createCsrfProtect, Config, TokenOptions } from '@shared/protect';
-import type { ConfigOptions } from '@shared/protect';
+import { Config, TokenOptions } from '@shared/config';
+import type { ConfigOptions } from '@shared/config';
+import { CsrfError, createCsrfProtect as _createCsrfProtect } from '@shared/protect';
 
 export { CsrfError };
 

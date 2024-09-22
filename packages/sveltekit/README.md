@@ -146,6 +146,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   saltByteLength: 8,
   secretByteLength: 18,
   token: {
+    fieldName: 'csrf_token',
     value: undefined
   }
 }
