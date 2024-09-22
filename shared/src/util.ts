@@ -68,7 +68,7 @@ export async function getTokenString(request: Request, tokenOpts: TokenOptions =
   const token = request.headers.get('x-csrf-token');
   if (token !== null) return token;
 
-  const fieldName = tokenOpts.fieldName;
+  const { fieldName } = tokenOpts;
 
   // check request body
   const contentType = request.headers.get('content-type') || 'text/plain';

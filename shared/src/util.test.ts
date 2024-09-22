@@ -109,7 +109,7 @@ describe('getTokenString', () => {
     expect(tokenStr).toEqual('my-token');
   });
 
-  it('gets token from custom field name', async() => {
+  it('gets token from custom field name', async () => {
     const formData = new FormData();
     formData.set('file', new Blob(['xxx']), 'filename');
     formData.set('csrfToken', 'my-token');
