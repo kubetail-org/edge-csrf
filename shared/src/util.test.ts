@@ -1,3 +1,4 @@
+import { TokenOptions } from './config';
 import * as util from './util';
 
 describe('createSecret', () => {
@@ -108,6 +109,21 @@ describe('getTokenString', () => {
     expect(tokenStr).toEqual('my-token');
   });
 
+  it('gets token from custom field name', async() => {
+    const formData = new FormData();
+    formData.set('file', new Blob(['xxx']), 'filename');
+    formData.set('csrfToken', 'my-token');
+
+    const request = new Request('http://example.com/', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const tokenOpts = new TokenOptions({ fieldName: 'csrfToken' });
+    const tokenStr = await util.getTokenString(request, tokenOpts);
+    expect(tokenStr).toEqual('my-token');
+  });
+
   it('gets token from raw body with other content-type', async () => {
     const request = new Request('http://example.com/', {
       method: 'POST',
@@ -144,8 +160,10 @@ describe('getTokenString', () => {
       method: 'POST',
       body: JSON.stringify({ 'custom-token-name': 'my-token' }),
     });
-    const valueFn = async (request: Request) => (await request.json())['custom-token-name'];
-    const tokenStr = await util.getTokenString(requestOuter, valueFn);
+    const tokenOpts = new TokenOptions({
+      value: async (request: Request) => (await request.json())['custom-token-name'],
+    });
+    const tokenStr = await util.getTokenString(requestOuter, tokenOpts);
     expect(tokenStr).toEqual('my-token');
   });
 });

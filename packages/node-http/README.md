@@ -108,6 +108,7 @@ Check out the example Node-HTTP server in this repository: [Node-HTTP example](e
   saltByteLength: 8,
   secretByteLength: 18,
   token: {
+    fieldName: 'csrf_token',
     responseHeader: 'X-CSRF-Token'
   }
 }

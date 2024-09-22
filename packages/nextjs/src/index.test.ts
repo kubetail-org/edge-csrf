@@ -133,7 +133,7 @@ describe('csrfProtect integration tests', () => {
     expect(newTokenStr).not.toBe('');
   });
 
-  it('should handle server action non-form submissions', async () => {
+  it('should handle server action non-form submissions with string arg0', async () => {
     const secret = util.createSecret(8);
     const token = await util.createToken(secret, 8);
 
@@ -141,6 +141,26 @@ describe('csrfProtect integration tests', () => {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify([util.utoa(token), 'arg']),
+    });
+    request.cookies.set('_csrfSecret', util.utoa(secret));
+
+    const response = NextResponse.next();
+    await csrfProtectDefault(request, response);
+
+    // assertions
+    const newTokenStr = response.headers.get('X-CSRF-Token');
+    expect(newTokenStr).toBeDefined();
+    expect(newTokenStr).not.toBe('');
+  });
+
+  it('should handle server action non-form submissions with object arg0', async () => {
+    const secret = util.createSecret(8);
+    const token = await util.createToken(secret, 8);
+
+    const request = new NextRequest('http://example.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify([{ csrf_token: util.utoa(token) }, 'arg']),
     });
     request.cookies.set('_csrfSecret', util.utoa(secret));
 
