@@ -15,7 +15,7 @@ jobs:
           node-version: 20
       - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - run: pnpm install
       - run: pnpm -r lint
 
@@ -28,7 +28,7 @@ jobs:
           node-version: 20
       - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - run: pnpm install
       - run: pnpm -r test run -- --environment node
       - run: pnpm -r test run -- --environment edge-runtime
@@ -44,6 +44,6 @@ jobs:
           node-version: 20
       - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - run: pnpm install
       - run: pnpm -r build
