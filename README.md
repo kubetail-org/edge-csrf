@@ -11,8 +11,8 @@ We hope you enjoy using this software. Contributions and suggestions are welcome
 - Runs on both node and edge runtimes
 - Includes integrations for [Next.js](packages/nextjs), [Sveltekit](packages/sveltekit), [Express](packages/express) and [Node-HTTP](packages/node-http)
 - Includes a low-level API for custom integrations ([see here](packages/core))
+- Gets token from HTTP request header (`X-CSRF-Token`) or from request body
 - Handles form-urlencoded, multipart/form-data or json-encoded HTTP request bodies
-- Gets token from HTTP request header or from request body
 - Supports Server Actions via form and non-form submission
 - Customizable cookie and other options
 
