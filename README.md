@@ -60,8 +60,8 @@ Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be reject
 
 import { headers } from 'next/headers';
 
-export default function Page() {
-  const headersList = await headers()
+export default async function Page() {
+  const headersList = await headers();
   const csrfToken = headersList.get('X-CSRF-Token') || 'missing';
 
   return (

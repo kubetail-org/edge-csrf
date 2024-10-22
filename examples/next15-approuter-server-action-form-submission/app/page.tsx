@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation';
 
 import '../styles/globals.css';
 
-export default function Page() {
-  const headersList = headers();
+export default async function Page() {
+  const headersList = await headers();
   const csrfToken = headersList.get('X-CSRF-Token') || 'missing';
 
   async function myAction() {
