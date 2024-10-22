@@ -61,7 +61,8 @@ Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be reject
 import { headers } from 'next/headers';
 
 export default function Page() {
-  const csrfToken = headers().get('X-CSRF-Token') || 'missing';
+  const headersList = await headers()
+  const csrfToken = headersList.get('X-CSRF-Token') || 'missing';
 
   return (
     <form action="/api/form-handler" method="post">
@@ -231,7 +232,7 @@ app.listen(port, () => {
 });
 ```
 
-With the middleware installed, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. 
+With the middleware installed, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token.
 
 ## Quickstart (Node-HTTP)
 
@@ -313,7 +314,7 @@ server.listen(3000, () => {
 });
 ```
 
-With the CSRF protection method, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. 
+With the CSRF protection method, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token.
 
 ## Development
 
