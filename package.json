@@ -22,5 +22,5 @@
     "vitest": "^1.4.0",
     "vitest-environment-miniflare": "^2.14.2"
   },
-  "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771"
+  "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
 }
