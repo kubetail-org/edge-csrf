@@ -29,11 +29,40 @@ jobs:
       - uses: pnpm/action-setup@v3
         with:
           version: 9
-      - run: pnpm install
-      - run: pnpm -r test run -- --environment node
-      - run: pnpm -r test run -- --environment edge-runtime
-      - run: pnpm -r build # only necessary for miniflare
-      - run: pnpm -r test run -- --environment miniflare
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: |
+          pnpm -r build # only necessary for miniflare
+          pnpm -r test run -- --environment node
+          pnpm -r test run -- --environment edge-runtime
+          pnpm -r test run -- --environment miniflare
+
+  test-nextjs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [13, 14, 15]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Next.js version
+        working-directory: packages/nextjs
+        run: pnpm install next@${{ matrix.version }}
+      - name: Run tests
+        working-directory: packages/nextjs
+        run: |
+          pnpm build # only necessary for miniflare
+          pnpm test run -- --environment node
+          pnpm test run -- --environment edge-runtime
+          pnpm test run -- --environment miniflare
 
   build:
     runs-on: ubuntu-latest

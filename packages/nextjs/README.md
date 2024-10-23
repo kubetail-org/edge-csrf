@@ -1,6 +1,6 @@
 # Next.js
 
-This is the documentation for Edge-CSRF's Next.js integration. The integration works with Next.js 13 and Next.js 14.
+This is the documentation for Edge-CSRF's Next.js integration. The integration works with Next.js 13, 14 and 15.
 
 ## Quickstart
 
@@ -40,8 +40,9 @@ Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be reject
 
 import { headers } from 'next/headers';
 
-export default function Page() {
-  const csrfToken = headers().get('X-CSRF-Token') || 'missing';
+export default async function Page() {
+  const h = await headers();
+  const csrfToken = h.get('X-CSRF-Token') || 'missing';
 
   return (
     <form action="/api/form-handler" method="post">
@@ -103,7 +104,7 @@ type Data = {
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  // this code won't execute unless CSRF token passes validation 
+  // this code won't execute unless CSRF token passes validation
   res.status(200).json({ status: 'success' });
 }
 ```
@@ -125,6 +126,13 @@ Here are some [examples](examples) in this repository:
 | Next.js 14 | app router   | [Server action (form)](examples/next14-approuter-server-action-form-submission)         |
 | Next.js 14 | app router   | [Server action (non-form)](examples/next14-approuter-server-action-non-form-submission) |
 | Next.js 14 | pages router | [HTML form](examples/next14-pagesrouter-html-submission)                                |
+| Next.js 15 | app router   | [HTML form](examples/next15-approuter-html-submission)                                  |
+| Next.js 15 | app router   | [JavaScript (dynamic)](examples/next15-approuter-js-submission-dynamic)                 |
+| Next.js 15 | app router   | [JavaScript (static)](examples/next15-approuter-js-submission-static)                   |
+| Next.js 15 | app router   | [Sentry](examples/next15-approuter-sentry)                                              |
+| Next.js 15 | app router   | [Server action (form)](examples/next15-approuter-server-action-form-submission)         |
+| Next.js 15 | app router   | [Server action (non-form)](examples/next15-approuter-server-action-non-form-submission) |
+| Next.js 15 | pages router | [HTML form](examples/next15-pagesrouter-html-submission)                                |
 
 ## Lower-level implementations
 
@@ -154,7 +162,7 @@ export const middleware = async (request: NextRequest) => {
     if (err instanceof CsrfError) return new NextResponse('invalid csrf token', { status: 403 });
     throw err;
   }
-    
+
   return response;
 };
 ```

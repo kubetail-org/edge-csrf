@@ -46,13 +46,17 @@ describe('csrfProtect unit tests', () => {
     const response = NextResponse.next();
 
     request.cookies.get = vi.fn();
-    response.cookies.set = vi.fn();
+
+    const setSpy = vi.fn();
+    Object.defineProperty(response, 'cookies', {
+      value: { set: setSpy },
+    });
 
     const csrfProtect = createCsrfProtect();
     await csrfProtect(request, response);
 
     expect(request.cookies.get).toHaveBeenCalledOnce();
-    expect(response.cookies.set).toHaveBeenCalledOnce();
+    expect(setSpy).toHaveBeenCalledOnce();
   });
 
   it('adds token to response header', async () => {
