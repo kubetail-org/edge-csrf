@@ -1,4 +1,4 @@
 packages:
   - "packages/**"
   - "shared"
-  - "!examples/next14-approuter-html-submission/*"
+  - "!examples/**"

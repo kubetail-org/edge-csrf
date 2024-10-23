@@ -20,10 +20,10 @@
     "test-all": "vitest run --environment node && vitest run --environment edge-runtime && vitest run --environment miniflare"
   },
   "devDependencies": {
-    "next": "^14.2.0"
+    "next": "^15.0.0"
   },
   "peerDependencies": {
-    "next": "^13.0.0 || ^14.0.0"
+    "next": "^13.0.0 || ^14.0.0 || ^15.0.0"
   },
   "keywords": [
     "csrf",

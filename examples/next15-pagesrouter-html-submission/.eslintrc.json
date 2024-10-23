@@ -1,0 +1,7 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react/function-component-definition": "off",
+    "react/jsx-props-no-spreading": "off"
+  }
+}
