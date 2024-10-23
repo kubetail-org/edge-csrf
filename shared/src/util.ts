@@ -26,7 +26,7 @@ export function utoa(input: Uint8Array): string {
 
 /**
  * Decode base64 string into Uint8Array
- * @param {string} input - The data to be converted from base64 to Uint8Array
+ * @param {string} inputB64 - The data to be converted from base64 to Uint8Array
  */
 export function atou(inputB64: string): Uint8Array {
   let inputStr: string;
@@ -34,7 +34,7 @@ export function atou(inputB64: string): Uint8Array {
   try {
     inputStr = atob(inputB64);
   } catch (error: unknown) {
-    if (error instanceof DOMException && error.name === 'InvalidCharacterError') {
+    if (error instanceof Error && error.name === 'InvalidCharacterError') {
       return new Uint8Array();
     }
     throw error;
