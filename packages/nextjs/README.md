@@ -1,6 +1,6 @@
 # Next.js
 
-This is the documentation for Edge-CSRF's Next.js integration. The integration works with Next.js 13 and Next.js 14.
+This is the documentation for Edge-CSRF's Next.js integration. The integration works with Next.js 13, 14 and 15.
 
 ## Quickstart
 
@@ -41,8 +41,8 @@ Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be reject
 import { headers } from 'next/headers';
 
 export default async function Page() {
-  const headersList = await headers();
-  const csrfToken = headersList.get('X-CSRF-Token') || 'missing';
+  const h = await headers();
+  const csrfToken = h.get('X-CSRF-Token') || 'missing';
 
   return (
     <form action="/api/form-handler" method="post">
