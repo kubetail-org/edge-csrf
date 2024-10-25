@@ -27,7 +27,7 @@
     "createServer"
   ],
   "dependencies": {
-    "cookie": "^0.6.0"
+    "cookie": "^0.7.0"
   },
   "devDependencies": {
     "@types/cookie": "^0.6.0",
