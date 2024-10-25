@@ -53,8 +53,8 @@ importers:
   packages/express:
     dependencies:
       cookie:
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.7.0
+        version: 0.7.1
     devDependencies:
       '@types/cookie':
         specifier: ^0.6.0
@@ -81,8 +81,8 @@ importers:
   packages/node-http:
     dependencies:
       cookie:
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.7.0
+        version: 0.7.1
     devDependencies:
       '@types/cookie':
         specifier: ^0.6.0
