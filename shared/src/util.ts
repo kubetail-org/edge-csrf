@@ -73,12 +73,9 @@ export async function getTokenString(request: Request, tokenOpts: TokenOptions =
   // check request body
   const contentType = request.headers.get('content-type') || 'text/plain';
 
-  // clone request so reading doesn't alter original
-  const requestCopy = request.clone();
-
   // url-encoded or multipart/form-data
   if (contentType === 'application/x-www-form-urlencoded' || contentType.startsWith('multipart/form-data')) {
-    const formData = await requestCopy.formData();
+    const formData = await request.formData();
     const formDataVal = getTokenValueFromFormData(formData, tokenOpts);
     if (typeof formDataVal === 'string') return formDataVal;
     return '';
@@ -86,13 +83,13 @@ export async function getTokenString(request: Request, tokenOpts: TokenOptions =
 
   // json-encoded
   if (contentType === 'application/json' || contentType === 'application/ld+json') {
-    const json = await requestCopy.json() as any;
+    const json = await request.json() as any;
     const jsonVal = json[fieldName];
     if (typeof jsonVal === 'string') return jsonVal;
     return '';
   }
 
-  const rawVal = await requestCopy.text();
+  const rawVal = await request.text();
 
   // non-form server actions
   if (contentType.startsWith('text/plain')) {
