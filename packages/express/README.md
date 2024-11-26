@@ -143,7 +143,8 @@ app.listen(port, () => {
     domain: '',
     secure: true,
     httpOnly: true,
-    sameSite: 'strict'
+    sameSite: 'strict',
+    partitioned: undefined
   },
   excludePathPrefixes: [],
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],

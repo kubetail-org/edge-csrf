@@ -101,7 +101,8 @@ Check out the example Node-HTTP server in this repository: [Node-HTTP example](e
     domain: '',
     secure: true,
     httpOnly: true,
-    sameSite: 'strict'
+    sameSite: 'strict',
+    partitioned: undefined
   },
   excludePathPrefixes: [],
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
