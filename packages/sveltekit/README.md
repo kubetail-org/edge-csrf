@@ -139,7 +139,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     domain: '',
     secure: true,
     httpOnly: true,
-    sameSite: 'strict'
+    sameSite: 'strict',
+    partitioned: undefined
   },
   excludePathPrefixes: [],
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],

@@ -180,7 +180,8 @@ export const middleware = async (request: NextRequest) => {
     domain: '',
     secure: true,
     httpOnly: true,
-    sameSite: 'strict'
+    sameSite: 'strict',
+    partitioned: undefined
   },
   excludePathPrefixes: ['/_next/'],
   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
