@@ -67,7 +67,7 @@ export default async function Page() {
 
   return (
     <form action="/api/form-handler" method="post">
-      <input type="hidden" value={csrfToken}>
+      <input type="hidden" name="csrf_token" value={csrfToken}>
       <input type="text" name="my-input">
       <input type="submit">
     </form>
@@ -147,7 +147,7 @@ export const actions = {
 <span>success</span>
 {:else}
 <form method="post">
-  <input type="hidden" value={data.csrfToken}>
+  <input type="hidden" name="csrf_token" value={data.csrfToken}>
   <input type="text" name="my-input">
   <input type="submit">
 </form>
