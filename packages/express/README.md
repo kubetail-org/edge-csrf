@@ -81,7 +81,7 @@ app.post('/my-form', (req, res) => {
 
 ## Example
 
-Check out the example Express app in this repository: [Express example](examples/express).
+Check out the example Express app in this repository: [Express example](/examples/express).
 
 ## Lower-level implementations
 

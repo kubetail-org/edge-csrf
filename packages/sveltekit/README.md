@@ -89,12 +89,12 @@ export {};
 
 ## Examples
 
-Here are some [examples](examples) in this repository:
+Here are some [examples](/examples) in this repository:
 
 | Adapter    | Implementation                             |
 | ---------- | ------------------------------------------ |
-| vercel     | [HTML form](examples/sveltekit-vercel)     |
-| cloudflare | [HTML form](examples/sveltekit-cloudflare) |
+| vercel     | [HTML form](/examples/sveltekit-vercel)     |
+| cloudflare | [HTML form](/examples/sveltekit-cloudflare) |
 
 ## Lower-level implementations
 
