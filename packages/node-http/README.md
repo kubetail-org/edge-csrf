@@ -86,7 +86,7 @@ With the CSRF protection method, all HTTP submission requests (e.g. POST, PUT, D
 
 ## Example
 
-Check out the example Node-HTTP server in this repository: [Node-HTTP example](examples/node-http).
+Check out the example Node-HTTP server in this repository: [Node-HTTP example](/examples/node-http).
 
 ## Configuration
 
