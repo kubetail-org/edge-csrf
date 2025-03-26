@@ -50,7 +50,10 @@ const csrfMiddleware = createCsrfMiddleware({
   },
 });
 
-export const middleware = csrfMiddleware;
+export async function middleware(request: NextRequest) {
+    const response = await csrfMiddleware(request);
+    return response;
+}
 ```
 
 Now, all HTTP submission requests (e.g. POST, PUT, DELETE, PATCH) will be rejected if they do not include a valid CSRF token. To add the CSRF token to your forms, you can fetch it from the `X-CSRF-Token` HTTP response header server-side or client-side. For example:
