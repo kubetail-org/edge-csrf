@@ -33,8 +33,18 @@ function getRequestBody(req: IncomingMessageWithBody): Promise<string> {
       // add `body` to request for downstream readers
       req.body = Buffer.concat(buffer);
 
-      // resolve promise
-      resolve(req.body.toString());
+      // Convert Buffer to a string
+      const contentType = req.headers['content-type'] || '';
+
+      if (contentType.includes('application/json')) {
+          req.body = JSON.parse(req.body.toString());
+      } else if (contentType.includes('application/x-www-form-urlencoded')) {
+          req.body = req.body.toString(); // Keep it as a string for form submissions
+      } else {
+          req.body = req.body.toString(); // Default to string conversion
+      }
+
+      resolve(req.body); // Resolve with the properly formatted body
     };
 
     const onErr = (err: Error) => {
